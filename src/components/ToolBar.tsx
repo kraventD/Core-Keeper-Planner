@@ -7,8 +7,10 @@ import {
   MirrorMode,
   DoorOrientation,
   PaletteColor,
+  Language,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
+import { getPaletteColorLabel } from '../utils/palette';
 import {
   MousePointer,
   Pencil,
@@ -52,6 +54,7 @@ interface ToolBarProps {
   onChangeDoorOrientation: (orientation: DoorOrientation) => void;
   showDoorTooltip: boolean;
   onDismissDoorTooltip: () => void;
+  language: Language;
   t: Translations;
 }
 
@@ -76,6 +79,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
   onChangeDoorOrientation,
   showDoorTooltip,
   onDismissDoorTooltip,
+  language,
   t,
 }) => {
   const tools: Array<{
@@ -167,11 +171,11 @@ export const ToolBar: React.FC<ToolBarProps> = ({
   return (
     <aside
       className="w-16 md:w-56 bg-[#14151a] border-r border-zinc-800/90 flex flex-col justify-between p-2 select-none shrink-0 z-20"
-      aria-label="Barra de herramientas"
+      aria-label={t.toolbarAria}
     >
       <div className="space-y-1">
         <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 hidden md:block">
-          Herramientas
+          {t.toolsSection}
         </div>
 
         {tools.map(tool => {
@@ -219,7 +223,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                     ? 'bg-amber-500 text-zinc-950 font-semibold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
-                title="Dibuja muros perimetrales con interior vacío"
+                title={t.rectOutlineTooltip}
               >
                 <SquareDashed className="w-3 h-3" />
                 <span>{t.toolOptions.outline}</span>
@@ -232,7 +236,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                     ? 'bg-amber-500 text-zinc-950 font-semibold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
-                title="Dibuja bloque sólido de casillas"
+                title={t.rectFilledTooltip}
               >
                 <Maximize2 className="w-3 h-3" />
                 <span>{t.toolOptions.filled}</span>
@@ -257,7 +261,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                       ? 'bg-amber-500 text-zinc-950 font-semibold'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
-                  title="Dibuja anillo de muros perimetrales con interior vacío"
+                  title={t.circleOutlineTooltip}
                 >
                   <Circle className="w-3 h-3" />
                   <span>{t.toolOptions.outline}</span>
@@ -270,7 +274,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                       ? 'bg-amber-500 text-zinc-950 font-semibold'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
-                  title="Dibuja disco sólido circular de casillas"
+                  title={t.circleFilledTooltip}
                 >
                   <CircleDot className="w-3 h-3" />
                   <span>{t.toolOptions.filled}</span>
@@ -291,7 +295,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                       ? 'bg-amber-500 text-zinc-950 font-semibold'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
-                  title="Clic en el bloque central y expandir hacia fuera de forma simétrica"
+                  title={t.circleFromCenterTooltip}
                 >
                   <Crosshair className="w-3 h-3" />
                   <span>{t.toolOptions.fromCenter}</span>
@@ -304,7 +308,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                       ? 'bg-amber-500 text-zinc-950 font-semibold'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
-                  title="Arrastrar entre dos esquinas de una caja cuadrada"
+                  title={t.circleFromCornerTooltip}
                 >
                   <Maximize className="w-3 h-3" />
                   <span>{t.toolOptions.fromCorner}</span>
@@ -530,9 +534,9 @@ export const ToolBar: React.FC<ToolBarProps> = ({
             style={{ backgroundColor: activeColor.hex }}
           />
           <div className="hidden md:block min-w-0">
-            <span className="text-[10px] text-zinc-400 block leading-none">Color activo</span>
+            <span className="text-[10px] text-zinc-400 block leading-none">{t.activeColor}</span>
             <span className="text-xs font-medium text-zinc-200 truncate block mt-0.5">
-              {activeColor.name}
+              {getPaletteColorLabel(activeColor, t, language)}
             </span>
           </div>
         </div>

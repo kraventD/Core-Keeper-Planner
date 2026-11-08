@@ -58,7 +58,7 @@ export const ResizeModal: React.FC<ResizeModalProps> = ({
           <button
             onClick={onClose}
             className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition"
-            aria-label="Cerrar modal"
+            aria-label={t.closeModal}
           >
             <X className="w-5 h-5" />
           </button>
@@ -118,11 +118,11 @@ export const ResizeModal: React.FC<ResizeModalProps> = ({
                 className="px-2.5 py-1.5 rounded-lg text-xs text-red-400 hover:text-red-300 hover:bg-red-950/30 border border-red-900/40 transition flex items-center gap-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>Limpiar plano</span>
+                <span>{t.clearBlueprint}</span>
               </button>
             ) : (
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] text-red-400">¿Seguro?</span>
+                <span className="text-[11px] text-red-400">{t.confirmClearQuestion}</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -131,7 +131,7 @@ export const ResizeModal: React.FC<ResizeModalProps> = ({
                   }}
                   className="px-2 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs font-medium transition"
                 >
-                  Sí, borrar todo
+                  {t.confirmClearBlueprint}
                 </button>
                 <button
                   type="button"

@@ -42,8 +42,8 @@ export const ImportCodeModal: React.FC<ImportCodeModalProps> = ({
       const projectData = decodeShareCode(trimmed);
       onImport(projectData);
       onClose();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t.importCodeModal.errorInvalid);
+    } catch {
+      setError(t.importCodeModal.errorInvalid);
     } finally {
       setIsImporting(false);
     }
@@ -60,7 +60,7 @@ export const ImportCodeModal: React.FC<ImportCodeModalProps> = ({
           <button
             onClick={onClose}
             className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition"
-            aria-label="Cerrar modal"
+            aria-label={t.closeModal}
           >
             <X className="w-5 h-5" />
           </button>

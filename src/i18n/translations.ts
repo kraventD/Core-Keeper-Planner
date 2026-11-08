@@ -164,6 +164,7 @@ export interface Translations {
     core: string;
     statue: string;
     lighting: string;
+    npc: string;
     other: string;
   };
   legend: string;
@@ -231,8 +232,45 @@ export interface Translations {
     panDirect: string;
     zoomInfo: string;
     zoomInOut: string;
+    scrollWheel: string;
+    spaceDrag: string;
+    middleButton: string;
     close: string;
   };
+  // Misc UI
+  defaultProjectName: string;
+  toolsSection: string;
+  change: string;
+  size: string;
+  origin: string;
+  activeColor: string;
+  outsideCanvas: string;
+  newColor: string;
+  zoomOut: string;
+  zoomIn: string;
+  closeModal: string;
+  propertiesPanelAria: string;
+  toolbarAria: string;
+  copyTooltip: string;
+  cutTooltip: string;
+  fillSelectionTooltip: string;
+  deleteTooltip: string;
+  editColorTooltip: string;
+  deleteColorTooltip: string;
+  rectOutlineTooltip: string;
+  rectFilledTooltip: string;
+  circleOutlineTooltip: string;
+  circleFilledTooltip: string;
+  circleFromCenterTooltip: string;
+  circleFromCornerTooltip: string;
+  clearBlueprint: string;
+  confirmClearBlueprint: string;
+  confirmClearQuestion: string;
+  annotationPrompt: string;
+  annotationEditPrompt: string;
+  annotationAdded: string;
+  annotationUpdated: string;
+  annotationDeleted: string;
   alerts: {
     invalidJson: string;
     projectLoaded: string;
@@ -411,6 +449,7 @@ export const translations: Record<Language, Translations> = {
       core: 'Núcleo / Portal',
       statue: 'Estatua / Altar',
       lighting: 'Iluminación / Antorchas',
+      npc: 'Habitación NPC / Muebles',
       other: 'Otro / Libre',
     },
     legend: 'Leyenda y estadísticas',
@@ -477,8 +516,44 @@ export const translations: Record<Language, Translations> = {
       panDirect: 'Desplazamiento directo',
       zoomInfo: 'Rueda del ratón sobre el cursor o teclas + / -',
       zoomInOut: 'Aumentar / Reducir zoom',
+      scrollWheel: 'Rueda del ratón',
+      spaceDrag: 'Espacio + Arrastrar',
+      middleButton: 'Botón Central',
       close: 'Cerrar',
     },
+    defaultProjectName: 'Plano Base Core Keeper',
+    toolsSection: 'Herramientas',
+    change: 'Cambiar',
+    size: 'Tamaño',
+    origin: 'Origen',
+    activeColor: 'Color activo',
+    outsideCanvas: 'Fuera del plano',
+    newColor: 'Nuevo color',
+    zoomOut: 'Reducir zoom',
+    zoomIn: 'Aumentar zoom',
+    closeModal: 'Cerrar modal',
+    propertiesPanelAria: 'Panel de propiedades',
+    toolbarAria: 'Barra de herramientas',
+    copyTooltip: 'Copiar (Ctrl+C)',
+    cutTooltip: 'Cortar (Ctrl+X)',
+    fillSelectionTooltip: 'Rellenar selección con color activo',
+    deleteTooltip: 'Eliminar (Supr / Backspace)',
+    editColorTooltip: 'Editar color',
+    deleteColorTooltip: 'Eliminar color',
+    rectOutlineTooltip: 'Dibuja muros perimetrales con interior vacío',
+    rectFilledTooltip: 'Dibuja bloque sólido de casillas',
+    circleOutlineTooltip: 'Dibuja anillo de muros perimetrales con interior vacío',
+    circleFilledTooltip: 'Dibuja disco sólido circular de casillas',
+    circleFromCenterTooltip: 'Clic en el bloque central y expandir hacia fuera de forma simétrica',
+    circleFromCornerTooltip: 'Arrastrar entre dos esquinas de una caja cuadrada',
+    clearBlueprint: 'Limpiar plano',
+    confirmClearBlueprint: 'Sí, borrar todo',
+    confirmClearQuestion: '¿Seguro?',
+    annotationPrompt: 'Texto de la anotación:',
+    annotationEditPrompt: 'Editar anotación:',
+    annotationAdded: 'Anotación añadida',
+    annotationUpdated: 'Anotación actualizada',
+    annotationDeleted: 'Anotación eliminada',
     alerts: {
       invalidJson: 'El archivo seleccionado no es un plano JSON válido.',
       projectLoaded: 'Plano cargado correctamente.',
@@ -655,6 +730,7 @@ export const translations: Record<Language, Translations> = {
       core: 'Core / Waypoint',
       statue: 'Statue / Altar',
       lighting: 'Lighting / Torch',
+      npc: 'NPC Room / Furniture',
       other: 'Other / Custom',
     },
     legend: 'Legend & Statistics',
@@ -721,8 +797,44 @@ export const translations: Record<Language, Translations> = {
       panDirect: 'Direct pan',
       zoomInfo: 'Mouse wheel over cursor or + / - keys',
       zoomInOut: 'Zoom in / Zoom out',
+      scrollWheel: 'Mouse wheel',
+      spaceDrag: 'Space + Drag',
+      middleButton: 'Middle button',
       close: 'Close',
     },
+    defaultProjectName: 'Core Keeper Base Plan',
+    toolsSection: 'Tools',
+    change: 'Change',
+    size: 'Size',
+    origin: 'Origin',
+    activeColor: 'Active color',
+    outsideCanvas: 'Outside the canvas',
+    newColor: 'New color',
+    zoomOut: 'Zoom out',
+    zoomIn: 'Zoom in',
+    closeModal: 'Close modal',
+    propertiesPanelAria: 'Properties panel',
+    toolbarAria: 'Tool bar',
+    copyTooltip: 'Copy (Ctrl+C)',
+    cutTooltip: 'Cut (Ctrl+X)',
+    fillSelectionTooltip: 'Fill selection with active color',
+    deleteTooltip: 'Delete (Del / Backspace)',
+    editColorTooltip: 'Edit color',
+    deleteColorTooltip: 'Delete color',
+    rectOutlineTooltip: 'Draws perimeter walls with an empty interior',
+    rectFilledTooltip: 'Draws a solid block of cells',
+    circleOutlineTooltip: 'Draws a ring of perimeter walls with an empty interior',
+    circleFilledTooltip: 'Draws a solid circular disk of cells',
+    circleFromCenterTooltip: 'Click the center cell and expand outward symmetrically',
+    circleFromCornerTooltip: 'Drag between two corners of a square box',
+    clearBlueprint: 'Clear blueprint',
+    confirmClearBlueprint: 'Yes, delete all',
+    confirmClearQuestion: 'Are you sure?',
+    annotationPrompt: 'Annotation text:',
+    annotationEditPrompt: 'Edit annotation:',
+    annotationAdded: 'Annotation added',
+    annotationUpdated: 'Annotation updated',
+    annotationDeleted: 'Annotation deleted',
     alerts: {
       invalidJson: 'The selected file is not a valid JSON blueprint.',
       projectLoaded: 'Blueprint loaded successfully.',

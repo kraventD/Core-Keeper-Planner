@@ -1,4 +1,5 @@
-import { PaletteColor } from '../types/blueprint';
+import { Language, PaletteColor } from '../types/blueprint';
+import { Translations } from '../i18n/translations';
 
 export const DEFAULT_PALETTE: PaletteColor[] = [
   { id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true },
@@ -22,4 +23,20 @@ export function getPaletteColor(palette: PaletteColor[], colorId: string): Palet
 export function getColorHex(palette: PaletteColor[], colorId: string): string {
   const found = getPaletteColor(palette, colorId);
   return found ? found.hex : '#64748b';
+}
+
+/**
+ * Returns the display label for a palette color.
+ * Default colors are shown in English when the UI language is English;
+ * Spanish keeps the original bilingual names stored in the project.
+ */
+export function getPaletteColorLabel(
+  color: PaletteColor,
+  t: Translations,
+  language: Language
+): string {
+  if (language !== 'en' || !color.isDefault) return color.name;
+  const key = color.id === 'door' ? 'doorway' : color.id;
+  const table = t.defaultColors as Record<string, string>;
+  return table[key] ?? color.name;
 }

@@ -80,7 +80,7 @@ export default function App() {
   const [project, setProject] = useState<BlueprintProject>(() => {
     const saved = loadAutosave();
     if (saved) return saved;
-    return INITIAL_PROJECT;
+    return { ...INITIAL_PROJECT, name: translations[language].defaultProjectName };
   });
 
   // 3. Tool & Color state
@@ -381,7 +381,7 @@ export default function App() {
 
   // Annotation handlers
   const handleAddAnnotation = useCallback((x: number, y: number) => {
-    const text = window.prompt('Texto de la anotación:');
+    const text = window.prompt(t.annotationPrompt);
     if (text !== null && text.trim() !== '') {
       const newAnnotation: Annotation = {
         id: `ann_${Date.now()}`,
@@ -394,14 +394,14 @@ export default function App() {
         annotations: [...prev.annotations, newAnnotation],
         updatedAt: new Date().toISOString(),
       }));
-      showToast('Anotación añadida');
+      showToast(t.annotationAdded);
     }
-  }, [showToast]);
+  }, [showToast, t.annotationPrompt, t.annotationAdded]);
 
   const handleEditAnnotation = useCallback((annotationId: string) => {
     const ann = project.annotations.find(a => a.id === annotationId);
     if (!ann) return;
-    const text = window.prompt('Editar anotación:', ann.text);
+    const text = window.prompt(t.annotationEditPrompt, ann.text);
     if (text !== null) {
       setProject(prev => ({
         ...prev,
@@ -410,9 +410,9 @@ export default function App() {
         ),
         updatedAt: new Date().toISOString(),
       }));
-      showToast('Anotación actualizada');
+      showToast(t.annotationUpdated);
     }
-  }, [project.annotations, showToast]);
+  }, [project.annotations, showToast, t.annotationEditPrompt, t.annotationUpdated]);
 
   const handleDeleteAnnotation = useCallback((annotationId: string) => {
     setProject(prev => ({
@@ -420,8 +420,8 @@ export default function App() {
       annotations: prev.annotations.filter(a => a.id !== annotationId),
       updatedAt: new Date().toISOString(),
     }));
-    showToast('Anotación eliminada');
-  }, [showToast]);
+    showToast(t.annotationDeleted);
+  }, [showToast, t.annotationDeleted]);
 
   const handleMoveAnnotation = useCallback((annotationId: string, x: number, y: number) => {
     setProject(prev => ({
@@ -748,6 +748,7 @@ export default function App() {
           onChangeDoorOrientation={setDoorOrientation}
           showDoorTooltip={showDoorTooltip}
           onDismissDoorTooltip={handleDismissDoorTooltip}
+          language={language}
           t={t}
         />
 
@@ -818,6 +819,7 @@ export default function App() {
           onCenterSelectionBoth={handleCenterSelectionBoth}
           cellColorCounts={cellColorCounts}
           onOpenSettings={() => setIsResizeOpen(true)}
+          language={language}
           t={t}
         />
       </div>

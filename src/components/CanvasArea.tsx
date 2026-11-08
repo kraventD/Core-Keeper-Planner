@@ -1265,8 +1265,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         <button
           type="button"
           onClick={() => handleZoom(1 / 1.2)}
-          title="Reducir zoom (-)"
-          aria-label="Reducir zoom"
+          title={`${t.zoomOut} (-)`}
+          aria-label={t.zoomOut}
           className="p-1.5 rounded hover:bg-zinc-800 hover:text-zinc-100 transition"
         >
           <ZoomOut className="w-4 h-4" />
@@ -1279,8 +1279,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         <button
           type="button"
           onClick={() => handleZoom(1.2)}
-          title="Aumentar zoom (+)"
-          aria-label="Aumentar zoom"
+          title={`${t.zoomIn} (+)`}
+          aria-label={t.zoomIn}
           className="p-1.5 rounded hover:bg-zinc-800 hover:text-zinc-100 transition"
         >
           <ZoomIn className="w-4 h-4" />
@@ -1336,7 +1336,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             <strong className="text-amber-400">{hoverCell.y}</strong>
           </span>
         ) : (
-          <span className="text-zinc-500 italic">Fuera del plano</span>
+          <span className="text-zinc-500 italic">{t.outsideCanvas}</span>
         )}
 
         <div className="w-[1px] h-3 bg-zinc-800 mx-1 hidden sm:block" />

@@ -79,7 +79,7 @@ export const ExportCodeModal: React.FC<ExportCodeModalProps> = ({
           <button
             onClick={onClose}
             className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition"
-            aria-label="Cerrar modal"
+            aria-label={t.closeModal}
           >
             <X className="w-5 h-5" />
           </button>

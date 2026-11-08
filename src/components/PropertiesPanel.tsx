@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { PaletteColor, SelectionBox } from '../types/blueprint';
+import { PaletteColor, SelectionBox, Language } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
+import { getPaletteColorLabel } from '../utils/palette';
 import {
   Palette,
   Eye,
@@ -53,6 +54,7 @@ interface PropertiesPanelProps {
   onCenterSelectionBoth?: () => void;
   cellColorCounts: Record<string, number>;
   onOpenSettings: () => void;
+  language: Language;
   t: Translations;
 }
 
@@ -91,6 +93,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onCenterSelectionBoth,
   cellColorCounts,
   onOpenSettings,
+  language,
   t,
 }) => {
   const [isAddingColor, setIsAddingColor] = useState(false);
@@ -104,7 +107,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const handleStartEdit = (col: PaletteColor, e: React.MouseEvent) => {
     e.stopPropagation();
     setEditingColorId(col.id);
-    setEditName(col.name);
+    setEditName(getPaletteColorLabel(col, t, language));
     setEditHex(col.hex);
   };
 
@@ -135,7 +138,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   return (
     <aside
       className="w-72 bg-[#14151a] border-l border-zinc-800/90 flex flex-col justify-between overflow-y-auto select-none shrink-0 z-20"
-      aria-label="Panel de propiedades"
+      aria-label={t.propertiesPanelAria}
     >
       <div className="p-3.5 space-y-4 text-zinc-200">
         {/* Section 1: Dimensions & View Options */}
@@ -149,7 +152,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               onClick={onOpenSettings}
               className="text-[11px] text-amber-400 hover:text-amber-300 font-medium"
             >
-              Cambiar
+              {t.change}
             </button>
           </div>
 
@@ -285,11 +288,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-1.5 p-2 bg-[#121316] rounded border border-zinc-800/80 font-mono text-[11px]">
                 <div>
-                  <span className="text-zinc-500 text-[10px] block">Origen:</span>
+                  <span className="text-zinc-500 text-[10px] block">{t.origin}:</span>
                   X:{selectionBox.minX}, Y:{selectionBox.minY}
                 </div>
                 <div>
-                  <span className="text-zinc-500 text-[10px] block">Tamaño:</span>
+                  <span className="text-zinc-500 text-[10px] block">{t.size}:</span>
                   {selWidth} × {selHeight} ({selTotalCells})
                 </div>
               </div>
@@ -299,7 +302,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <button
                   type="button"
                   onClick={onCopySelection}
-                  title="Copiar (Ctrl+C)"
+                  title={t.copyTooltip}
                   className="px-2 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 flex items-center justify-center gap-1.5 transition text-[11px]"
                 >
                   <Copy className="w-3 h-3 text-sky-400" />
@@ -308,7 +311,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <button
                   type="button"
                   onClick={onCutSelection}
-                  title="Cortar (Ctrl+X)"
+                  title={t.cutTooltip}
                   className="px-2 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 flex items-center justify-center gap-1.5 transition text-[11px]"
                 >
                   <Scissors className="w-3 h-3 text-amber-400" />
@@ -317,7 +320,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <button
                   type="button"
                   onClick={onFillSelection}
-                  title="Rellenar selección con color activo"
+                  title={t.fillSelectionTooltip}
                   className="px-2 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 flex items-center justify-center gap-1.5 transition text-[11px]"
                 >
                   <Sparkles className="w-3 h-3 text-emerald-400" />
@@ -326,7 +329,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <button
                   type="button"
                   onClick={onDeleteSelection}
-                  title="Eliminar (Supr / Backspace)"
+                  title={t.deleteTooltip}
                   className="px-2 py-1.5 rounded bg-red-950/40 hover:bg-red-900/50 border border-red-900/50 text-red-300 flex items-center justify-center gap-1.5 transition text-[11px]"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -459,7 +462,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           {/* New color form */}
           {isAddingColor && (
             <form onSubmit={handleSaveNewColor} className="mb-3 p-2.5 bg-[#18191f] rounded-lg border border-amber-500/40 space-y-2">
-              <div className="text-[11px] font-semibold text-amber-400">Nuevo color</div>
+              <div className="text-[11px] font-semibold text-amber-400">{t.newColor}</div>
               <input
                 type="text"
                 placeholder={t.colorName}
@@ -568,7 +571,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       className="w-4 h-4 rounded-sm border border-black/40 shrink-0 shadow-inner"
                       style={{ backgroundColor: col.hex }}
                     />
-                    <span className="text-xs truncate font-medium">{col.name}</span>
+                    <span className="text-xs truncate font-medium">{getPaletteColorLabel(col, t, language)}</span>
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0">
@@ -583,7 +586,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <button
                       type="button"
                       onClick={e => handleStartEdit(col, e)}
-                      title="Editar color"
+                      title={t.editColorTooltip}
                       className="opacity-0 group-hover:opacity-100 p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition"
                     >
                       <Sliders className="w-3 h-3" />
@@ -596,7 +599,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                           e.stopPropagation();
                           onDeleteColor(col.id);
                         }}
-                        title="Eliminar color"
+                        title={t.deleteColorTooltip}
                         className="opacity-0 group-hover:opacity-100 p-1 text-red-400 hover:text-red-300 rounded hover:bg-red-950/30 transition"
                       >
                         <Trash2 className="w-3 h-3" />

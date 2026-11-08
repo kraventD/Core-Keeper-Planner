@@ -35,9 +35,9 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose,
   ];
 
   const canvasShortcuts = [
-    { key: 'Rueda del ratón', desc: t.shortcutsModal.zoomInfo },
-    { key: 'Espacio + Arrastrar', desc: t.shortcutsModal.panInfo },
-    { key: 'Botón Central', desc: t.shortcutsModal.panDirect },
+    { key: t.shortcutsModal.scrollWheel, desc: t.shortcutsModal.zoomInfo },
+    { key: t.shortcutsModal.spaceDrag, desc: t.shortcutsModal.panInfo },
+    { key: t.shortcutsModal.middleButton, desc: t.shortcutsModal.panDirect },
     { key: '+  /  -', desc: t.shortcutsModal.zoomInOut },
     { key: '0', desc: t.resetZoom },
   ];
@@ -53,7 +53,7 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose,
           <button
             onClick={onClose}
             className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition"
-            aria-label="Cerrar modal"
+            aria-label={t.closeModal}
           >
             <X className="w-5 h-5" />
           </button>
