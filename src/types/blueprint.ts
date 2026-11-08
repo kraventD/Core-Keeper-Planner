@@ -9,7 +9,8 @@ export type ToolType =
   | 'rect_select'
   | 'fill'
   | 'move'
-  | 'annotation';
+  | 'annotation'
+  | 'hand';
 
 export type RectangleMode = 'outline' | 'filled';
 export type ShapeMode = 'outline' | 'filled';

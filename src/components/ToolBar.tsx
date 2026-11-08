@@ -97,6 +97,13 @@ export const ToolBar: React.FC<ToolBarProps> = ({
       tooltip: t.tooltips.select,
     },
     {
+      id: 'move',
+      name: t.tools.move,
+      icon: Move,
+      shortcut: 'M',
+      tooltip: t.tooltips.move,
+    },
+    {
       id: 'pencil',
       name: t.tools.pencil,
       icon: Pencil,
@@ -165,6 +172,13 @@ export const ToolBar: React.FC<ToolBarProps> = ({
       icon: Move,
       shortcut: 'M',
       tooltip: t.tooltips.move,
+    },
+    {
+      id: 'hand',
+      name: 'Mano',
+      icon: Move,
+      shortcut: 'H',
+      tooltip: 'Mover lienzo',
     },
   ];
 
