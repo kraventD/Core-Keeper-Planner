@@ -1,4 +1,4 @@
-import { BlueprintProject } from '../types/blueprint';
+import { BlueprintProject, PaletteColor } from '../types/blueprint';
 import { DEFAULT_PALETTE } from './palette';
 
 const AUTOSAVE_KEY = 'corekeeper_blueprint_autosave_v1';
@@ -35,13 +35,41 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
     throw new Error('Invalid blueprint: missing cells map');
   }
 
+  // Migración de paleta: eliminar 'doorway' y asegurar 'door' como primer elemento
+  let migratedPalette: PaletteColor[] = [];
+  if (Array.isArray(data.palette) && data.palette.length > 0) {
+    migratedPalette = data.palette.filter((p: PaletteColor) => p.id !== 'doorway');
+    // Si 'door' no existe, agregarlo al principio
+    const hasDoor = migratedPalette.some((p: PaletteColor) => p.id === 'door');
+    if (!hasDoor) {
+      migratedPalette.unshift({ id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true });
+    } else {
+      // Mover 'door' al principio si ya existe pero no está primero
+      const doorIndex = migratedPalette.findIndex((p: PaletteColor) => p.id === 'door');
+      if (doorIndex > 0) {
+        const doorColor = migratedPalette.splice(doorIndex, 1)[0];
+        migratedPalette.unshift(doorColor);
+      }
+    }
+  } else {
+    migratedPalette = [...DEFAULT_PALETTE];
+  }
+
+  // Migración de celdas: reemplazar referencias a 'doorway' con 'door'
+  const migratedCells: Record<string, string> = {};
+  if (typeof data.cells === 'object' && data.cells !== null) {
+    for (const [key, colorId] of Object.entries(data.cells)) {
+      migratedCells[key] = (colorId as string) === 'doorway' ? 'door' : (colorId as string);
+    }
+  }
+
   return {
     id: typeof data.id === 'string' ? data.id : `proj_${Date.now()}`,
     name: typeof data.name === 'string' ? data.name : 'Core Keeper Blueprint',
     width: Math.max(5, Math.min(500, Math.round(data.width))),
     height: Math.max(5, Math.min(500, Math.round(data.height))),
-    cells: data.cells,
-    palette: Array.isArray(data.palette) && data.palette.length > 0 ? data.palette : DEFAULT_PALETTE,
+    cells: migratedCells,
+    palette: migratedPalette,
     annotations: Array.isArray(data.annotations) ? data.annotations : [],
     createdAt: data.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),

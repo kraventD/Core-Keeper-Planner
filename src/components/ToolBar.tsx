@@ -5,6 +5,7 @@ import {
   ShapeMode,
   CircleOrigin,
   MirrorMode,
+  DoorOrientation,
   PaletteColor,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
@@ -47,6 +48,10 @@ interface ToolBarProps {
   brushSize: number;
   onChangeBrushSize: (size: number) => void;
   activeColor: PaletteColor;
+  doorOrientation: DoorOrientation;
+  onChangeDoorOrientation: (orientation: DoorOrientation) => void;
+  showDoorTooltip: boolean;
+  onDismissDoorTooltip: () => void;
   t: Translations;
 }
 
@@ -67,6 +72,10 @@ export const ToolBar: React.FC<ToolBarProps> = ({
   brushSize,
   onChangeBrushSize,
   activeColor,
+  doorOrientation,
+  onChangeDoorOrientation,
+  showDoorTooltip,
+  onDismissDoorTooltip,
   t,
 }) => {
   const tools: Array<{
@@ -384,6 +393,67 @@ export const ToolBar: React.FC<ToolBarProps> = ({
               ))}
             </div>
           </div>
+        )}
+
+        {activeColor.id === 'door' && (
+          <>
+            {showDoorTooltip && (
+              <div className="pt-1 pb-2 px-1">
+                <div className="bg-amber-500/20 border border-amber-500/50 rounded-lg p-2 mb-2 text-xs text-amber-100 relative">
+                  <span className="flex items-center gap-1 mb-1">
+                    <span className="w-3 h-3 rounded-full bg-amber-400 shrink-0" />
+                    <span className="font-medium">{t.doorTooltip.title}</span>
+                  </span>
+                  <p className="text-amber-200/90 leading-relaxed">{t.doorTooltip.text}</p>
+                  <button
+                    type="button"
+                    onClick={onDismissDoorTooltip}
+                    className="absolute top-1 right-1 p-1 text-amber-300 hover:text-white hover:bg-amber-500/30 rounded transition"
+                    title={t.doorTooltip.dismiss}
+                    aria-label={t.doorTooltip.dismiss}
+                  >
+                    <span className="text-[10px]">✕</span>
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="pt-3 mt-3 border-t border-zinc-800/80 hidden md:block px-1">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] uppercase font-semibold text-zinc-500 block">
+                  {t.doorOrientation.title}
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              </div>
+              <div className="grid grid-cols-2 gap-1 bg-[#121316] p-1 rounded-lg border border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => onChangeDoorOrientation('horizontal')}
+                  title={t.doorOrientation.horizontal}
+                  className={`py-1 px-1 rounded text-[10px] font-mono font-medium transition flex items-center justify-center gap-0.5 ${
+                    doorOrientation === 'horizontal'
+                      ? 'bg-cyan-500 text-zinc-950 font-bold shadow-sm'
+                      : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  <span className="w-3 h-3 border-t-4 border-black shrink-0" />
+                  <span>{t.doorOrientation.horizontal}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeDoorOrientation('vertical')}
+                  title={t.doorOrientation.vertical}
+                  className={`py-1 px-1 rounded text-[10px] font-mono font-medium transition flex items-center justify-center gap-0.5 ${
+                    doorOrientation === 'vertical'
+                      ? 'bg-cyan-500 text-zinc-950 font-bold shadow-sm'
+                      : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  <span className="w-3 h-3 border-l-4 border-black shrink-0" />
+                  <span>{t.doorOrientation.vertical}</span>
+                </button>
+              </div>
+            </div>
+          </>
         )}
 
         {/* Real-time Mirror Mode Section */}

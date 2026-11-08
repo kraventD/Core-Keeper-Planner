@@ -67,6 +67,16 @@ export interface Translations {
     filled: string;
     connectedOnly: string;
   };
+  doorOrientation: {
+    title: string;
+    horizontal: string;
+    vertical: string;
+  };
+  doorTooltip: {
+    title: string;
+    text: string;
+    dismiss: string;
+  };
   // Properties panel
   properties: string;
   dimensions: string;
@@ -308,6 +318,16 @@ export const translations: Record<Language, Translations> = {
       filled: 'Relleno completo',
       connectedOnly: 'Solo celdas conectadas',
     },
+    doorOrientation: {
+      title: 'Orientación de puerta',
+      horizontal: 'Horizontal',
+      vertical: 'Vertical',
+    },
+    doorTooltip: {
+      title: 'Orientación de puerta',
+      text: 'Aquí puedes cambiar la orientación de la puerta entre horizontal y vertical.',
+      dismiss: 'Cerrar',
+    },
     properties: 'Propiedades',
     dimensions: 'Dimensiones del plano',
     width: 'Ancho',
@@ -541,6 +561,16 @@ export const translations: Record<Language, Translations> = {
       outline: 'Walls only (Hollow)',
       filled: 'Solid fill',
       connectedOnly: 'Connected cells only',
+    },
+    doorOrientation: {
+      title: 'Door Orientation',
+      horizontal: 'Horizontal',
+      vertical: 'Vertical',
+    },
+    doorTooltip: {
+      title: 'Door Orientation',
+      text: 'Here you can change the door orientation between horizontal and vertical.',
+      dismiss: 'Close',
     },
     properties: 'Properties',
     dimensions: 'Blueprint Dimensions',

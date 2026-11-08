@@ -3,6 +3,7 @@ import {
   Annotation,
   BlueprintProject,
   ClipboardData,
+  DoorOrientation,
   HistoryStep,
   Language,
   PaletteColor,
@@ -91,6 +92,17 @@ export default function App() {
   const [mirrorMode, setMirrorMode] = useState<MirrorMode>('none');
   const [brushSize, setBrushSize] = useState<number>(1);
   const [activeColor, setActiveColor] = useState<PaletteColor>(() => project.palette[0] || DEFAULT_PALETTE[0]);
+  const [doorOrientation, setDoorOrientation] = useState<DoorOrientation>('horizontal');
+
+  // Door tooltip: shown once, persisted in localStorage
+  const [showDoorTooltip, setShowDoorTooltip] = useState<boolean>(() => {
+    try {
+      const seen = localStorage.getItem('ck_door_tooltip_seen');
+      return seen === null; // true if never seen
+    } catch {
+      return true;
+    }
+  });
 
   // Keep activeColor in sync if palette changes
   useEffect(() => {
@@ -421,6 +433,21 @@ export default function App() {
     }));
   }, [showToast]);
 
+  // Door tooltip handlers
+  const handleDoorPlaced = useCallback(() => {
+    if (!showDoorTooltip) return;
+    // El tooltip se muestra cuando se coloca la primera puerta
+  }, [showDoorTooltip]);
+
+  const handleDismissDoorTooltip = useCallback(() => {
+    setShowDoorTooltip(false);
+    try {
+      localStorage.setItem('ck_door_tooltip_seen', 'true');
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
   const handleCenterCoreOnBlueprint = useCallback(() => {
     const center = getCenterOfGrid(project.width, project.height);
     const { updatedCells } = stampCorePattern(
@@ -717,6 +744,10 @@ export default function App() {
           brushSize={brushSize}
           onChangeBrushSize={setBrushSize}
           activeColor={activeColor}
+          doorOrientation={doorOrientation}
+          onChangeDoorOrientation={setDoorOrientation}
+          showDoorTooltip={showDoorTooltip}
+          onDismissDoorTooltip={handleDismissDoorTooltip}
           t={t}
         />
 
@@ -746,6 +777,8 @@ export default function App() {
             onEditAnnotation={handleEditAnnotation}
             onDeleteAnnotation={handleDeleteAnnotation}
             onMoveAnnotation={handleMoveAnnotation}
+            onDoorPlaced={handleDoorPlaced}
+            doorOrientation={doorOrientation}
             t={t}
           />
         </main>

@@ -589,7 +589,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       <Sliders className="w-3 h-3" />
                     </button>
 
-                    {!col.isDefault && (
+                    {!col.isDefault && col.id !== 'door' && (
                       <button
                         type="button"
                         onClick={e => {

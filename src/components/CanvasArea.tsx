@@ -10,6 +10,7 @@ import {
   MirrorMode,
   SelectionBox,
   ToolType,
+  DoorOrientation,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
 import {
@@ -82,6 +83,8 @@ interface CanvasAreaProps {
   onEditAnnotation: (annotationId: string) => void;
   onDeleteAnnotation: (annotationId: string) => void;
   onMoveAnnotation: (annotationId: string, x: number, y: number) => void;
+  onDoorPlaced?: () => void;
+  doorOrientation: DoorOrientation;
   t: Translations;
 }
 
@@ -110,6 +113,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onEditAnnotation,
   onDeleteAnnotation,
   onMoveAnnotation,
+  onDoorPlaced,
+  doorOrientation = 'horizontal',
   t,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,6 +135,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   // Annotation drag state
   const [draggingAnnotationId, setDraggingAnnotationId] = useState<string | null>(null);
   const [annotationDragStartCell, setAnnotationDragStartCell] = useState<CellCoord | null>(null);
+
+  // Door tooltip tracking (per session)
+  const doorTooltipNotifiedRef = useRef<boolean>(false);
 
   // Space key held for quick panning
   const [isSpaceHeld, setIsSpaceHeld] = useState<boolean>(false);
@@ -344,6 +352,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     setIsPointerDown(true);
 
+    // Detectar primera puerta colocada (para tooltip de bienvenida)
+    if (
+      activeColor.id === 'door' &&
+      !doorTooltipNotifiedRef.current &&
+      onDoorPlaced
+    ) {
+      doorTooltipNotifiedRef.current = true;
+      onDoorPlaced();
+    }
+
     // Click izquierdo: iniciar arrastre de anotación existente
     if (annotations.length > 0 && cell) {
       const ann = annotations.find(a => a.x === cell.x && a.y === cell.y);
@@ -468,6 +486,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
 
     if (!isPointerDown) return;
+
+    // Detectar puerta colocada durante arrastre continuo
+    if (
+      activeColor.id === 'door' &&
+      !doorTooltipNotifiedRef.current &&
+      onDoorPlaced
+    ) {
+      doorTooltipNotifiedRef.current = true;
+      onDoorPlaced();
+    }
 
     if (cell) {
       setDragCurrentCell(cell);
@@ -662,13 +690,42 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           const cellScreenX = bpX + cx * currentCellSize;
           const cellScreenY = bpY + cy * currentCellSize;
 
-          ctx.fillStyle = hex;
-          ctx.fillRect(
-            cellScreenX,
-            cellScreenY,
-            currentCellSize,
-            currentCellSize
-          );
+          // Render door as thin line (25% of cell thickness) with rotation
+          if (colorId === 'door') {
+            const doorThickness = currentCellSize * 0.25;
+            const doorOffset = currentCellSize * 0.375; // (1 - 0.25) / 2 = 0.375
+
+            ctx.save();
+            ctx.fillStyle = hex;
+
+            if (doorOrientation === 'horizontal') {
+              // Horizontal door: thin horizontal line across the center of the cell
+              ctx.fillRect(
+                cellScreenX,
+                cellScreenY + doorOffset,
+                currentCellSize,
+                doorThickness
+              );
+            } else {
+              // Vertical door: thin vertical line across the center of the cell
+              ctx.fillRect(
+                cellScreenX + doorOffset,
+                cellScreenY,
+                doorThickness,
+                currentCellSize
+              );
+            }
+
+            ctx.restore();
+          } else {
+            ctx.fillStyle = hex;
+            ctx.fillRect(
+              cellScreenX,
+              cellScreenY,
+              currentCellSize,
+              currentCellSize
+            );
+          }
 
           // Dark perimeter border around every individual painted cell
           // This ensures that adjacent cells of the same color are 100% distinguishable and easily countable!
@@ -1155,6 +1212,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     dragStartCell,
     dragCurrentCell,
     annotations,
+    doorOrientation,
     markRecentChanges,
   ]);
 

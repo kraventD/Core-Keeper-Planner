@@ -15,6 +15,7 @@ export type RectangleMode = 'outline' | 'filled';
 export type ShapeMode = 'outline' | 'filled';
 export type CircleOrigin = 'center' | 'corner';
 export type MirrorMode = 'none' | 'horizontal' | 'vertical' | 'quad';
+export type DoorOrientation = 'horizontal' | 'vertical';
 
 export interface CellCoord {
   x: number;
