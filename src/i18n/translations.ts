@@ -42,6 +42,7 @@ export interface Translations {
     rect_select: string;
     fill: string;
     move: string;
+    hand: string;
     annotation: string;
   };
   placeCore: {
@@ -318,6 +319,7 @@ export const translations: Record<Language, Translations> = {
       fill: 'Rellenar Ã¡rea',
       move: 'Mover selecciÃ³n',
       place_core: 'Colocar Core',
+      hand: 'Mano',
       annotation: 'AnotaciÃ³n',
     },
     tooltips: {
@@ -328,6 +330,7 @@ export const translations: Record<Language, Translations> = {
       rectangle: 'Dibujar habitaciÃ³n o bloque rectangular (R)',
       circle: 'Dibujar habitaciÃ³n o estructura circular perfecta (C)',
       place_core: 'Colocar Core y estatuas inamovibles de inicio (K)',
+      hand: 'Mover el lienzo arrastrando (H)',
       rect_select: 'Seleccionar regiÃ³n para copiar, mover o borrar (S)',
       fill: 'Rellenar Ã¡rea conectada de casillas (B / G)',
       move: 'Mover casillas de la selecciÃ³n (M)',
@@ -599,6 +602,7 @@ export const translations: Record<Language, Translations> = {
       fill: 'Fill Area',
       move: 'Move Selection',
       place_core: 'Place Core',
+      hand: 'Hand',
       annotation: 'Annotation',
     },
     tooltips: {
@@ -609,6 +613,7 @@ export const translations: Record<Language, Translations> = {
       rectangle: 'Draw room or rectangular block (R)',
       circle: 'Draw perfect circular room or structure (C)',
       place_core: 'Place Core and default immovable boss statues (K)',
+      hand: 'Pan canvas by dragging (H)',
       rect_select: 'Select region to copy, move or delete (S)',
       fill: 'Flood fill connected area (B / G)',
       move: 'Move selection cells (M)',
@@ -855,3 +860,5 @@ export const translations: Record<Language, Translations> = {
     },
   },
 };
+
+

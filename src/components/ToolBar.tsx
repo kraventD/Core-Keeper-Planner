@@ -175,10 +175,10 @@ export const ToolBar: React.FC<ToolBarProps> = ({
     },
     {
       id: 'hand',
-      name: 'Mano',
+      name: t.tools.hand,
       icon: Move,
       shortcut: 'H',
-      tooltip: 'Mover lienzo',
+      tooltip: t.tooltips.hand,
     },
   ];
 

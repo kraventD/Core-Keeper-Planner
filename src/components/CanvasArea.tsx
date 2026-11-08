@@ -328,8 +328,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     if (!canvas) return;
     canvas.setPointerCapture(e.pointerId);
 
-    // Pan mode with Middle Click (button === 1) or Spacebar held
-    if (e.button === 1 || isSpaceHeld) {
+    // Pan mode with Middle Click (button === 1), Spacebar held, or Hand tool (left click)
+    if (e.button === 1 || isSpaceHeld || (activeTool === 'hand' && e.button === 0)) {
       setIsPanning(true);
       setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
       return;
@@ -1230,7 +1230,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const grabCursor = isDarkTheme ? makeGrabCursor('#ffffff') : makeGrabCursor('#000000');
   const grabbingCursor = isDarkTheme ? makeGrabbingCursor('#ffffff') : makeGrabbingCursor('#000000');
 
-  const activeCursor = isSpaceHeld || isPanning
+  const activeCursor = isSpaceHeld || isPanning || activeTool === 'hand'
     ? (isPointerDown ? grabbingCursor : grabCursor)
     : activeTool === 'pencil'
       ? pencilCursor
