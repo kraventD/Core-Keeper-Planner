@@ -47,7 +47,7 @@ Ready. You can start drawing your blueprint.
 
 ### Screenshot
 
-![Core Keeper Planner - Overview](preview.png)
+![Core Keeper Planner - Overview](preview-en.png)
 
 ### How to share your designs
 
