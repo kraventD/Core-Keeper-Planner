@@ -568,9 +568,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <div
-                      className="w-4 h-4 rounded-sm border border-black/40 shrink-0 shadow-inner"
-                      style={{ backgroundColor: col.hex }}
-                    />
+                      className="w-4 h-4 rounded-sm border border-black/40 shrink-0 shadow-inner relative"
+                      style={{
+                        backgroundColor: col.id === 'door' ? 'transparent' : col.hex,
+                      }}
+                    >
+                      {col.id === 'door' && (
+                        <div
+                          className="absolute left-1 right-1 top-1/2 -translate-y-1/2 h-2"
+                          style={{ backgroundColor: col.hex }}
+                        />
+                      )}
+                    </div>
                     <span className="text-xs truncate font-medium">{getPaletteColorLabel(col, t, language)}</span>
                   </div>
 

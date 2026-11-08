@@ -35,21 +35,19 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
     throw new Error('Invalid blueprint: missing cells map');
   }
 
-  // Migración de paleta: eliminar 'doorway' y asegurar 'door' como primer elemento
+  // Migración de paleta: eliminar 'doorway' y asegurar 'door' en segunda posición (índice 1)
   let migratedPalette: PaletteColor[] = [];
   if (Array.isArray(data.palette) && data.palette.length > 0) {
     migratedPalette = data.palette.filter((p: PaletteColor) => p.id !== 'doorway');
-    // Si 'door' no existe, agregarlo al principio
-    const hasDoor = migratedPalette.some((p: PaletteColor) => p.id === 'door');
-    if (!hasDoor) {
-      migratedPalette.unshift({ id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true });
-    } else {
-      // Mover 'door' al principio si ya existe pero no está primero
-      const doorIndex = migratedPalette.findIndex((p: PaletteColor) => p.id === 'door');
-      if (doorIndex > 0) {
-        const doorColor = migratedPalette.splice(doorIndex, 1)[0];
-        migratedPalette.unshift(doorColor);
-      }
+    const doorColor = { id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true };
+    const doorIndex = migratedPalette.findIndex((p: PaletteColor) => p.id === 'door');
+    if (doorIndex === -1) {
+      // Si 'door' no existe, agregarlo en segunda posición (después del primero si hay alguno)
+      migratedPalette.length > 0 ? migratedPalette.splice(1, 0, doorColor) : migratedPalette.push(doorColor);
+    } else if (doorIndex !== 1) {
+      // Mover 'door' a segunda posición si no está ya ahí
+      const removed = migratedPalette.splice(doorIndex, 1)[0];
+      migratedPalette.splice(1, 0, removed);
     }
   } else {
     migratedPalette = [...DEFAULT_PALETTE];

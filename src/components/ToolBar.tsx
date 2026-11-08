@@ -544,9 +544,18 @@ export const ToolBar: React.FC<ToolBarProps> = ({
       <div className="pt-2 border-t border-zinc-800/80">
         <div className="p-2 rounded-lg bg-[#18191f] border border-zinc-800 flex items-center gap-2">
           <div
-            className="w-5 h-5 rounded-md border border-black/40 shadow-inner shrink-0"
-            style={{ backgroundColor: activeColor.hex }}
-          />
+            className="w-5 h-5 rounded-md border border-black/40 shadow-inner shrink-0 relative"
+            style={{
+              backgroundColor: activeColor.id === 'door' ? 'transparent' : activeColor.hex,
+            }}
+          >
+            {activeColor.id === 'door' && (
+              <div
+                className="absolute left-1 right-1 top-1/2 -translate-y-1/2 h-2"
+                style={{ backgroundColor: activeColor.hex }}
+              />
+            )}
+          </div>
           <div className="hidden md:block min-w-0">
             <span className="text-[10px] text-zinc-400 block leading-none">{t.activeColor}</span>
             <span className="text-xs font-medium text-zinc-200 truncate block mt-0.5">
