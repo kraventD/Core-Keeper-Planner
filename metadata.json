@@ -1,0 +1,6 @@
+{
+  "name": "Core Keeper Blueprint Editor",
+  "description": "Grid-based construction blueprint planner for designing Core Keeper rooms, workshops, storage, and bases with 1:1 cell precision.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
