@@ -29,7 +29,7 @@ Ideal for planning your base before building it in the game, sharing designs wit
 
 ### How to use (3 steps)
 
-1. **Download** the `.zip` file from [Releases](https://github.com/TU-USUARIO/core-keeper-planner/releases)
+1. **Download** the `.zip` file from [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases)
 2. **Extract** it to any folder on your computer
 3. **Open** `index.html` with your browser (Chrome, Edge, Brave, or Firefox)
 
@@ -108,7 +108,7 @@ Ideal para planear tu base antes de construirla en el juego, compartir diseños 
 
 ### Cómo usarlo (3 pasos)
 
-1. **Descarga** el archivo `.zip` desde [Releases](https://github.com/TU-USUARIO/core-keeper-planner/releases)
+1. **Descarga** el archivo `.zip` desde [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases)
 2. **Descomprímelo** en cualquier carpeta de tu computadora
 3. **Abre** `index.html` con tu navegador (Chrome, Edge, Brave o Firefox)
 
