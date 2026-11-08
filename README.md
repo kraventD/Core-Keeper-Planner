@@ -35,6 +35,9 @@ Ideal for planning your base before building it in the game, sharing designs wit
 
 Ready. You can start drawing your blueprint.
 
+> [!WARNING]
+> **Don't want to unzip anything?** Download the standalone `.html` file from [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases) and open it directly in your browser.
+
 ### Requirements
 
 - Any computer with Windows, Mac, or Linux
@@ -45,8 +48,6 @@ Ready. You can start drawing your blueprint.
 ### Screenshot
 
 ![Core Keeper Planner - Overview](preview.png)
-
-*(Add a real screenshot of your editor here)*
 
 ### How to share your designs
 
@@ -114,6 +115,9 @@ Ideal para planear tu base antes de construirla en el juego, compartir diseños 
 
 Listo. Ya puedes empezar a dibujar tu plano.
 
+> [!WARNING]
+> **¿No quieres descomprimir nada?** Descarga el archivo `.html` independiente desde [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases) y ábrelo directamente en tu navegador.
+
 ### Requisitos
 
 - Cualquier computadora con Windows, Mac o Linux
@@ -124,8 +128,6 @@ Listo. Ya puedes empezar a dibujar tu plano.
 ### Captura
 
 ![Editor Core Keeper Planner - vista general](preview.png)
-
-*(Agrega aquí una captura real de tu editor)*
 
 ### Cómo compartir tus diseños
 
