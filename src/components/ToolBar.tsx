@@ -22,6 +22,7 @@ import {
   BoxSelect,
   PaintBucket,
   Move,
+  Hand,
   SquareDashed,
   Maximize,
   Maximize2,
@@ -97,13 +98,6 @@ export const ToolBar: React.FC<ToolBarProps> = ({
       tooltip: t.tooltips.select,
     },
     {
-      id: 'move',
-      name: t.tools.move,
-      icon: Move,
-      shortcut: 'M',
-      tooltip: t.tooltips.move,
-    },
-    {
       id: 'pencil',
       name: t.tools.pencil,
       icon: Pencil,
@@ -176,7 +170,7 @@ export const ToolBar: React.FC<ToolBarProps> = ({
     {
       id: 'hand',
       name: t.tools.hand,
-      icon: Move,
+      icon: Hand,
       shortcut: 'H',
       tooltip: t.tooltips.hand,
     },
