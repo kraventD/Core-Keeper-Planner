@@ -27,6 +27,7 @@ export interface Translations {
     rect_select: string;
     fill: string;
     move: string;
+    hand: string;
     place_core: string;
     annotation: string;
   };
@@ -41,6 +42,7 @@ export interface Translations {
     rect_select: string;
     fill: string;
     move: string;
+    hand: string;
     annotation: string;
   };
   placeCore: {
@@ -53,6 +55,7 @@ export interface Translations {
     waypointComponent: string;
     placedSuccessToast: string;
     hint: string;
+    badge: string;
   };
   toolOptions: {
     brushSize: string;
@@ -123,6 +126,8 @@ export interface Translations {
     quad: string;
     axisLabelH: string;
     axisLabelV: string;
+    axisShortH: string;
+    axisShortV: string;
     mirrorSelectionTitle: string;
     mirrorSelectionOppositeH: string;
     mirrorSelectionOppositeV: string;
@@ -177,6 +182,11 @@ export interface Translations {
     width: string;
     height: string;
     presets: string;
+    namePlaceholder: string;
+    presetRoom: string;
+    presetMedium: string;
+    presetLarge: string;
+    presetHuge: string;
     create: string;
     cancel: string;
     confirmWarning: string;
@@ -194,7 +204,12 @@ export interface Translations {
     title: string;
     desc: string;
     format: string;
+    fileName: string;
     scale: string;
+    scaleNormal: string;
+    scaleHigh: string;
+    scaleUltra: string;
+    scalePoster: string;
     background: string;
     bgDark: string;
     bgNavy: string;
@@ -213,10 +228,14 @@ export interface Translations {
     copied: string;
     download: string;
     cancel: string;
+    errorGenerate: string;
+    errorUnexpected: string;
   };
   importCodeModal: {
     title: string;
     description: string;
+    placeholder: string;
+    clear: string;
     import: string;
     importing: string;
     cancel: string;
@@ -293,13 +312,13 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   es: {
     appName: 'Core Keeper Planner',
-    appSubtitle: 'Planificador de construcciÃ³n y habitaciones 1:1',
+    appSubtitle: 'Planificador de construcción y habitaciones 1:1',
     newProject: 'Nuevo',
     openProject: 'Abrir',
     saveProject: 'Guardar',
     exportImage: 'Exportar imagen',
-    exportCode: 'Exportar cÃ³digo',
-    importCode: 'Importar cÃ³digo',
+    exportCode: 'Exportar código',
+    importCode: 'Importar código',
     undo: 'Deshacer',
     redo: 'Rehacer',
     settings: 'Configurar plano',
@@ -308,62 +327,65 @@ export const translations: Record<Language, Translations> = {
     projectNamePlaceholder: 'Nombre del plano...',
     tools: {
       select: 'Seleccionar',
-      pencil: 'LÃ¡piz',
+      pencil: 'Lápiz',
       eraser: 'Borrador',
-      line: 'LÃ­nea',
-      rectangle: 'RectÃ¡ngulo',
-      circle: 'CÃ­rculo',
-      rect_select: 'SelecciÃ³n rectangular',
-      fill: 'Rellenar Ã¡rea',
-      move: 'Mover selecciÃ³n',
+      line: 'Línea',
+      rectangle: 'Rectángulo',
+      circle: 'Círculo',
+      rect_select: 'Selección rectangular',
+      fill: 'Rellenar área',
+      move: 'Mover selección',
       place_core: 'Colocar Core',
-      annotation: 'AnotaciÃ³n',
+      hand: 'Mano',
+      annotation: 'Anotación',
     },
     tooltips: {
       select: 'Seleccionar casilla o inspeccionar (V)',
       pencil: 'Pintar casillas con el color activo (P)',
       eraser: 'Borrar contenido de casillas (E)',
-      line: 'Dibujar lÃ­nea recta o diagonal (L)',
-      rectangle: 'Dibujar habitaciÃ³n o bloque rectangular (R)',
-      circle: 'Dibujar habitaciÃ³n o estructura circular perfecta (C)',
+      line: 'Dibujar línea recta o diagonal (L)',
+      rectangle: 'Dibujar habitación o bloque rectangular (R)',
+      circle: 'Dibujar habitación o estructura circular perfecta (C)',
       place_core: 'Colocar Core y estatuas inamovibles de inicio (K)',
-      rect_select: 'Seleccionar regiÃ³n para copiar, mover o borrar (S)',
-      fill: 'Rellenar Ã¡rea conectada de casillas (B / G)',
-      move: 'Mover casillas de la selecciÃ³n (M)',
-      annotation: 'Agregar o editar una anotaciÃ³n de texto en una casilla (T)',
+      hand: 'Mover el lienzo arrastrando (H)',
+      rect_select: 'Seleccionar región para copiar, mover o borrar (S)',
+      fill: 'Rellenar área conectada de casillas (B / G)',
+      move: 'Mover casillas de la selección (M)',
+      annotation: 'Agregar o editar una anotación de texto en una casilla (T)',
     },
     placeCore: {
       title: 'Colocar Core y Estatuas',
-      centerOnBlueprint: 'Centrar en el plano',
-      centerTooltip: 'Coloca el patrÃ³n del Core automÃ¡ticamente en el centro exacto del plano',
+      centerOnBlueprint: 'Centrar Core en el plano',
+      centerTooltip: 'Coloca automáticamente el patrón del Core y las estatuas en el centro exacto del plano',
       includeWaypoint: 'Incluir Waypoint',
-      coreComponent: 'NÃºcleo Central (5Ã—5)',
-      statuesComponent: '3 Estatuas de Jefes (3Ã—3)',
-      waypointComponent: 'Punto de apariciÃ³n (3Ã—3)',
-      placedSuccessToast: 'PatrÃ³n del Core y estatuas colocado con Ã©xito',
-      hint: 'Haz clic en el plano para estampar el Core o usa "Centrar en el plano"',
+      coreComponent: 'Core central (5×5)',
+      statuesComponent: '3 estatuas de jefes (3×3)',
+      waypointComponent: 'Waypoint de aparición (3×3)',
+      placedSuccessToast: 'Patrón del Core y las estatuas colocado con éxito',
+      hint: 'Haz clic en el plano para estampar el Core o usa "Centrar Core en el plano"',
+      badge: 'CORE Y ESTATUAS',
     },
     toolOptions: {
       brushSize: 'Grosor',
-      rectMode: 'Modo rectÃ¡ngulo',
-      circleMode: 'Modo cÃ­rculo',
+      rectMode: 'Modo rectángulo',
+      circleMode: 'Modo círculo',
       circleOrigin: 'Trazado',
-      fromCenter: 'Desde centro (SimÃ©trico)',
+      fromCenter: 'Desde centro (Simétrico)',
       fromCorner: 'Desde esquina',
       radiusLabel: 'Radio',
-      diameterLabel: 'DiÃ¡metro',
+      diameterLabel: 'Diámetro',
       outline: 'Solo muros (hueco)',
       filled: 'Relleno completo',
       connectedOnly: 'Solo celdas conectadas',
     },
     doorOrientation: {
-      title: 'OrientaciÃ³n de puerta',
+      title: 'Orientación de puerta',
       horizontal: 'Horizontal',
       vertical: 'Vertical',
     },
     doorTooltip: {
-      title: 'OrientaciÃ³n de puerta',
-      text: 'AquÃ­ puedes cambiar la orientaciÃ³n de la puerta entre horizontal y vertical.',
+      title: 'Orientación de puerta',
+      text: 'Aquí puedes cambiar la orientación de la puerta entre horizontal y vertical.',
       dismiss: 'Cerrar',
     },
     properties: 'Propiedades',
@@ -371,16 +393,16 @@ export const translations: Record<Language, Translations> = {
     width: 'Ancho',
     height: 'Alto',
     cells: 'casillas',
-    cellSize: 'TamaÃ±o visual',
+    cellSize: 'Tamaño visual',
     zoom: 'Zoom',
     viewOptions: 'Opciones de vista',
-    showGrid: 'Mostrar cuadrÃ­cula',
-    showMajorGrid: 'GuÃ­a de chunks (16Ã—16)',
+    showGrid: 'Mostrar cuadrícula',
+    showMajorGrid: 'Guía de chunks 16x16',
     showCoordinates: 'Reglas y coordenadas',
     gridBackground: 'Fondo del plano',
     gridBgLight: 'Blanco (Papel / Plano)',
-    gridBgDark: 'Oscuro (CarbÃ³n)',
-    gridThickness: 'Grosor de lÃ­neas',
+    gridBgDark: 'Oscuro (Carbón)',
+    gridThickness: 'Grosor de líneas',
     gridThicknessThin: 'Fina (1px)',
     gridThicknessMedium: 'Media (1.5px)',
     gridThicknessThick: 'Gruesa (2.5px)',
@@ -388,9 +410,9 @@ export const translations: Record<Language, Translations> = {
     centerCanvas: 'Centrar plano',
     fitToScreen: 'Ajustar a pantalla',
     resetZoom: 'Reiniciar zoom (100%)',
-    selection: 'SelecciÃ³n',
-    noSelection: 'Ninguna regiÃ³n seleccionada',
-    selectionCoords: 'PosiciÃ³n inicial',
+    selection: 'Selección',
+    noSelection: 'Ninguna región seleccionada',
+    selectionCoords: 'Posición inicial',
     selectionDims: 'Dimensiones',
     selectionCount: 'Casillas seleccionadas',
     copy: 'Copiar',
@@ -406,22 +428,24 @@ export const translations: Record<Language, Translations> = {
       none: 'Desactivado',
       horizontal: 'Horizontal (Izq / Der)',
       vertical: 'Vertical (Arr / Abajo)',
-      quad: 'CuÃ¡druple (4 cuadrantes)',
-      axisLabelH: 'Eje de simetrÃ­a horizontal',
-      axisLabelV: 'Eje de simetrÃ­a vertical',
-      mirrorSelectionTitle: 'Espejo en selecciÃ³n',
+      quad: 'Cuádruple (4 cuadrantes)',
+      axisLabelH: 'Eje de simetría horizontal',
+      axisLabelV: 'Eje de simetría vertical',
+      axisShortH: 'EJE H',
+      axisShortV: 'EJE V',
+      mirrorSelectionTitle: 'Espejo en selección',
       mirrorSelectionOppositeH: 'Duplicar espejo (Opuesto Este/Oeste)',
       mirrorSelectionOppositeV: 'Duplicar espejo (Opuesto Norte/Sur)',
-      flipSelectionH: 'Voltear selecciÃ³n horizontalmente',
-      flipSelectionV: 'Voltear selecciÃ³n verticalmente',
-      duplicatedOppositeH: 'RegiÃ³n duplicada en espejo horizontalmente.',
-      duplicatedOppositeV: 'RegiÃ³n duplicada en espejo verticalmente.',
-      flippedH: 'SelecciÃ³n volteada horizontalmente.',
-      flippedV: 'SelecciÃ³n volteada verticalmente.',
-      centeredH: 'SelecciÃ³n centrada horizontalmente.',
-      centeredV: 'SelecciÃ³n centrada verticalmente.',
-      centeredBoth: 'SelecciÃ³n centrada en ambos ejes.',
-      centerTitle: 'Centrar selecciÃ³n',
+      flipSelectionH: 'Voltear selección horizontalmente',
+      flipSelectionV: 'Voltear selección verticalmente',
+      duplicatedOppositeH: 'Región duplicada en espejo horizontalmente.',
+      duplicatedOppositeV: 'Región duplicada en espejo verticalmente.',
+      flippedH: 'Selección volteada horizontalmente.',
+      flippedV: 'Selección volteada verticalmente.',
+      centeredH: 'Selección centrada horizontalmente.',
+      centeredV: 'Selección centrada verticalmente.',
+      centeredBoth: 'Selección centrada en ambos ejes.',
+      centerTitle: 'Centrar selección',
       centerH: 'H',
       centerV: 'V',
       centerBoth: 'Ambos',
@@ -431,7 +455,7 @@ export const translations: Record<Language, Translations> = {
       flipV: 'Voltear V',
     },
     palette: 'Paleta de colores',
-    addColor: 'AÃ±adir color',
+    addColor: 'Añadir color',
     editColor: 'Editar color',
     deleteColor: 'Eliminar',
     colorName: 'Nombre del elemento',
@@ -442,89 +466,103 @@ export const translations: Record<Language, Translations> = {
       wall: 'Pared / Muro',
       floor: 'Suelo / Camino',
       doorway: 'Entrada / Puerta',
-      storage: 'AlmacÃ©n / Cofres',
+      storage: 'Almacén / Cofres',
       workshop: 'Taller / Estaciones',
       farm: 'Zona de cultivo',
       enclosure: 'Corral de animales',
-      core: 'NÃºcleo / Portal',
+      core: 'Núcleo / Portal',
       statue: 'Estatua / Altar',
-      lighting: 'IluminaciÃ³n / Antorchas',
-      npc: 'HabitaciÃ³n NPC / Muebles',
+      lighting: 'Iluminación / Antorchas',
+      npc: 'Habitación NPC / Muebles',
       other: 'Otro / Libre',
     },
-    legend: 'Leyenda y estadÃ­sticas',
-    emptyCells: 'VacÃ­as',
+    legend: 'Leyenda y estadísticas',
+    emptyCells: 'Vacías',
     totalOccupied: 'Ocupadas',
     newProjectModal: {
       title: 'Crear nuevo plano',
-      desc: 'Define el tamaÃ±o inicial de la cuadrÃ­cula de construcciÃ³n.',
+      desc: 'Define el tamaño inicial de la cuadrícula de construcción.',
       width: 'Ancho (casillas)',
       height: 'Alto (casillas)',
-      presets: 'TamaÃ±os predefinidos',
+      presets: 'Tamaños predefinidos',
+      namePlaceholder: 'Mi Base Principal...',
+      presetRoom: 'Habitación',
+      presetMedium: 'Base mediana',
+      presetLarge: 'Gran complejo',
+      presetHuge: 'Base masiva',
       create: 'Crear plano',
       cancel: 'Cancelar',
-      confirmWarning: 'Se perderÃ¡n las modificaciones no guardadas del plano actual.',
+      confirmWarning: 'Se perderán las modificaciones no guardadas del plano actual.',
     },
     resizeModal: {
-      title: 'Cambiar tamaÃ±o del plano',
-      desc: 'Modifica las dimensiones de la cuadrÃ­cula de trabajo.',
-      currentSize: 'TamaÃ±o actual',
-      newSize: 'Nuevo tamaÃ±o',
-      trimWarning: 'Â¡AtenciÃ³n! Reducir el plano dejarÃ¡ {count} casillas fuera de los lÃ­mites y se eliminarÃ¡n.',
+      title: 'Cambiar tamaño del plano',
+      desc: 'Modifica las dimensiones de la cuadrícula de trabajo.',
+      currentSize: 'Tamaño actual',
+      newSize: 'Nuevo tamaño',
+      trimWarning: '¡Atención! Reducir el plano dejará {count} casillas fuera de los límites y se eliminarán.',
       apply: 'Aplicar cambios',
       cancel: 'Cancelar',
     },
     exportModal: {
       title: 'Exportar imagen del plano',
-      desc: 'Genera una imagen en formato PNG de alta resoluciÃ³n.',
+      desc: 'Genera una imagen en formato PNG de alta resolución.',
       format: 'Formato',
-      scale: 'ResoluciÃ³n de exportaciÃ³n',
+      fileName: 'Nombre de archivo',
+      scale: 'Resolución de exportación',
+      scaleNormal: 'Normal (16px / casilla)',
+      scaleHigh: 'Alta (24px / casilla)',
+      scaleUltra: 'Ultra HD (36px / casilla)',
+      scalePoster: 'Póster 4K (48px / casilla)',
       background: 'Color de fondo',
-      bgDark: 'Gris oscuro carbÃ³n',
-      bgNavy: 'Azul plano tÃ©cnico',
+      bgDark: 'Gris oscuro carbón',
+      bgNavy: 'Azul plano técnico',
       bgLight: 'Fondo claro',
       bgTransparent: 'Transparente',
-      includeGrid: 'Incluir lÃ­neas de cuadrÃ­cula',
+      includeGrid: 'Incluir líneas de cuadrícula',
       includeLegend: 'Incluir leyenda de colores',
       export: 'Descargar PNG',
       cancel: 'Cancelar',
       exporting: 'Generando imagen...',
     },
     exportCodeModal: {
-      title: 'CÃ³digo compartible',
-      description: 'Copia este cÃ³digo y pÃ©galo en cualquier red social o foro. Cualquiera puede importarlo en el editor para cargar tu diseÃ±o exactamente como lo creaste.',
-      copy: 'Copiar cÃ³digo',
-      copied: 'Â¡CÃ³digo copiado al portapapeles!',
+      title: 'Código compartible',
+      description: 'Copia este código y pégalo en cualquier red social o foro. Cualquiera puede importarlo en el editor para cargar tu diseño exactamente como lo creaste.',
+      copy: 'Copiar código',
+      copied: '¡Código copiado al portapapeles!',
       download: 'Descargar como archivo',
       cancel: 'Cancelar',
+      errorGenerate: 'No se pudo generar el código.',
+      errorUnexpected: 'Error inesperado al generar el código.',
     },
     importCodeModal: {
-      title: 'Importar desde cÃ³digo',
-      description: 'Pega aquÃ­ el cÃ³digo CKBP que te compartieron para cargar ese diseÃ±o en tu editor.',
-      import: 'Cargar diseÃ±o',
+      title: 'Importar desde código',
+      description: 'Pega aquí el código CKBP que te compartieron para cargar ese diseño en tu editor.',
+      placeholder: 'Pega aquí el código CKBP...',
+      clear: 'Limpiar',
+      import: 'Cargar diseño',
       importing: 'Cargando...',
       cancel: 'Cancelar',
-      errorEmpty: 'Por favor pega un cÃ³digo primero.',
-      errorInvalid: 'CÃ³digo invÃ¡lido o corrupto.',
+      errorEmpty: 'Por favor pega un código primero.',
+      errorInvalid: 'Código inválido o corrupto.',
     },
     shortcutsModal: {
       title: 'Atajos de teclado',
       toolsSection: 'Herramientas',
-      canvasSection: 'NavegaciÃ³n del lienzo',
-      clipboardSection: 'EdiciÃ³n y portapapeles',
-      panInfo: 'BotÃ³n central del ratÃ³n, o Espacio + Arrastrar',
+      canvasSection: 'Navegación del lienzo',
+      clipboardSection: 'Edición y portapapeles',
+      panInfo: 'Botón central del ratón, o Espacio + Arrastrar',
       panDirect: 'Desplazamiento directo',
-      zoomInfo: 'Rueda del ratÃ³n sobre el cursor o teclas + / -',
+      zoomInfo: 'Rueda del ratón sobre el cursor o teclas + / -',
       zoomInOut: 'Aumentar / Reducir zoom',
-      scrollWheel: 'Rueda del ratÃ³n',
+      scrollWheel: 'Rueda del ratón',
       spaceDrag: 'Espacio + Arrastrar',
-      middleButton: 'BotÃ³n Central',
+      middleButton: 'Botón Central',
       close: 'Cerrar',
     },
     defaultProjectName: 'Plano Base Core Keeper',
     toolsSection: 'Herramientas',
     change: 'Cambiar',
-    size: 'TamaÃ±o',
+    size: 'Tamaño',
     origin: 'Origen',
     activeColor: 'Color activo',
     outsideCanvas: 'Fuera del plano',
@@ -536,40 +574,40 @@ export const translations: Record<Language, Translations> = {
     toolbarAria: 'Barra de herramientas',
     copyTooltip: 'Copiar (Ctrl+C)',
     cutTooltip: 'Cortar (Ctrl+X)',
-    fillSelectionTooltip: 'Rellenar selecciÃ³n con color activo',
+    fillSelectionTooltip: 'Rellenar selección con color activo',
     deleteTooltip: 'Eliminar (Supr / Backspace)',
     editColorTooltip: 'Editar color',
     deleteColorTooltip: 'Eliminar color',
-    rectOutlineTooltip: 'Dibuja muros perimetrales con interior vacÃ­o',
-    rectFilledTooltip: 'Dibuja bloque sÃ³lido de casillas',
-    circleOutlineTooltip: 'Dibuja anillo de muros perimetrales con interior vacÃ­o',
-    circleFilledTooltip: 'Dibuja disco sÃ³lido circular de casillas',
-    circleFromCenterTooltip: 'Clic en el bloque central y expandir hacia fuera de forma simÃ©trica',
+    rectOutlineTooltip: 'Dibuja muros perimetrales con interior vacío',
+    rectFilledTooltip: 'Dibuja bloque sólido de casillas',
+    circleOutlineTooltip: 'Dibuja anillo de muros perimetrales con interior vacío',
+    circleFilledTooltip: 'Dibuja disco sólido circular de casillas',
+    circleFromCenterTooltip: 'Clic en el bloque central y expandir hacia fuera de forma simétrica',
     circleFromCornerTooltip: 'Arrastrar entre dos esquinas de una caja cuadrada',
     clearBlueprint: 'Limpiar plano',
-    confirmClearBlueprint: 'SÃ­, borrar todo',
-    confirmClearQuestion: 'Â¿Seguro?',
-    annotationPrompt: 'Texto de la anotaciÃ³n:',
-    annotationEditPrompt: 'Editar anotaciÃ³n:',
-    annotationAdded: 'AnotaciÃ³n aÃ±adida',
-    annotationUpdated: 'AnotaciÃ³n actualizada',
-    annotationDeleted: 'AnotaciÃ³n eliminada',
+    confirmClearBlueprint: 'Sí, borrar todo',
+    confirmClearQuestion: '¿Seguro?',
+    annotationPrompt: 'Texto de la anotación:',
+    annotationEditPrompt: 'Editar anotación:',
+    annotationAdded: 'Anotación añadida',
+    annotationUpdated: 'Anotación actualizada',
+    annotationDeleted: 'Anotación eliminada',
     alerts: {
-      invalidJson: 'El archivo seleccionado no es un plano JSON vÃ¡lido.',
+      invalidJson: 'El archivo seleccionado no es un plano JSON válido.',
       projectLoaded: 'Plano cargado correctamente.',
       projectSaved: 'Plano guardado como archivo JSON.',
-      imageExported: 'Imagen del plano exportada con Ã©xito.',
-      codeCopied: 'CÃ³digo copiado al portapapeles.',
-      codeDownloaded: 'CÃ³digo descargado como archivo.',
-      clipboardEmpty: 'El portapapeles estÃ¡ vacÃ­o.',
-      copied: 'RegiÃ³n copiada al portapapeles.',
-      cut: 'RegiÃ³n cortada al portapapeles.',
-      pasted: 'RegiÃ³n pegada. Haz clic en el lienzo para colocarla.',
+      imageExported: 'Imagen del plano exportada con éxito.',
+      codeCopied: 'Código copiado al portapapeles.',
+      codeDownloaded: 'Código descargado como archivo.',
+      clipboardEmpty: 'El portapapeles está vacío.',
+      copied: 'Región copiada al portapapeles.',
+      cut: 'Región cortada al portapapeles.',
+      pasted: 'Región pegada. Haz clic en el lienzo para colocarla.',
     },
     footer: {
       cursorPos: 'Casilla',
       gridScale: 'Escala 1:1 bloque Core Keeper',
-      panHint: 'Espacio + Arrastre o botÃ³n central para mover',
+      panHint: 'Espacio + Arrastre o botón central para mover',
     },
   },
   en: {
@@ -598,6 +636,7 @@ export const translations: Record<Language, Translations> = {
       fill: 'Fill Area',
       move: 'Move Selection',
       place_core: 'Place Core',
+      hand: 'Hand',
       annotation: 'Annotation',
     },
     tooltips: {
@@ -608,6 +647,7 @@ export const translations: Record<Language, Translations> = {
       rectangle: 'Draw room or rectangular block (R)',
       circle: 'Draw perfect circular room or structure (C)',
       place_core: 'Place Core and default immovable boss statues (K)',
+      hand: 'Pan canvas by dragging (H)',
       rect_select: 'Select region to copy, move or delete (S)',
       fill: 'Flood fill connected area (B / G)',
       move: 'Move selection cells (M)',
@@ -615,14 +655,15 @@ export const translations: Record<Language, Translations> = {
     },
     placeCore: {
       title: 'Place Core & Statues',
-      centerOnBlueprint: 'Center on blueprint',
-      centerTooltip: 'Automatically stamps the Core & Statues at the exact center of the blueprint',
+      centerOnBlueprint: 'Center Core on blueprint',
+      centerTooltip: 'Automatically stamps the Core & statues at the exact center of the blueprint',
       includeWaypoint: 'Include Waypoint',
-      coreComponent: 'Central Core (5Ã—5)',
-      statuesComponent: '3 Boss Statues (3Ã—3)',
-      waypointComponent: 'Spawn Waypoint (3Ã—3)',
+      coreComponent: 'Central Core (5×5)',
+      statuesComponent: '3 boss statues (3×3)',
+      waypointComponent: 'Spawn Waypoint (3×3)',
       placedSuccessToast: 'Core & statues pattern placed successfully',
-      hint: 'Click on grid to stamp Core or use "Center on blueprint"',
+      hint: 'Click on the grid to stamp the Core or use "Center Core on blueprint"',
+      badge: 'CORE & STATUES',
     },
     toolOptions: {
       brushSize: 'Size',
@@ -656,7 +697,7 @@ export const translations: Record<Language, Translations> = {
     zoom: 'Zoom',
     viewOptions: 'View Options',
     showGrid: 'Show grid lines',
-    showMajorGrid: 'Chunk guides (16Ã—16)',
+    showMajorGrid: 'Chunk guides 16x16',
     showCoordinates: 'Rulers & coordinates',
     gridBackground: 'Blueprint background',
     gridBgLight: 'White (Paper / Blueprint)',
@@ -690,6 +731,8 @@ export const translations: Record<Language, Translations> = {
       quad: 'Quad (4 Quadrants)',
       axisLabelH: 'Horizontal symmetry axis',
       axisLabelV: 'Vertical symmetry axis',
+      axisShortH: 'AXIS H',
+      axisShortV: 'AXIS V',
       mirrorSelectionTitle: 'Selection Mirror',
       mirrorSelectionOppositeH: 'Duplicate mirror (Opposite East/West)',
       mirrorSelectionOppositeV: 'Duplicate mirror (Opposite North/South)',
@@ -742,6 +785,11 @@ export const translations: Record<Language, Translations> = {
       width: 'Width (cells)',
       height: 'Height (cells)',
       presets: 'Preset sizes',
+      namePlaceholder: 'My Main Base...',
+      presetRoom: 'Room',
+      presetMedium: 'Medium base',
+      presetLarge: 'Large complex',
+      presetHuge: 'Huge base',
       create: 'Create Blueprint',
       cancel: 'Cancel',
       confirmWarning: 'Unsaved changes to the current blueprint will be lost.',
@@ -759,7 +807,12 @@ export const translations: Record<Language, Translations> = {
       title: 'Export Blueprint Image',
       desc: 'Generate a high-resolution PNG image of the blueprint.',
       format: 'Format',
+      fileName: 'File name',
       scale: 'Export resolution',
+      scaleNormal: 'Normal (16px / cell)',
+      scaleHigh: 'High (24px / cell)',
+      scaleUltra: 'Ultra HD (36px / cell)',
+      scalePoster: 'Poster 4K (48px / cell)',
       background: 'Background color',
       bgDark: 'Dark charcoal',
       bgNavy: 'Blueprint navy',
@@ -778,10 +831,14 @@ export const translations: Record<Language, Translations> = {
       copied: 'Code copied to clipboard!',
       download: 'Download as file',
       cancel: 'Cancel',
+      errorGenerate: 'Could not generate the code.',
+      errorUnexpected: 'Unexpected error while generating the code.',
     },
     importCodeModal: {
       title: 'Import from Code',
       description: 'Paste the CKBP code shared with you to load that design into your editor.',
+      placeholder: 'Paste the CKBP code here...',
+      clear: 'Clear',
       import: 'Load design',
       importing: 'Loading...',
       cancel: 'Cancel',
@@ -854,3 +911,6 @@ export const translations: Record<Language, Translations> = {
     },
   },
 };
+
+
+

@@ -52,10 +52,10 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   };
 
   const scaleOptions = [
-    { label: 'Normal (16px / celda)', value: 16 },
-    { label: 'Alta (24px / celda)', value: 24 },
-    { label: 'Ultra HD (36px / celda)', value: 36 },
-    { label: 'Poster 4K (48px / celda)', value: 48 },
+    { label: t.exportModal.scaleNormal, value: 16 },
+    { label: t.exportModal.scaleHigh, value: 24 },
+    { label: t.exportModal.scaleUltra, value: 36 },
+    { label: t.exportModal.scalePoster, value: 48 },
   ];
 
   return (
@@ -78,7 +78,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         <form onSubmit={handleExport} className="mt-4 space-y-4">
           <div>
             <label className="block text-xs font-medium text-zinc-400 mb-1">
-              Nombre de archivo
+              {t.exportModal.fileName}
             </label>
             <input
               type="text"

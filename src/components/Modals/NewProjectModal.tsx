@@ -24,15 +24,15 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({
   if (!isOpen) return null;
 
   const presets = [
-    { label: '30 × 30', w: 30, h: 30, desc: 'Habitación / Room' },
-    { label: '50 × 50', w: 50, h: 50, desc: 'Base mediana / Medium' },
-    { label: '80 × 80', w: 80, h: 80, desc: 'Gran complejo / Large' },
-    { label: '100 × 100', w: 100, h: 100, desc: 'Base masiva / Huge' },
+    { label: '30 × 30', w: 30, h: 30, desc: t.newProjectModal.presetRoom },
+    { label: '50 × 50', w: 50, h: 50, desc: t.newProjectModal.presetMedium },
+    { label: '80 × 80', w: 80, h: 80, desc: t.newProjectModal.presetLarge },
+    { label: '100 × 100', w: 100, h: 100, desc: t.newProjectModal.presetHuge },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onConfirm(name.trim() || 'Core Keeper Base', Math.max(10, Math.min(300, width)), Math.max(10, Math.min(300, height)));
+    onConfirm(name.trim() || t.defaultProjectName, Math.max(10, Math.min(300, width)), Math.max(10, Math.min(300, height)));
     onClose();
   };
 
@@ -62,7 +62,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Mi Base Principal..."
+              placeholder={t.newProjectModal.namePlaceholder}
               className="w-full bg-[#121316] border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-amber-500"
             />
           </div>

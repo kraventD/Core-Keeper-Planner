@@ -672,6 +672,7 @@ export default function App() {
       else if (k === 's') setActiveTool('rect_select');
       else if (k === 'b' || k === 'g') setActiveTool('fill');
       else if (k === 'm') setActiveTool('move');
+      else if (k === 'h') setActiveTool('hand');
       else if (k === 't') setActiveTool('annotation');
 
       // Number keys 1-9: select palette color by index

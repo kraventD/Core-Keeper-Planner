@@ -2,8 +2,8 @@ import { Language, PaletteColor } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
 
 export const DEFAULT_PALETTE: PaletteColor[] = [
-  { id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true },
   { id: 'wall', name: 'Wall / Pared', hex: '#4B5262', isDefault: true },
+  { id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true },
   { id: 'floor', name: 'Floor / Suelo', hex: '#82786B', isDefault: true },
   { id: 'storage', name: 'Storage / Almacén', hex: '#3FA876', isDefault: true },
   { id: 'workshop', name: 'Workshop / Taller', hex: '#E2C943', isDefault: true },
