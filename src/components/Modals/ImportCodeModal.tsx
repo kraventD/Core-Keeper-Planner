@@ -81,7 +81,7 @@ export const ImportCodeModal: React.FC<ImportCodeModalProps> = ({
           <div className="relative">
             <textarea
               value={code}
-              placeholder="Pega aquí el código CKBP..."
+              placeholder={t.importCodeModal.placeholder}
               onChange={e => {
                 setCode(e.target.value);
                 setError(null);
@@ -92,8 +92,8 @@ export const ImportCodeModal: React.FC<ImportCodeModalProps> = ({
               type="button"
               onClick={() => setCode('')}
               className="absolute right-2 top-2 p-1.5 rounded-md bg-zinc-800/80 border border-zinc-700 text-zinc-400 hover:text-zinc-200 transition"
-              title="Limpiar"
-              aria-label="Limpiar"
+              title={t.importCodeModal.clear}
+              aria-label={t.importCodeModal.clear}
             >
               <RotateCcw className="w-4 h-4" />
             </button>

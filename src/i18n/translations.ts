@@ -55,6 +55,7 @@ export interface Translations {
     waypointComponent: string;
     placedSuccessToast: string;
     hint: string;
+    badge: string;
   };
   toolOptions: {
     brushSize: string;
@@ -125,6 +126,8 @@ export interface Translations {
     quad: string;
     axisLabelH: string;
     axisLabelV: string;
+    axisShortH: string;
+    axisShortV: string;
     mirrorSelectionTitle: string;
     mirrorSelectionOppositeH: string;
     mirrorSelectionOppositeV: string;
@@ -179,6 +182,11 @@ export interface Translations {
     width: string;
     height: string;
     presets: string;
+    namePlaceholder: string;
+    presetRoom: string;
+    presetMedium: string;
+    presetLarge: string;
+    presetHuge: string;
     create: string;
     cancel: string;
     confirmWarning: string;
@@ -196,7 +204,12 @@ export interface Translations {
     title: string;
     desc: string;
     format: string;
+    fileName: string;
     scale: string;
+    scaleNormal: string;
+    scaleHigh: string;
+    scaleUltra: string;
+    scalePoster: string;
     background: string;
     bgDark: string;
     bgNavy: string;
@@ -215,10 +228,14 @@ export interface Translations {
     copied: string;
     download: string;
     cancel: string;
+    errorGenerate: string;
+    errorUnexpected: string;
   };
   importCodeModal: {
     title: string;
     description: string;
+    placeholder: string;
+    clear: string;
     import: string;
     importing: string;
     cancel: string;
@@ -338,14 +355,15 @@ export const translations: Record<Language, Translations> = {
     },
     placeCore: {
       title: 'Colocar Core y Estatuas',
-      centerOnBlueprint: 'Centrar en el plano',
-      centerTooltip: 'Coloca el patrón del Core automáticamente en el centro exacto del plano',
+      centerOnBlueprint: 'Centrar Core en el plano',
+      centerTooltip: 'Coloca automáticamente el patrón del Core y las estatuas en el centro exacto del plano',
       includeWaypoint: 'Incluir Waypoint',
-      coreComponent: 'Núcleo Central (5Ã—5)',
-      statuesComponent: '3 Estatuas de Jefes (3Ã—3)',
-      waypointComponent: 'Punto de aparición (3Ã—3)',
-      placedSuccessToast: 'Patrón del Core y estatuas colocado con éxito',
-      hint: 'Haz clic en el plano para estampar el Core o usa "Centrar en el plano"',
+      coreComponent: 'Core central (5×5)',
+      statuesComponent: '3 estatuas de jefes (3×3)',
+      waypointComponent: 'Waypoint de aparición (3×3)',
+      placedSuccessToast: 'Patrón del Core y las estatuas colocado con éxito',
+      hint: 'Haz clic en el plano para estampar el Core o usa "Centrar Core en el plano"',
+      badge: 'CORE Y ESTATUAS',
     },
     toolOptions: {
       brushSize: 'Grosor',
@@ -413,6 +431,8 @@ export const translations: Record<Language, Translations> = {
       quad: 'Cuádruple (4 cuadrantes)',
       axisLabelH: 'Eje de simetría horizontal',
       axisLabelV: 'Eje de simetría vertical',
+      axisShortH: 'EJE H',
+      axisShortV: 'EJE V',
       mirrorSelectionTitle: 'Espejo en selección',
       mirrorSelectionOppositeH: 'Duplicar espejo (Opuesto Este/Oeste)',
       mirrorSelectionOppositeV: 'Duplicar espejo (Opuesto Norte/Sur)',
@@ -465,6 +485,11 @@ export const translations: Record<Language, Translations> = {
       width: 'Ancho (casillas)',
       height: 'Alto (casillas)',
       presets: 'Tamaños predefinidos',
+      namePlaceholder: 'Mi Base Principal...',
+      presetRoom: 'Habitación',
+      presetMedium: 'Base mediana',
+      presetLarge: 'Gran complejo',
+      presetHuge: 'Base masiva',
       create: 'Crear plano',
       cancel: 'Cancelar',
       confirmWarning: 'Se perderán las modificaciones no guardadas del plano actual.',
@@ -474,7 +499,7 @@ export const translations: Record<Language, Translations> = {
       desc: 'Modifica las dimensiones de la cuadrícula de trabajo.',
       currentSize: 'Tamaño actual',
       newSize: 'Nuevo tamaño',
-      trimWarning: 'Â¡Atención! Reducir el plano dejará {count} casillas fuera de los límites y se eliminarán.',
+      trimWarning: '¡Atención! Reducir el plano dejará {count} casillas fuera de los límites y se eliminarán.',
       apply: 'Aplicar cambios',
       cancel: 'Cancelar',
     },
@@ -482,7 +507,12 @@ export const translations: Record<Language, Translations> = {
       title: 'Exportar imagen del plano',
       desc: 'Genera una imagen en formato PNG de alta resolución.',
       format: 'Formato',
+      fileName: 'Nombre de archivo',
       scale: 'Resolución de exportación',
+      scaleNormal: 'Normal (16px / casilla)',
+      scaleHigh: 'Alta (24px / casilla)',
+      scaleUltra: 'Ultra HD (36px / casilla)',
+      scalePoster: 'Póster 4K (48px / casilla)',
       background: 'Color de fondo',
       bgDark: 'Gris oscuro carbón',
       bgNavy: 'Azul plano técnico',
@@ -498,13 +528,17 @@ export const translations: Record<Language, Translations> = {
       title: 'Código compartible',
       description: 'Copia este código y pégalo en cualquier red social o foro. Cualquiera puede importarlo en el editor para cargar tu diseño exactamente como lo creaste.',
       copy: 'Copiar código',
-      copied: 'Â¡Código copiado al portapapeles!',
+      copied: '¡Código copiado al portapapeles!',
       download: 'Descargar como archivo',
       cancel: 'Cancelar',
+      errorGenerate: 'No se pudo generar el código.',
+      errorUnexpected: 'Error inesperado al generar el código.',
     },
     importCodeModal: {
       title: 'Importar desde código',
       description: 'Pega aquí el código CKBP que te compartieron para cargar ese diseño en tu editor.',
+      placeholder: 'Pega aquí el código CKBP...',
+      clear: 'Limpiar',
       import: 'Cargar diseño',
       importing: 'Cargando...',
       cancel: 'Cancelar',
@@ -552,7 +586,7 @@ export const translations: Record<Language, Translations> = {
     circleFromCornerTooltip: 'Arrastrar entre dos esquinas de una caja cuadrada',
     clearBlueprint: 'Limpiar plano',
     confirmClearBlueprint: 'Sí, borrar todo',
-    confirmClearQuestion: 'Â¿Seguro?',
+    confirmClearQuestion: '¿Seguro?',
     annotationPrompt: 'Texto de la anotación:',
     annotationEditPrompt: 'Editar anotación:',
     annotationAdded: 'Anotación añadida',
@@ -621,14 +655,15 @@ export const translations: Record<Language, Translations> = {
     },
     placeCore: {
       title: 'Place Core & Statues',
-      centerOnBlueprint: 'Center on blueprint',
-      centerTooltip: 'Automatically stamps the Core & Statues at the exact center of the blueprint',
+      centerOnBlueprint: 'Center Core on blueprint',
+      centerTooltip: 'Automatically stamps the Core & statues at the exact center of the blueprint',
       includeWaypoint: 'Include Waypoint',
-      coreComponent: 'Central Core (5Ã—5)',
-      statuesComponent: '3 Boss Statues (3Ã—3)',
-      waypointComponent: 'Spawn Waypoint (3Ã—3)',
+      coreComponent: 'Central Core (5×5)',
+      statuesComponent: '3 boss statues (3×3)',
+      waypointComponent: 'Spawn Waypoint (3×3)',
       placedSuccessToast: 'Core & statues pattern placed successfully',
-      hint: 'Click on grid to stamp Core or use "Center on blueprint"',
+      hint: 'Click on the grid to stamp the Core or use "Center Core on blueprint"',
+      badge: 'CORE & STATUES',
     },
     toolOptions: {
       brushSize: 'Size',
@@ -696,6 +731,8 @@ export const translations: Record<Language, Translations> = {
       quad: 'Quad (4 Quadrants)',
       axisLabelH: 'Horizontal symmetry axis',
       axisLabelV: 'Vertical symmetry axis',
+      axisShortH: 'AXIS H',
+      axisShortV: 'AXIS V',
       mirrorSelectionTitle: 'Selection Mirror',
       mirrorSelectionOppositeH: 'Duplicate mirror (Opposite East/West)',
       mirrorSelectionOppositeV: 'Duplicate mirror (Opposite North/South)',
@@ -748,6 +785,11 @@ export const translations: Record<Language, Translations> = {
       width: 'Width (cells)',
       height: 'Height (cells)',
       presets: 'Preset sizes',
+      namePlaceholder: 'My Main Base...',
+      presetRoom: 'Room',
+      presetMedium: 'Medium base',
+      presetLarge: 'Large complex',
+      presetHuge: 'Huge base',
       create: 'Create Blueprint',
       cancel: 'Cancel',
       confirmWarning: 'Unsaved changes to the current blueprint will be lost.',
@@ -765,7 +807,12 @@ export const translations: Record<Language, Translations> = {
       title: 'Export Blueprint Image',
       desc: 'Generate a high-resolution PNG image of the blueprint.',
       format: 'Format',
+      fileName: 'File name',
       scale: 'Export resolution',
+      scaleNormal: 'Normal (16px / cell)',
+      scaleHigh: 'High (24px / cell)',
+      scaleUltra: 'Ultra HD (36px / cell)',
+      scalePoster: 'Poster 4K (48px / cell)',
       background: 'Background color',
       bgDark: 'Dark charcoal',
       bgNavy: 'Blueprint navy',
@@ -784,10 +831,14 @@ export const translations: Record<Language, Translations> = {
       copied: 'Code copied to clipboard!',
       download: 'Download as file',
       cancel: 'Cancel',
+      errorGenerate: 'Could not generate the code.',
+      errorUnexpected: 'Unexpected error while generating the code.',
     },
     importCodeModal: {
       title: 'Import from Code',
       description: 'Paste the CKBP code shared with you to load that design into your editor.',
+      placeholder: 'Paste the CKBP code here...',
+      clear: 'Clear',
       import: 'Load design',
       importing: 'Loading...',
       cancel: 'Cancel',

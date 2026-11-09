@@ -853,7 +853,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
           ctx.fillStyle = '#06b6d4';
           ctx.font = 'bold 9px monospace';
-          ctx.fillText('EJE H', midX - 14, Math.max(12, bpY - 4));
+          ctx.fillText(t.mirror.axisShortH, midX - 14, Math.max(12, bpY - 4));
         }
 
         if (mirrorMode === 'vertical' || mirrorMode === 'quad') {
@@ -869,7 +869,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
           ctx.fillStyle = '#06b6d4';
           ctx.font = 'bold 9px monospace';
-          ctx.fillText('EJE V', Math.max(4, bpX - 30), midY - 4);
+          ctx.fillText(t.mirror.axisShortV, Math.max(4, bpX - 30), midY - 4);
         }
         ctx.restore();
       }
@@ -964,7 +964,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           }
 
           // Dimension badge pill for circle (diameter & radius)
-          const badgeText = `⊚ ${previewCircle.diameter} × ${previewCircle.diameter} | Radio: ${previewCircle.radius}`;
+          const badgeText = `⊚ ${previewCircle.diameter} × ${previewCircle.diameter} | ${t.toolOptions.radiusLabel}: ${previewCircle.radius}`;
           ctx.font = 'bold 12px monospace';
           const textMetrics = ctx.measureText(badgeText);
           const badgeX = bpX + (previewCircle.minX + previewCircle.diameter / 2) * currentCellSize - textMetrics.width / 2 - 8;
@@ -1126,7 +1126,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           }
 
           // Badge pill indicating tool
-          const badgeText = `★ NÚCLEO Y ESTATUAS (19×13)`;
+          const badgeText = `★ ${t.placeCore.badge} (${CORE_PATTERN_WIDTH}×${CORE_PATTERN_HEIGHT})`;
           ctx.font = 'bold 12px monospace';
           const textMetrics = ctx.measureText(badgeText);
           const badgeX = boxLeft + boxW / 2 - textMetrics.width / 2 - 8;
@@ -1214,6 +1214,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     annotations,
     doorOrientation,
     markRecentChanges,
+    t,
   ]);
 
   // Contextual cursor based on active tool and theme

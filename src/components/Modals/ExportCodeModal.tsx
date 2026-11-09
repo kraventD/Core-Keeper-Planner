@@ -28,10 +28,10 @@ export const ExportCodeModal: React.FC<ExportCodeModalProps> = ({
   try {
     code = encodeShareCode(project);
     if (!code) {
-      error = 'No se pudo generar el código';
+      error = t.exportCodeModal.errorGenerate;
     }
   } catch {
-    error = 'Error inesperado al generar código';
+    error = t.exportCodeModal.errorUnexpected;
   }
 
   const handleCopy = async () => {
