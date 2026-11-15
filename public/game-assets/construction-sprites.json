@@ -1,0 +1,6902 @@
+[
+  {
+    "id": "16x16black_rounded_anvil",
+    "name": "16x16black_rounded_anvil",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/16x16black_rounded_anvil.png"
+  },
+  {
+    "id": "ancient_door_0",
+    "name": "ancient_door_0",
+    "x": 122,
+    "y": 343,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "ancient_door_0_0",
+    "name": "ancient_door_0",
+    "x": 122,
+    "y": 343,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "ancient_door_1",
+    "name": "ancient_door_1",
+    "x": 289,
+    "y": 54,
+    "width": 16,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "ancient_door_1_0",
+    "name": "ancient_door_1",
+    "x": 289,
+    "y": 54,
+    "width": 16,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "ancient_door_circuit_0",
+    "name": "ancient_door_circuit_0",
+    "x": 271,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "ancient_door_circuit_0_0",
+    "name": "ancient_door_circuit_0",
+    "x": 271,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "ancient_door_circuit_1",
+    "name": "ancient_door_circuit_1",
+    "x": 253,
+    "y": 160,
+    "width": 16,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "ancient_door_circuit_1_0",
+    "name": "ancient_door_circuit_1",
+    "x": 253,
+    "y": 160,
+    "width": 16,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "ancient_forge_ui_bg",
+    "name": "ancient_forge_ui_bg",
+    "x": 0,
+    "y": 102,
+    "width": 63,
+    "height": 60,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_bg_expanded",
+    "name": "ancient_forge_ui_bg_expanded",
+    "x": 0,
+    "y": 17,
+    "width": 107,
+    "height": 85,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_crystal",
+    "name": "ancient_forge_ui_crystal",
+    "x": 108,
+    "y": 90,
+    "width": 54,
+    "height": 36,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_desert",
+    "name": "ancient_forge_ui_desert",
+    "x": 144,
+    "y": 126,
+    "width": 36,
+    "height": 36,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_excavation",
+    "name": "ancient_forge_ui_excavation",
+    "x": 180,
+    "y": 90,
+    "width": 36,
+    "height": 36,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_nature",
+    "name": "ancient_forge_ui_nature",
+    "x": 72,
+    "y": 126,
+    "width": 36,
+    "height": 36,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_passage",
+    "name": "ancient_forge_ui_passage",
+    "x": 180,
+    "y": 126,
+    "width": 36,
+    "height": 36,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "ancient_forge_ui_sea",
+    "name": "ancient_forge_ui_sea",
+    "x": 108,
+    "y": 126,
+    "width": 36,
+    "height": 36,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ancient_forge_ui.png"
+  },
+  {
+    "id": "automatic_doors_0",
+    "name": "automatic_doors_0",
+    "x": 100,
+    "y": 477,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_0_0",
+    "name": "automatic_doors_0",
+    "x": 100,
+    "y": 477,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_1",
+    "name": "automatic_doors_1",
+    "x": 235,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_1_0",
+    "name": "automatic_doors_1",
+    "x": 235,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_10",
+    "name": "automatic_doors_10",
+    "x": 154,
+    "y": 476,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_10_0",
+    "name": "automatic_doors_10",
+    "x": 154,
+    "y": 476,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_11",
+    "name": "automatic_doors_11",
+    "x": 172,
+    "y": 476,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_11_0",
+    "name": "automatic_doors_11",
+    "x": 172,
+    "y": 476,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_12",
+    "name": "automatic_doors_12",
+    "x": 226,
+    "y": 418,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_12_0",
+    "name": "automatic_doors_12",
+    "x": 226,
+    "y": 418,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_13",
+    "name": "automatic_doors_13",
+    "x": 190,
+    "y": 458,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_13_0",
+    "name": "automatic_doors_13",
+    "x": 190,
+    "y": 458,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_14",
+    "name": "automatic_doors_14",
+    "x": 208,
+    "y": 470,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_14_0",
+    "name": "automatic_doors_14",
+    "x": 208,
+    "y": 470,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_15",
+    "name": "automatic_doors_15",
+    "x": 226,
+    "y": 436,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_15_0",
+    "name": "automatic_doors_15",
+    "x": 226,
+    "y": 436,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_2",
+    "name": "automatic_doors_2",
+    "x": 82,
+    "y": 486,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_2_0",
+    "name": "automatic_doors_2",
+    "x": 82,
+    "y": 486,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_3",
+    "name": "automatic_doors_3",
+    "x": 226,
+    "y": 490,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_3_0",
+    "name": "automatic_doors_3",
+    "x": 226,
+    "y": 490,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_4",
+    "name": "automatic_doors_4",
+    "x": 208,
+    "y": 488,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_4_0",
+    "name": "automatic_doors_4",
+    "x": 208,
+    "y": 488,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_5",
+    "name": "automatic_doors_5",
+    "x": 190,
+    "y": 476,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_5_0",
+    "name": "automatic_doors_5",
+    "x": 190,
+    "y": 476,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_6",
+    "name": "automatic_doors_6",
+    "x": 226,
+    "y": 472,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_6_0",
+    "name": "automatic_doors_6",
+    "x": 226,
+    "y": 472,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_7",
+    "name": "automatic_doors_7",
+    "x": 226,
+    "y": 454,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_7_0",
+    "name": "automatic_doors_7",
+    "x": 226,
+    "y": 454,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_8",
+    "name": "automatic_doors_8",
+    "x": 220,
+    "y": 290,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_8_0",
+    "name": "automatic_doors_8",
+    "x": 220,
+    "y": 290,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "automatic_doors_9",
+    "name": "automatic_doors_9",
+    "x": 235,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "automatic_doors_9_0",
+    "name": "automatic_doors_9",
+    "x": 235,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "cartography_table_0",
+    "name": "cartography_table_0",
+    "x": 28,
+    "y": 0,
+    "width": 34,
+    "height": 24,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "cartography_table_0_0",
+    "name": "cartography_table_0",
+    "x": 28,
+    "y": 0,
+    "width": 34,
+    "height": 24,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "cartography_table_1",
+    "name": "cartography_table_1",
+    "x": 56,
+    "y": 26,
+    "width": 34,
+    "height": 10,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "cartography_table_1_0",
+    "name": "cartography_table_1",
+    "x": 56,
+    "y": 26,
+    "width": 34,
+    "height": 10,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "christmas_tables_2",
+    "name": "christmas_tables_2",
+    "x": 0,
+    "y": 9,
+    "width": 66,
+    "height": 25,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/christmas_tables.png"
+  },
+  {
+    "id": "christmas_tables_3",
+    "name": "christmas_tables_3",
+    "x": 0,
+    "y": 0,
+    "width": 66,
+    "height": 9,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/christmas_tables.png"
+  },
+  {
+    "id": "christmas_tables_6",
+    "name": "christmas_tables_6",
+    "x": 66,
+    "y": 11,
+    "width": 34,
+    "height": 57,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/christmas_tables.png"
+  },
+  {
+    "id": "christmas_tables_7",
+    "name": "christmas_tables_7",
+    "x": 66,
+    "y": 2,
+    "width": 34,
+    "height": 9,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/christmas_tables.png"
+  },
+  {
+    "id": "circuit_machine",
+    "name": "circuit_machine",
+    "x": 113,
+    "y": 259,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "circuit_machine_0",
+    "name": "circuit_machine",
+    "x": 113,
+    "y": 259,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "circuit_machine_emissive",
+    "name": "circuit_machine_emissive",
+    "x": 144,
+    "y": 214,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "circuit_machine_emissive_0",
+    "name": "circuit_machine_emissive",
+    "x": 144,
+    "y": 214,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_0",
+    "name": "condition_circuit_0",
+    "x": 28,
+    "y": 473,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_0_0",
+    "name": "condition_circuit_0",
+    "x": 28,
+    "y": 473,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_1",
+    "name": "condition_circuit_1",
+    "x": 118,
+    "y": 456,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_1_0",
+    "name": "condition_circuit_1",
+    "x": 118,
+    "y": 456,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_2",
+    "name": "condition_circuit_2",
+    "x": 170,
+    "y": 422,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_2_0",
+    "name": "condition_circuit_2",
+    "x": 170,
+    "y": 422,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_3",
+    "name": "condition_circuit_3",
+    "x": 202,
+    "y": 362,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_3_0",
+    "name": "condition_circuit_3",
+    "x": 202,
+    "y": 362,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_emissives_0",
+    "name": "condition_circuit_emissives_0",
+    "x": 253,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_emissives_0_0",
+    "name": "condition_circuit_emissives_0",
+    "x": 253,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_emissives_1",
+    "name": "condition_circuit_emissives_1",
+    "x": 271,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_emissives_1_0",
+    "name": "condition_circuit_emissives_1",
+    "x": 271,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_emissives_2",
+    "name": "condition_circuit_emissives_2",
+    "x": 271,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_emissives_2_0",
+    "name": "condition_circuit_emissives_2",
+    "x": 271,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "condition_circuit_emissives_3",
+    "name": "condition_circuit_emissives_3",
+    "x": 307,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "condition_circuit_emissives_3_0",
+    "name": "condition_circuit_emissives_3",
+    "x": 307,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "credits_Lionbridge",
+    "name": "credits_Lionbridge",
+    "x": 90,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-128x128-Uncompressed-Credits-955a718b.png"
+  },
+  {
+    "id": "credits_LionbridgeLQA",
+    "name": "credits_LionbridgeLQA",
+    "x": 0,
+    "y": 86,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-128x128-Uncompressed-Credits-955a718b.png"
+  },
+  {
+    "id": "CrossCircuit_0",
+    "name": "CrossCircuit_0",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_1",
+    "name": "CrossCircuit_1",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_2",
+    "name": "CrossCircuit_2",
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_3",
+    "name": "CrossCircuit_3",
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_4",
+    "name": "CrossCircuit_4",
+    "x": 64,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_5",
+    "name": "CrossCircuit_5",
+    "x": 80,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_6",
+    "name": "CrossCircuit_6",
+    "x": 96,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_7",
+    "name": "CrossCircuit_7",
+    "x": 112,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "CrossCircuit_8",
+    "name": "CrossCircuit_8",
+    "x": 128,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/CrossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_crossCircuit_0",
+    "name": "cursor_placement_crossCircuit_0",
+    "x": 0,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_crossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_crossCircuit_1",
+    "name": "cursor_placement_crossCircuit_1",
+    "x": 16,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_crossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_crossCircuit_2",
+    "name": "cursor_placement_crossCircuit_2",
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_crossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_crossCircuit_3",
+    "name": "cursor_placement_crossCircuit_3",
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_crossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_crossCircuit_4",
+    "name": "cursor_placement_crossCircuit_4",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_crossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_crossCircuit_5",
+    "name": "cursor_placement_crossCircuit_5",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_crossCircuit.png"
+  },
+  {
+    "id": "cursor_placement_ICircuit_0",
+    "name": "cursor_placement_ICircuit_0",
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_ICircuit.png"
+  },
+  {
+    "id": "cursor_placement_ICircuit_1",
+    "name": "cursor_placement_ICircuit_1",
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_ICircuit.png"
+  },
+  {
+    "id": "cursor_placement_ICircuit_2",
+    "name": "cursor_placement_ICircuit_2",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_ICircuit.png"
+  },
+  {
+    "id": "cursor_placement_ICircuit_3",
+    "name": "cursor_placement_ICircuit_3",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_ICircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_0",
+    "name": "cursor_placement_LCircuit_0",
+    "x": 0,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_1",
+    "name": "cursor_placement_LCircuit_1",
+    "x": 16,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_2",
+    "name": "cursor_placement_LCircuit_2",
+    "x": 0,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_3",
+    "name": "cursor_placement_LCircuit_3",
+    "x": 16,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_4",
+    "name": "cursor_placement_LCircuit_4",
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_5",
+    "name": "cursor_placement_LCircuit_5",
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_6",
+    "name": "cursor_placement_LCircuit_6",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_LCircuit_7",
+    "name": "cursor_placement_LCircuit_7",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_LCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_0",
+    "name": "cursor_placement_TCircuit_0",
+    "x": 0,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_1",
+    "name": "cursor_placement_TCircuit_1",
+    "x": 16,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_2",
+    "name": "cursor_placement_TCircuit_2",
+    "x": 0,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_3",
+    "name": "cursor_placement_TCircuit_3",
+    "x": 16,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_4",
+    "name": "cursor_placement_TCircuit_4",
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_5",
+    "name": "cursor_placement_TCircuit_5",
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_6",
+    "name": "cursor_placement_TCircuit_6",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "cursor_placement_TCircuit_7",
+    "name": "cursor_placement_TCircuit_7",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/cursor_placement_TCircuit.png"
+  },
+  {
+    "id": "delay_circuit_0",
+    "name": "delay_circuit_0",
+    "x": 235,
+    "y": 180,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_0_0",
+    "name": "delay_circuit_0",
+    "x": 235,
+    "y": 180,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_1",
+    "name": "delay_circuit_1",
+    "x": 253,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_1_0",
+    "name": "delay_circuit_1",
+    "x": 253,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_2",
+    "name": "delay_circuit_2",
+    "x": 289,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_2_0",
+    "name": "delay_circuit_2",
+    "x": 289,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_3",
+    "name": "delay_circuit_3",
+    "x": 289,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_3_0",
+    "name": "delay_circuit_3",
+    "x": 289,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_emissives_0",
+    "name": "delay_circuit_emissives_0",
+    "x": 222,
+    "y": 364,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_emissives_0_0",
+    "name": "delay_circuit_emissives_0",
+    "x": 222,
+    "y": 364,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_emissives_1",
+    "name": "delay_circuit_emissives_1",
+    "x": 224,
+    "y": 382,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_emissives_1_0",
+    "name": "delay_circuit_emissives_1",
+    "x": 224,
+    "y": 382,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_emissives_2",
+    "name": "delay_circuit_emissives_2",
+    "x": 235,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_emissives_2_0",
+    "name": "delay_circuit_emissives_2",
+    "x": 235,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "delay_circuit_emissives_3",
+    "name": "delay_circuit_emissives_3",
+    "x": 224,
+    "y": 400,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "delay_circuit_emissives_3_0",
+    "name": "delay_circuit_emissives_3",
+    "x": 224,
+    "y": 400,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "destructables_brokenmachines_0",
+    "name": "destructables_brokenmachines_0",
+    "x": 196,
+    "y": 50,
+    "width": 16,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "destructables_brokenmachines_0_0",
+    "name": "destructables_brokenmachines_0",
+    "x": 196,
+    "y": 50,
+    "width": 16,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "destructables_brokenmachines_1",
+    "name": "destructables_brokenmachines_1",
+    "x": 194,
+    "y": 344,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "destructables_brokenmachines_1_0",
+    "name": "destructables_brokenmachines_1",
+    "x": 194,
+    "y": 344,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "destructables_brokenmachines_2",
+    "name": "destructables_brokenmachines_2",
+    "x": 118,
+    "y": 438,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "destructables_brokenmachines_2_0",
+    "name": "destructables_brokenmachines_2",
+    "x": 118,
+    "y": 438,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "destructables_brokenmachines_3",
+    "name": "destructables_brokenmachines_3",
+    "x": 79,
+    "y": 259,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "destructables_brokenmachines_3_0",
+    "name": "destructables_brokenmachines_3",
+    "x": 79,
+    "y": 259,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "destructables_brokenmachines_4",
+    "name": "destructables_brokenmachines_4",
+    "x": 44,
+    "y": 299,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "destructables_brokenmachines_4_0",
+    "name": "destructables_brokenmachines_4",
+    "x": 44,
+    "y": 299,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_0",
+    "name": "door_electric_0",
+    "x": 289,
+    "y": 68,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_0_0",
+    "name": "door_electric_0",
+    "x": 289,
+    "y": 68,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_1",
+    "name": "door_electric_1",
+    "x": 325,
+    "y": 18,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_1_0",
+    "name": "door_electric_1",
+    "x": 325,
+    "y": 18,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_2",
+    "name": "door_electric_2",
+    "x": 235,
+    "y": 234,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_2_0",
+    "name": "door_electric_2",
+    "x": 235,
+    "y": 234,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_3",
+    "name": "door_electric_3",
+    "x": 357,
+    "y": 0,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_3_0",
+    "name": "door_electric_3",
+    "x": 357,
+    "y": 0,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_4",
+    "name": "door_electric_4",
+    "x": 271,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_4_0",
+    "name": "door_electric_4",
+    "x": 271,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_5",
+    "name": "door_electric_5",
+    "x": 253,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_5_0",
+    "name": "door_electric_5",
+    "x": 253,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_emissive_0",
+    "name": "door_electric_emissive_0",
+    "x": 235,
+    "y": 198,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_emissive_0_0",
+    "name": "door_electric_emissive_0",
+    "x": 235,
+    "y": 198,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_emissive_1",
+    "name": "door_electric_emissive_1",
+    "x": 235,
+    "y": 216,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_emissive_1_0",
+    "name": "door_electric_emissive_1",
+    "x": 235,
+    "y": 216,
+    "width": 8,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_emissive_2",
+    "name": "door_electric_emissive_2",
+    "x": 271,
+    "y": 108,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_emissive_2_0",
+    "name": "door_electric_emissive_2",
+    "x": 271,
+    "y": 108,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_emissive_3",
+    "name": "door_electric_emissive_3",
+    "x": 271,
+    "y": 118,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_emissive_3_0",
+    "name": "door_electric_emissive_3",
+    "x": 271,
+    "y": 118,
+    "width": 16,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_emissive_4",
+    "name": "door_electric_emissive_4",
+    "x": 271,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_emissive_4_0",
+    "name": "door_electric_emissive_4",
+    "x": 271,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "door_electric_emissive_5",
+    "name": "door_electric_emissive_5",
+    "x": 253,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "door_electric_emissive_5_0",
+    "name": "door_electric_emissive_5",
+    "x": 253,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "egg_incubator_base_emissive",
+    "name": "egg_incubator_base_emissive",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/egg_incubator_base_emissive.png"
+  },
+  {
+    "id": "egg_incubator_top_emissive",
+    "name": "egg_incubator_top_emissive",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/egg_incubator_top_emissive.png"
+  },
+  {
+    "id": "fence_gate_4",
+    "name": "fence_gate_4",
+    "x": 16,
+    "y": 77,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fence_gate.png"
+  },
+  {
+    "id": "fence_gate_scarlet_0",
+    "name": "fence_gate_scarlet_0",
+    "x": 16,
+    "y": 77,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fence_gate_scarlet.png"
+  },
+  {
+    "id": "fence_gate_stone_0",
+    "name": "fence_gate_stone_0",
+    "x": 16,
+    "y": 78,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fence_gate_stone.png"
+  },
+  {
+    "id": "Firework_Circuit_down_0",
+    "name": "Firework_Circuit_down_0",
+    "x": 202,
+    "y": 274,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_down_0_0",
+    "name": "Firework_Circuit_down_0",
+    "x": 202,
+    "y": 274,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_down_1",
+    "name": "Firework_Circuit_down_1",
+    "x": 184,
+    "y": 308,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_down_1_0",
+    "name": "Firework_Circuit_down_1",
+    "x": 184,
+    "y": 308,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_left_0",
+    "name": "Firework_Circuit_left_0",
+    "x": 136,
+    "y": 440,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_left_0_0",
+    "name": "Firework_Circuit_left_0",
+    "x": 136,
+    "y": 440,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_left_1",
+    "name": "Firework_Circuit_left_1",
+    "x": 212,
+    "y": 328,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_left_1_0",
+    "name": "Firework_Circuit_left_1",
+    "x": 212,
+    "y": 328,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_middle_0",
+    "name": "Firework_Circuit_middle_0",
+    "x": 214,
+    "y": 50,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_middle_0_0",
+    "name": "Firework_Circuit_middle_0",
+    "x": 214,
+    "y": 50,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_middle_1",
+    "name": "Firework_Circuit_middle_1",
+    "x": 166,
+    "y": 368,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_middle_1_0",
+    "name": "Firework_Circuit_middle_1",
+    "x": 166,
+    "y": 368,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_right_0",
+    "name": "Firework_Circuit_right_0",
+    "x": 140,
+    "y": 348,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_right_0_0",
+    "name": "Firework_Circuit_right_0",
+    "x": 140,
+    "y": 348,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_right_1",
+    "name": "Firework_Circuit_right_1",
+    "x": 158,
+    "y": 350,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_right_1_0",
+    "name": "Firework_Circuit_right_1",
+    "x": 158,
+    "y": 350,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_up_0",
+    "name": "Firework_Circuit_up_0",
+    "x": 206,
+    "y": 398,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_up_0_0",
+    "name": "Firework_Circuit_up_0",
+    "x": 206,
+    "y": 398,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "Firework_Circuit_up_1",
+    "name": "Firework_Circuit_up_1",
+    "x": 190,
+    "y": 440,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "Firework_Circuit_up_1_0",
+    "name": "Firework_Circuit_up_1",
+    "x": 190,
+    "y": 440,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "furnace_done_0",
+    "name": "furnace_done_0",
+    "x": 134,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "furnace_done_0_0",
+    "name": "furnace_done_0",
+    "x": 134,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "furnace_done_1",
+    "name": "furnace_done_1",
+    "x": 90,
+    "y": 164,
+    "width": 4,
+    "height": 1,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "furnace_done_1_0",
+    "name": "furnace_done_1",
+    "x": 90,
+    "y": 164,
+    "width": 4,
+    "height": 1,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "fury_forge_0",
+    "name": "fury_forge_0",
+    "x": 0,
+    "y": 16,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge.png"
+  },
+  {
+    "id": "fury_forge_2",
+    "name": "fury_forge_2",
+    "x": 32,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge.png"
+  },
+  {
+    "id": "fury_forge_emissive_0",
+    "name": "fury_forge_emissive_0",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_emissive.png"
+  },
+  {
+    "id": "fury_forge_emissive_1",
+    "name": "fury_forge_emissive_1",
+    "x": 32,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_emissive.png"
+  },
+  {
+    "id": "fury_forge_emissive_2",
+    "name": "fury_forge_emissive_2",
+    "x": 64,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_emissive.png"
+  },
+  {
+    "id": "fury_forge_emissive_tubes_0",
+    "name": "fury_forge_emissive_tubes_0",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_emissive_tubes.png"
+  },
+  {
+    "id": "fury_forge_emissive_tubes_1",
+    "name": "fury_forge_emissive_tubes_1",
+    "x": 32,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_emissive_tubes.png"
+  },
+  {
+    "id": "fury_forge_emissive_tubes_2",
+    "name": "fury_forge_emissive_tubes_2",
+    "x": 64,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_emissive_tubes.png"
+  },
+  {
+    "id": "fury_forge_tube",
+    "name": "fury_forge_tube",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/fury_forge_tube.png"
+  },
+  {
+    "id": "glassThinWalls_0",
+    "name": "glassThinWalls_0",
+    "x": 235,
+    "y": 162,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "glassThinWalls_0_0",
+    "name": "glassThinWalls_0",
+    "x": 235,
+    "y": 162,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "glassThinWalls_1",
+    "name": "glassThinWalls_1",
+    "x": 207,
+    "y": 224,
+    "width": 16,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "glassThinWalls_1_0",
+    "name": "glassThinWalls_1",
+    "x": 207,
+    "y": 224,
+    "width": 16,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "iceFloorPanel_0",
+    "name": "iceFloorPanel_0",
+    "x": 1206,
+    "y": 220,
+    "width": 28,
+    "height": 31,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanel_0_0",
+    "name": "iceFloorPanel_0",
+    "x": 1206,
+    "y": 220,
+    "width": 28,
+    "height": 31,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanel_1",
+    "name": "iceFloorPanel_1",
+    "x": 1406,
+    "y": 76,
+    "width": 28,
+    "height": 31,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanel_1_0",
+    "name": "iceFloorPanel_1",
+    "x": 1406,
+    "y": 76,
+    "width": 28,
+    "height": 31,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanel_2",
+    "name": "iceFloorPanel_2",
+    "x": 1647,
+    "y": 0,
+    "width": 28,
+    "height": 31,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanel_2_0",
+    "name": "iceFloorPanel_2",
+    "x": 1647,
+    "y": 0,
+    "width": 28,
+    "height": 31,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanelMedium_0",
+    "name": "iceFloorPanelMedium_0",
+    "x": 1082,
+    "y": 414,
+    "width": 20,
+    "height": 21,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanelMedium_0_0",
+    "name": "iceFloorPanelMedium_0",
+    "x": 1082,
+    "y": 414,
+    "width": 20,
+    "height": 21,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanelMedium_1",
+    "name": "iceFloorPanelMedium_1",
+    "x": 1314,
+    "y": 197,
+    "width": 20,
+    "height": 21,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanelMedium_1_0",
+    "name": "iceFloorPanelMedium_1",
+    "x": 1314,
+    "y": 197,
+    "width": 20,
+    "height": 21,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanelMedium_2",
+    "name": "iceFloorPanelMedium_2",
+    "x": 1613,
+    "y": 34,
+    "width": 20,
+    "height": 21,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanelMedium_2_0",
+    "name": "iceFloorPanelMedium_2",
+    "x": 1613,
+    "y": 34,
+    "width": 20,
+    "height": 21,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanelSmall_0",
+    "name": "iceFloorPanelSmall_0",
+    "x": 1108,
+    "y": 397,
+    "width": 13,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanelSmall_0_0",
+    "name": "iceFloorPanelSmall_0",
+    "x": 1108,
+    "y": 397,
+    "width": 13,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "iceFloorPanelSmall_1",
+    "name": "iceFloorPanelSmall_1",
+    "x": 1314,
+    "y": 220,
+    "width": 13,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630.png"
+  },
+  {
+    "id": "iceFloorPanelSmall_1_0",
+    "name": "iceFloorPanelSmall_1",
+    "x": 1314,
+    "y": 220,
+    "width": 13,
+    "height": 12,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-2048x1024-Uncompressed-particles-23508630_0.png"
+  },
+  {
+    "id": "ICircuit_0",
+    "name": "ICircuit_0",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ICircuit.png"
+  },
+  {
+    "id": "ICircuit_1",
+    "name": "ICircuit_1",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ICircuit.png"
+  },
+  {
+    "id": "ICircuit_2",
+    "name": "ICircuit_2",
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ICircuit.png"
+  },
+  {
+    "id": "ICircuit_3",
+    "name": "ICircuit_3",
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/ICircuit.png"
+  },
+  {
+    "id": "lava_treasure_boss_chest",
+    "name": "lava_treasure_boss_chest",
+    "x": 0,
+    "y": 60,
+    "width": 32,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "lava_treasure_boss_chest_0",
+    "name": "lava_treasure_boss_chest",
+    "x": 0,
+    "y": 60,
+    "width": 32,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "lava_treasure_boss_chest_emissive",
+    "name": "lava_treasure_boss_chest_emissive",
+    "x": 0,
+    "y": 42,
+    "width": 32,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "lava_treasure_boss_chest_emissive_0",
+    "name": "lava_treasure_boss_chest_emissive",
+    "x": 0,
+    "y": 42,
+    "width": 32,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "lava_treasure_chest",
+    "name": "lava_treasure_chest",
+    "x": 54,
+    "y": 132,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "lava_treasure_chest_0",
+    "name": "lava_treasure_chest",
+    "x": 54,
+    "y": 132,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "lava_treasure_chest_emissive",
+    "name": "lava_treasure_chest_emissive",
+    "x": 218,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "lava_treasure_chest_emissive_0",
+    "name": "lava_treasure_chest_emissive",
+    "x": 218,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "LCircuit_0",
+    "name": "LCircuit_0",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_1",
+    "name": "LCircuit_1",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_2",
+    "name": "LCircuit_2",
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_3",
+    "name": "LCircuit_3",
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_4",
+    "name": "LCircuit_4",
+    "x": 64,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_5",
+    "name": "LCircuit_5",
+    "x": 80,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_6",
+    "name": "LCircuit_6",
+    "x": 96,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "LCircuit_7",
+    "name": "LCircuit_7",
+    "x": 112,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/LCircuit.png"
+  },
+  {
+    "id": "lockDoor_horizontal_locked",
+    "name": "lockDoor_horizontal_locked",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/lockDoor_horizontal_locked.png"
+  },
+  {
+    "id": "lockDoor_vertical_locked",
+    "name": "lockDoor_vertical_locked",
+    "x": 0,
+    "y": 0,
+    "width": 10,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/lockDoor_vertical_locked.png"
+  },
+  {
+    "id": "lootsprite_apprenticeChest",
+    "name": "lootsprite_apprenticeChest",
+    "x": 90,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_apprenticeChest_small",
+    "name": "lootsprite_apprenticeChest_small",
+    "x": 72,
+    "y": 198,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_arcaneMonkChest",
+    "name": "lootsprite_arcaneMonkChest",
+    "x": 126,
+    "y": 162,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_arcaneMonkChest_small",
+    "name": "lootsprite_arcaneMonkChest_small",
+    "x": 18,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_automation_table",
+    "name": "lootsprite_automation_table",
+    "x": 18,
+    "y": 37,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_automation_table_small",
+    "name": "lootsprite_automation_table_small",
+    "x": 0,
+    "y": 91,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_azeosChest",
+    "name": "lootsprite_azeosChest",
+    "x": 72,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_azeosChest_small",
+    "name": "lootsprite_azeosChest_small",
+    "x": 0,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bangberryWall",
+    "name": "lootsprite_bangberryWall",
+    "x": 36,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Environment-3ad354fc.png"
+  },
+  {
+    "id": "lootsprite_bangberryWall_small",
+    "name": "lootsprite_bangberryWall_small",
+    "x": 54,
+    "y": 162,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Environment-3ad354fc.png"
+  },
+  {
+    "id": "lootsprite_bigTechTable",
+    "name": "lootsprite_bigTechTable",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_bigTechTable_small",
+    "name": "lootsprite_bigTechTable_small",
+    "x": 18,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_blastChest",
+    "name": "lootsprite_blastChest",
+    "x": 90,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_blastChest_small",
+    "name": "lootsprite_blastChest_small",
+    "x": 36,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_bombScarabChest",
+    "name": "lootsprite_bombScarabChest",
+    "x": 216,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_bombScarabChest_small",
+    "name": "lootsprite_bombScarabChest_small",
+    "x": 90,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_bridgeCoral",
+    "name": "lootsprite_bridgeCoral",
+    "x": 0,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeCoral_small",
+    "name": "lootsprite_bridgeCoral_small",
+    "x": 18,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeExcavation",
+    "name": "lootsprite_bridgeExcavation",
+    "x": 126,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeExcavation_small",
+    "name": "lootsprite_bridgeExcavation_small",
+    "x": 108,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeGalaxite",
+    "name": "lootsprite_bridgeGalaxite",
+    "x": 36,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeGalaxite_small",
+    "name": "lootsprite_bridgeGalaxite_small",
+    "x": 36,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeGlass",
+    "name": "lootsprite_bridgeGlass",
+    "x": 0,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeGlass_small",
+    "name": "lootsprite_bridgeGlass_small",
+    "x": 144,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeGleamWood",
+    "name": "lootsprite_bridgeGleamWood",
+    "x": 180,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeGleamWood_small",
+    "name": "lootsprite_bridgeGleamWood_small",
+    "x": 0,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeMetalGrate",
+    "name": "lootsprite_bridgeMetalGrate",
+    "x": 234,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeMetalGrate_small",
+    "name": "lootsprite_bridgeMetalGrate_small",
+    "x": 54,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeScarlet",
+    "name": "lootsprite_bridgeScarlet",
+    "x": 216,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeScarlet_small",
+    "name": "lootsprite_bridgeScarlet_small",
+    "x": 18,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeStone",
+    "name": "lootsprite_bridgeStone",
+    "x": 126,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeStone_small",
+    "name": "lootsprite_bridgeStone_small",
+    "x": 18,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeWood",
+    "name": "lootsprite_bridgeWood",
+    "x": 54,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_bridgeWood_small",
+    "name": "lootsprite_bridgeWood_small",
+    "x": 144,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_chestWoodenFlattop",
+    "name": "lootsprite_chestWoodenFlattop",
+    "x": 90,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_chestWoodenFlattop_small",
+    "name": "lootsprite_chestWoodenFlattop_small",
+    "x": 54,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_chieftainChest",
+    "name": "lootsprite_chieftainChest",
+    "x": 36,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_chieftainChest_small",
+    "name": "lootsprite_chieftainChest_small",
+    "x": 18,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_chineseLantern",
+    "name": "lootsprite_chineseLantern",
+    "x": 0,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x256-Uncompressed-LootSprites-Seasonal-25db51a8.png"
+  },
+  {
+    "id": "lootsprite_chineseLantern_small",
+    "name": "lootsprite_chineseLantern_small",
+    "x": 234,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x256-Uncompressed-LootSprites-Seasonal-25db51a8.png"
+  },
+  {
+    "id": "lootsprite_chineseWallKnot",
+    "name": "lootsprite_chineseWallKnot",
+    "x": 108,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x256-Uncompressed-LootSprites-Seasonal-25db51a8.png"
+  },
+  {
+    "id": "lootsprite_chineseWallKnot_small",
+    "name": "lootsprite_chineseWallKnot_small",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x256-Uncompressed-LootSprites-Seasonal-25db51a8.png"
+  },
+  {
+    "id": "lootsprite_chineseWallLantern",
+    "name": "lootsprite_chineseWallLantern",
+    "x": 36,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x256-Uncompressed-LootSprites-Seasonal-25db51a8.png"
+  },
+  {
+    "id": "lootsprite_chineseWallLantern_small",
+    "name": "lootsprite_chineseWallLantern_small",
+    "x": 198,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x256-Uncompressed-LootSprites-Seasonal-25db51a8.png"
+  },
+  {
+    "id": "lootsprite_cicadaChest",
+    "name": "lootsprite_cicadaChest",
+    "x": 18,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_cicadaChest_small",
+    "name": "lootsprite_cicadaChest_small",
+    "x": 72,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_coffeeMugGate",
+    "name": "lootsprite_coffeeMugGate",
+    "x": 18,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-128x128-Uncompressed-LootSprites-Collabs-b8b66dd1.png"
+  },
+  {
+    "id": "lootsprite_coffeeMugGate_small",
+    "name": "lootsprite_coffeeMugGate_small",
+    "x": 0,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-128x128-Uncompressed-LootSprites-Collabs-b8b66dd1.png"
+  },
+  {
+    "id": "lootsprite_coralDoor",
+    "name": "lootsprite_coralDoor",
+    "x": 0,
+    "y": 55,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_coralDoor_small",
+    "name": "lootsprite_coralDoor_small",
+    "x": 72,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_coreCommanderChest",
+    "name": "lootsprite_coreCommanderChest",
+    "x": 166,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "lootsprite_coreCommanderChest_0",
+    "name": "lootsprite_coreCommanderChest",
+    "x": 166,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "lootsprite_coreCommanderChest_small",
+    "name": "lootsprite_coreCommanderChest_small",
+    "x": 188,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "lootsprite_coreCommanderChest_small_0",
+    "name": "lootsprite_coreCommanderChest_small",
+    "x": 188,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "lootsprite_corruptWardenChest",
+    "name": "lootsprite_corruptWardenChest",
+    "x": 90,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_corruptWardenChest_small",
+    "name": "lootsprite_corruptWardenChest_small",
+    "x": 216,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_crossCircuit",
+    "name": "lootsprite_crossCircuit",
+    "x": 126,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_crossCircuit_small",
+    "name": "lootsprite_crossCircuit_small",
+    "x": 198,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_dancerChest",
+    "name": "lootsprite_dancerChest",
+    "x": 180,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_dancerChest_small",
+    "name": "lootsprite_dancerChest_small",
+    "x": 54,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_delayCircuit",
+    "name": "lootsprite_delayCircuit",
+    "x": 108,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_delayCircuit_small",
+    "name": "lootsprite_delayCircuit_small",
+    "x": 108,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_desertGuardianChest",
+    "name": "lootsprite_desertGuardianChest",
+    "x": 108,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_desertGuardianChest_small",
+    "name": "lootsprite_desertGuardianChest_small",
+    "x": 216,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_dreamerChest",
+    "name": "lootsprite_dreamerChest",
+    "x": 126,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_dreamerChest_small",
+    "name": "lootsprite_dreamerChest_small",
+    "x": 0,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_electricalDropGate",
+    "name": "lootsprite_electricalDropGate",
+    "x": 126,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_electricalDropGate_small",
+    "name": "lootsprite_electricalDropGate_small",
+    "x": 90,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_excavationDoor",
+    "name": "lootsprite_excavationDoor",
+    "x": 90,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_excavationDoor_small",
+    "name": "lootsprite_excavationDoor_small",
+    "x": 54,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_excavationWorkbench",
+    "name": "lootsprite_excavationWorkbench",
+    "x": 36,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_excavationWorkbench_small",
+    "name": "lootsprite_excavationWorkbench_small",
+    "x": 126,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_furnace",
+    "name": "lootsprite_furnace",
+    "x": 72,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_furnace_small",
+    "name": "lootsprite_furnace_small",
+    "x": 126,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_galaxiteDoor",
+    "name": "lootsprite_galaxiteDoor",
+    "x": 90,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_galaxiteDoor_small",
+    "name": "lootsprite_galaxiteDoor_small",
+    "x": 90,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_grimChest",
+    "name": "lootsprite_grimChest",
+    "x": 0,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_grimChest_small",
+    "name": "lootsprite_grimChest_small",
+    "x": 234,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_grimeyStoneTable",
+    "name": "lootsprite_grimeyStoneTable",
+    "x": 72,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_grimeyStoneTable_small",
+    "name": "lootsprite_grimeyStoneTable_small",
+    "x": 90,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_grimyStoneFloor",
+    "name": "lootsprite_grimyStoneFloor",
+    "x": 162,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Environment-3ad354fc.png"
+  },
+  {
+    "id": "lootsprite_grimyStoneFloor_small",
+    "name": "lootsprite_grimyStoneFloor_small",
+    "x": 90,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Environment-3ad354fc.png"
+  },
+  {
+    "id": "lootsprite_hotCoalsWall",
+    "name": "lootsprite_hotCoalsWall",
+    "x": 216,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Environment-3ad354fc.png"
+  },
+  {
+    "id": "lootsprite_hotCoalsWall_small",
+    "name": "lootsprite_hotCoalsWall_small",
+    "x": 144,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Environment-3ad354fc.png"
+  },
+  {
+    "id": "lootsprite_ICircuit",
+    "name": "lootsprite_ICircuit",
+    "x": 54,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_ICircuit_small",
+    "name": "lootsprite_ICircuit_small",
+    "x": 36,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_industrialWallRedBlock",
+    "name": "lootsprite_industrialWallRedBlock",
+    "x": 54,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Blocks-7b0185b4.png"
+  },
+  {
+    "id": "lootsprite_industrialWallRedBlock_small",
+    "name": "lootsprite_industrialWallRedBlock_small",
+    "x": 18,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Blocks-7b0185b4.png"
+  },
+  {
+    "id": "lootsprite_inventorChest",
+    "name": "lootsprite_inventorChest",
+    "x": 54,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_inventorChest_small",
+    "name": "lootsprite_inventorChest_small",
+    "x": 108,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_lampPost",
+    "name": "lootsprite_lampPost",
+    "x": 36,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_lampPost_small",
+    "name": "lootsprite_lampPost_small",
+    "x": 108,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_lampPostOld",
+    "name": "lootsprite_lampPostOld",
+    "x": 234,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_lampPostOld_small",
+    "name": "lootsprite_lampPostOld_small",
+    "x": 108,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_LCircuit",
+    "name": "lootsprite_LCircuit",
+    "x": 54,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_LCircuit_small",
+    "name": "lootsprite_LCircuit_small",
+    "x": 108,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_lever",
+    "name": "lootsprite_lever",
+    "x": 36,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_lever_small",
+    "name": "lootsprite_lever_small",
+    "x": 72,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_lockDoor",
+    "name": "lootsprite_lockDoor",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/lootsprite_lockDoor.png"
+  },
+  {
+    "id": "lootsprite_lockDoor_small",
+    "name": "lootsprite_lockDoor_small",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/lootsprite_lockDoor_small.png"
+  },
+  {
+    "id": "lootsprite_lockDoorKey",
+    "name": "lootsprite_lockDoorKey",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/lootsprite_lockDoorKey.png"
+  },
+  {
+    "id": "lootsprite_lockDoorKey_small",
+    "name": "lootsprite_lockDoorKey_small",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/lootsprite_lockDoorKey_small.png"
+  },
+  {
+    "id": "lootsprite_logicCircuit",
+    "name": "lootsprite_logicCircuit",
+    "x": 0,
+    "y": 73,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_logicCircuit_small",
+    "name": "lootsprite_logicCircuit_small",
+    "x": 162,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_longTechTable",
+    "name": "lootsprite_longTechTable",
+    "x": 162,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_longTechTable_small",
+    "name": "lootsprite_longTechTable_small",
+    "x": 108,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Excavation-5025ad53.png"
+  },
+  {
+    "id": "lootsprite_malugazChest",
+    "name": "lootsprite_malugazChest",
+    "x": 198,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_malugazChest_small",
+    "name": "lootsprite_malugazChest_small",
+    "x": 90,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_metalTable",
+    "name": "lootsprite_metalTable",
+    "x": 90,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_metalTable_small",
+    "name": "lootsprite_metalTable_small",
+    "x": 126,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_monkChest",
+    "name": "lootsprite_monkChest",
+    "x": 180,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_monkChest_small",
+    "name": "lootsprite_monkChest_small",
+    "x": 144,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_mossChest",
+    "name": "lootsprite_mossChest",
+    "x": 126,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_mossChest_small",
+    "name": "lootsprite_mossChest_small",
+    "x": 72,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_omorothChest",
+    "name": "lootsprite_omorothChest",
+    "x": 0,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_omorothChest_small",
+    "name": "lootsprite_omorothChest_small",
+    "x": 54,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_pandoriumChest",
+    "name": "lootsprite_pandoriumChest",
+    "x": 162,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_pandoriumChest_small",
+    "name": "lootsprite_pandoriumChest_small",
+    "x": 144,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_passageChest",
+    "name": "lootsprite_passageChest",
+    "x": 72,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_passageChest_small",
+    "name": "lootsprite_passageChest_small",
+    "x": 0,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_passageWallDecoration",
+    "name": "lootsprite_passageWallDecoration",
+    "x": 198,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_plateChest",
+    "name": "lootsprite_plateChest",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_plateChest_small",
+    "name": "lootsprite_plateChest_small",
+    "x": 108,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_raAkarChest",
+    "name": "lootsprite_raAkarChest",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_raAkarChest_small",
+    "name": "lootsprite_raAkarChest_small",
+    "x": 36,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_reluciteChest",
+    "name": "lootsprite_reluciteChest",
+    "x": 162,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_reluciteChest_small",
+    "name": "lootsprite_reluciteChest_small",
+    "x": 90,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_reluciteChestLocked",
+    "name": "lootsprite_reluciteChestLocked",
+    "x": 36,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_reluciteChestLocked_small",
+    "name": "lootsprite_reluciteChestLocked_small",
+    "x": 90,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_riftianLampfish",
+    "name": "lootsprite_riftianLampfish",
+    "x": 126,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_riftianLampfish_small",
+    "name": "lootsprite_riftianLampfish_small",
+    "x": 198,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_scientistChest",
+    "name": "lootsprite_scientistChest",
+    "x": 90,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-128x128-Uncompressed-LootSprites-Collabs-b8b66dd1.png"
+  },
+  {
+    "id": "lootsprite_scientistChest_small",
+    "name": "lootsprite_scientistChest_small",
+    "x": 36,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-128x128-Uncompressed-LootSprites-Collabs-b8b66dd1.png"
+  },
+  {
+    "id": "lootsprite_shadowChest",
+    "name": "lootsprite_shadowChest",
+    "x": 36,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_shadowChest_small",
+    "name": "lootsprite_shadowChest_small",
+    "x": 36,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_sirenLamp",
+    "name": "lootsprite_sirenLamp",
+    "x": 180,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_sirenLamp_small",
+    "name": "lootsprite_sirenLamp_small",
+    "x": 234,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_skirmisherChest",
+    "name": "lootsprite_skirmisherChest",
+    "x": 126,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_skirmisherChest_small",
+    "name": "lootsprite_skirmisherChest_small",
+    "x": 198,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_sleepyChest",
+    "name": "lootsprite_sleepyChest",
+    "x": 0,
+    "y": 180,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_sleepyChest_small",
+    "name": "lootsprite_sleepyChest_small",
+    "x": 36,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_soaringChest",
+    "name": "lootsprite_soaringChest",
+    "x": 54,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_soaringChest_small",
+    "name": "lootsprite_soaringChest_small",
+    "x": 126,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_sorcererChest",
+    "name": "lootsprite_sorcererChest",
+    "x": 198,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_sorcererChest_small",
+    "name": "lootsprite_sorcererChest_small",
+    "x": 54,
+    "y": 216,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_soulLantern",
+    "name": "lootsprite_soulLantern",
+    "x": 108,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_soulLantern_small",
+    "name": "lootsprite_soulLantern_small",
+    "x": 216,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_stoneFence",
+    "name": "lootsprite_stoneFence",
+    "x": 198,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_stoneFence_small",
+    "name": "lootsprite_stoneFence_small",
+    "x": 198,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_stoneLantern",
+    "name": "lootsprite_stoneLantern",
+    "x": 72,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_stoneLantern_small",
+    "name": "lootsprite_stoneLantern_small",
+    "x": 72,
+    "y": 216,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_sulfurChest",
+    "name": "lootsprite_sulfurChest",
+    "x": 180,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_sulfurChest_small",
+    "name": "lootsprite_sulfurChest_small",
+    "x": 18,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_swampMageChest",
+    "name": "lootsprite_swampMageChest",
+    "x": 108,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_swampMageChest_small",
+    "name": "lootsprite_swampMageChest_small",
+    "x": 54,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_TCircuit",
+    "name": "lootsprite_TCircuit",
+    "x": 162,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_TCircuit_small",
+    "name": "lootsprite_TCircuit_small",
+    "x": 90,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_voidAltarWorkbench",
+    "name": "lootsprite_voidAltarWorkbench",
+    "x": 144,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_voidAltarWorkbench_small",
+    "name": "lootsprite_voidAltarWorkbench_small",
+    "x": 36,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_voidFusedChest",
+    "name": "lootsprite_voidFusedChest",
+    "x": 0,
+    "y": 198,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_voidFusedChest_small",
+    "name": "lootsprite_voidFusedChest_small",
+    "x": 72,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_wallBossChest",
+    "name": "lootsprite_wallBossChest",
+    "x": 90,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_wallBossChest_small",
+    "name": "lootsprite_wallBossChest_small",
+    "x": 36,
+    "y": 180,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_wallBossScanner",
+    "name": "lootsprite_wallBossScanner",
+    "x": 108,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Scanners-79ae2278.png"
+  },
+  {
+    "id": "lootsprite_wallBossScanner_small",
+    "name": "lootsprite_wallBossScanner_small",
+    "x": 126,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Scanners-79ae2278.png"
+  },
+  {
+    "id": "lootsprite_wallBossTrophy",
+    "name": "lootsprite_wallBossTrophy",
+    "x": 144,
+    "y": 162,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_wallCoral",
+    "name": "lootsprite_wallCoral",
+    "x": 216,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallCoral_small",
+    "name": "lootsprite_wallCoral_small",
+    "x": 162,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallEerie",
+    "name": "lootsprite_wallEerie",
+    "x": 216,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallEerie_small",
+    "name": "lootsprite_wallEerie_small",
+    "x": 54,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallGalaxite",
+    "name": "lootsprite_wallGalaxite",
+    "x": 0,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallGalaxite_small",
+    "name": "lootsprite_wallGalaxite_small",
+    "x": 144,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallGauge",
+    "name": "lootsprite_wallGauge",
+    "x": 72,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallGauge_small",
+    "name": "lootsprite_wallGauge_small",
+    "x": 0,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallGleamWood",
+    "name": "lootsprite_wallGleamWood",
+    "x": 126,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallGleamWood_small",
+    "name": "lootsprite_wallGleamWood_small",
+    "x": 108,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallLightBulb",
+    "name": "lootsprite_wallLightBulb",
+    "x": 0,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallLightBulb_small",
+    "name": "lootsprite_wallLightBulb_small",
+    "x": 216,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallMetalSheet",
+    "name": "lootsprite_wallMetalSheet",
+    "x": 18,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallMetalSheet_small",
+    "name": "lootsprite_wallMetalSheet_small",
+    "x": 126,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallPaintable",
+    "name": "lootsprite_wallPaintable",
+    "x": 36,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallPaintable_small",
+    "name": "lootsprite_wallPaintable_small",
+    "x": 36,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallScarlet",
+    "name": "lootsprite_wallScarlet",
+    "x": 54,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallScarlet_small",
+    "name": "lootsprite_wallScarlet_small",
+    "x": 180,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallStoneBrick",
+    "name": "lootsprite_wallStoneBrick",
+    "x": 72,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallStoneBrick_small",
+    "name": "lootsprite_wallStoneBrick_small",
+    "x": 216,
+    "y": 108,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallThermostat",
+    "name": "lootsprite_wallThermostat",
+    "x": 144,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallThermostat_small",
+    "name": "lootsprite_wallThermostat_small",
+    "x": 198,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallWood",
+    "name": "lootsprite_wallWood",
+    "x": 144,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_wallWood_small",
+    "name": "lootsprite_wallWood_small",
+    "x": 72,
+    "y": 36,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-LootSprites-Base Building-c601e0d6.png"
+  },
+  {
+    "id": "lootsprite_warriorChest",
+    "name": "lootsprite_warriorChest",
+    "x": 198,
+    "y": 72,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_warriorChest_small",
+    "name": "lootsprite_warriorChest_small",
+    "x": 72,
+    "y": 18,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-LootSprites-Armor-3dedc797.png"
+  },
+  {
+    "id": "lootsprite_witchDoctorChest",
+    "name": "lootsprite_witchDoctorChest",
+    "x": 198,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_witchDoctorChest_small",
+    "name": "lootsprite_witchDoctorChest_small",
+    "x": 0,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-Lootsprites-1.0-d3712bb5.png"
+  },
+  {
+    "id": "lootsprite_workbenchLaboratory",
+    "name": "lootsprite_workbenchLaboratory",
+    "x": 72,
+    "y": 90,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_workbenchLaboratory_small",
+    "name": "lootsprite_workbenchLaboratory_small",
+    "x": 0,
+    "y": 19,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_workbenchPouch",
+    "name": "lootsprite_workbenchPouch",
+    "x": 54,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "lootsprite_workbenchPouch_small",
+    "name": "lootsprite_workbenchPouch_small",
+    "x": 144,
+    "y": 54,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x128-Uncompressed-LootSprites-Buildings-0c2f5c0b.png"
+  },
+  {
+    "id": "table_saw_emissive",
+    "name": "table_saw_emissive",
+    "x": 18,
+    "y": 140,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "table_saw_emissive_0",
+    "name": "table_saw_emissive",
+    "x": 18,
+    "y": 140,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "TCircuit_0",
+    "name": "TCircuit_0",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_1",
+    "name": "TCircuit_1",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_2",
+    "name": "TCircuit_2",
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_3",
+    "name": "TCircuit_3",
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_4",
+    "name": "TCircuit_4",
+    "x": 64,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_5",
+    "name": "TCircuit_5",
+    "x": 80,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_6",
+    "name": "TCircuit_6",
+    "x": 96,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "TCircuit_7",
+    "name": "TCircuit_7",
+    "x": 112,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TCircuit.png"
+  },
+  {
+    "id": "Torch",
+    "name": "Torch",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/Torch.png"
+  },
+  {
+    "id": "Torch_0",
+    "name": "Torch_0",
+    "x": 0,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire.png"
+  },
+  {
+    "id": "Torch_1",
+    "name": "Torch_1",
+    "x": 32,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire.png"
+  },
+  {
+    "id": "Torch_2",
+    "name": "Torch_2",
+    "x": 64,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire.png"
+  },
+  {
+    "id": "Torch_3",
+    "name": "Torch_3",
+    "x": 96,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire.png"
+  },
+  {
+    "id": "Torch_4",
+    "name": "Torch_4",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire.png"
+  },
+  {
+    "id": "Torch_5",
+    "name": "Torch_5",
+    "x": 32,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire.png"
+  },
+  {
+    "id": "TorchFire_blue_0",
+    "name": "TorchFire_blue_0",
+    "x": 0,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire_blue.png"
+  },
+  {
+    "id": "TorchFire_blue_1",
+    "name": "TorchFire_blue_1",
+    "x": 32,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire_blue.png"
+  },
+  {
+    "id": "TorchFire_blue_2",
+    "name": "TorchFire_blue_2",
+    "x": 64,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire_blue.png"
+  },
+  {
+    "id": "TorchFire_blue_3",
+    "name": "TorchFire_blue_3",
+    "x": 96,
+    "y": 32,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire_blue.png"
+  },
+  {
+    "id": "TorchFire_blue_4",
+    "name": "TorchFire_blue_4",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire_blue.png"
+  },
+  {
+    "id": "TorchFire_blue_5",
+    "name": "TorchFire_blue_5",
+    "x": 32,
+    "y": 0,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/TorchFire_blue.png"
+  },
+  {
+    "id": "upgrade_forge_ui_0",
+    "name": "upgrade_forge_ui_0",
+    "x": 0,
+    "y": 16,
+    "width": 32,
+    "height": 32,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_1",
+    "name": "upgrade_forge_ui_1",
+    "x": 32,
+    "y": 40,
+    "width": 8,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_2",
+    "name": "upgrade_forge_ui_2",
+    "x": 40,
+    "y": 40,
+    "width": 8,
+    "height": 8,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_3",
+    "name": "upgrade_forge_ui_3",
+    "x": 32,
+    "y": 34,
+    "width": 6,
+    "height": 6,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_4",
+    "name": "upgrade_forge_ui_4",
+    "x": 40,
+    "y": 34,
+    "width": 6,
+    "height": 6,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_5",
+    "name": "upgrade_forge_ui_5",
+    "x": 32,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_6",
+    "name": "upgrade_forge_ui_6",
+    "x": 48,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "upgrade_forge_ui_7",
+    "name": "upgrade_forge_ui_7",
+    "x": 48,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/upgrade_forge_ui.png"
+  },
+  {
+    "id": "valentine_floorpetals_0",
+    "name": "valentine_floorpetals_0",
+    "x": 54,
+    "y": 150,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "valentine_floorpetals_0_0",
+    "name": "valentine_floorpetals_0",
+    "x": 54,
+    "y": 150,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "valentine_floorpetals_1",
+    "name": "valentine_floorpetals_1",
+    "x": 18,
+    "y": 176,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "valentine_floorpetals_1_0",
+    "name": "valentine_floorpetals_1",
+    "x": 18,
+    "y": 176,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "valentine_floorpetals_2",
+    "name": "valentine_floorpetals_2",
+    "x": 116,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "valentine_floorpetals_2_0",
+    "name": "valentine_floorpetals_2",
+    "x": 116,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "valentine_floorpetals_3",
+    "name": "valentine_floorpetals_3",
+    "x": 134,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "valentine_floorpetals_3_0",
+    "name": "valentine_floorpetals_3",
+    "x": 134,
+    "y": 126,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "wall_loot_0",
+    "name": "wall_loot_0",
+    "x": 0,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_1",
+    "name": "wall_loot_1",
+    "x": 16,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_10",
+    "name": "wall_loot_10",
+    "x": 32,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_100",
+    "name": "wall_loot_100",
+    "x": 176,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_101",
+    "name": "wall_loot_101",
+    "x": 240,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_102",
+    "name": "wall_loot_102",
+    "x": 256,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_103",
+    "name": "wall_loot_103",
+    "x": 272,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_104",
+    "name": "wall_loot_104",
+    "x": 288,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_105",
+    "name": "wall_loot_105",
+    "x": 304,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_106",
+    "name": "wall_loot_106",
+    "x": 240,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_107",
+    "name": "wall_loot_107",
+    "x": 256,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_108",
+    "name": "wall_loot_108",
+    "x": 272,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_109",
+    "name": "wall_loot_109",
+    "x": 288,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_11",
+    "name": "wall_loot_11",
+    "x": 48,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_110",
+    "name": "wall_loot_110",
+    "x": 304,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_111",
+    "name": "wall_loot_111",
+    "x": 240,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_112",
+    "name": "wall_loot_112",
+    "x": 256,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_113",
+    "name": "wall_loot_113",
+    "x": 272,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_114",
+    "name": "wall_loot_114",
+    "x": 144,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_115",
+    "name": "wall_loot_115",
+    "x": 192,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_116",
+    "name": "wall_loot_116",
+    "x": 208,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_117",
+    "name": "wall_loot_117",
+    "x": 224,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_118",
+    "name": "wall_loot_118",
+    "x": 240,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_119",
+    "name": "wall_loot_119",
+    "x": 256,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_12",
+    "name": "wall_loot_12",
+    "x": 64,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_120",
+    "name": "wall_loot_120",
+    "x": 272,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_121",
+    "name": "wall_loot_121",
+    "x": 240,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_122",
+    "name": "wall_loot_122",
+    "x": 256,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_123",
+    "name": "wall_loot_123",
+    "x": 240,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_124",
+    "name": "wall_loot_124",
+    "x": 256,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_126",
+    "name": "wall_loot_126",
+    "x": 256,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_127",
+    "name": "wall_loot_127",
+    "x": 272,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_128",
+    "name": "wall_loot_128",
+    "x": 272,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_129",
+    "name": "wall_loot_129",
+    "x": 288,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_13",
+    "name": "wall_loot_13",
+    "x": 64,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_130",
+    "name": "wall_loot_130",
+    "x": 304,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_131",
+    "name": "wall_loot_131",
+    "x": 288,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_132",
+    "name": "wall_loot_132",
+    "x": 288,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_133",
+    "name": "wall_loot_133",
+    "x": 304,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_134",
+    "name": "wall_loot_134",
+    "x": 304,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_135",
+    "name": "wall_loot_135",
+    "x": 288,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_136",
+    "name": "wall_loot_136",
+    "x": 304,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_137",
+    "name": "wall_loot_137",
+    "x": 320,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_138",
+    "name": "wall_loot_138",
+    "x": 336,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_139",
+    "name": "wall_loot_139",
+    "x": 352,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_14",
+    "name": "wall_loot_14",
+    "x": 64,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_140",
+    "name": "wall_loot_140",
+    "x": 368,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_141",
+    "name": "wall_loot_141",
+    "x": 320,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_142",
+    "name": "wall_loot_142",
+    "x": 336,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_143",
+    "name": "wall_loot_143",
+    "x": 352,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_144",
+    "name": "wall_loot_144",
+    "x": 368,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_145",
+    "name": "wall_loot_145",
+    "x": 320,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_146",
+    "name": "wall_loot_146",
+    "x": 336,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_147",
+    "name": "wall_loot_147",
+    "x": 352,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_148",
+    "name": "wall_loot_148",
+    "x": 320,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_149",
+    "name": "wall_loot_149",
+    "x": 336,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_15",
+    "name": "wall_loot_15",
+    "x": 0,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_150",
+    "name": "wall_loot_150",
+    "x": 320,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_151",
+    "name": "wall_loot_151",
+    "x": 336,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_152",
+    "name": "wall_loot_152",
+    "x": 352,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_153",
+    "name": "wall_loot_153",
+    "x": 368,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_154",
+    "name": "wall_loot_154",
+    "x": 384,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_155",
+    "name": "wall_loot_155",
+    "x": 400,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_156",
+    "name": "wall_loot_156",
+    "x": 272,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_157",
+    "name": "wall_loot_157",
+    "x": 288,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_158",
+    "name": "wall_loot_158",
+    "x": 304,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_159",
+    "name": "wall_loot_159",
+    "x": 320,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_16",
+    "name": "wall_loot_16",
+    "x": 16,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_160",
+    "name": "wall_loot_160",
+    "x": 336,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_161",
+    "name": "wall_loot_161",
+    "x": 352,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_162",
+    "name": "wall_loot_162",
+    "x": 368,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_163",
+    "name": "wall_loot_163",
+    "x": 384,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_164",
+    "name": "wall_loot_164",
+    "x": 400,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_165",
+    "name": "wall_loot_165",
+    "x": 320,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_166",
+    "name": "wall_loot_166",
+    "x": 336,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_17",
+    "name": "wall_loot_17",
+    "x": 32,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_18",
+    "name": "wall_loot_18",
+    "x": 48,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_19",
+    "name": "wall_loot_19",
+    "x": 64,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_2",
+    "name": "wall_loot_2",
+    "x": 32,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_20",
+    "name": "wall_loot_20",
+    "x": 0,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot.png"
+  },
+  {
+    "id": "wall_loot_20_0",
+    "name": "wall_loot_20",
+    "x": 0,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_21",
+    "name": "wall_loot_21",
+    "x": 16,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_22",
+    "name": "wall_loot_22",
+    "x": 32,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_23",
+    "name": "wall_loot_23",
+    "x": 48,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_24",
+    "name": "wall_loot_24",
+    "x": 64,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_25",
+    "name": "wall_loot_25",
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_26",
+    "name": "wall_loot_26",
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_27",
+    "name": "wall_loot_27",
+    "x": 32,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_28",
+    "name": "wall_loot_28",
+    "x": 48,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_29",
+    "name": "wall_loot_29",
+    "x": 64,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_3",
+    "name": "wall_loot_3",
+    "x": 48,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_30",
+    "name": "wall_loot_30",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_31",
+    "name": "wall_loot_31",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_32",
+    "name": "wall_loot_32",
+    "x": 80,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_34",
+    "name": "wall_loot_34",
+    "x": 112,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_35",
+    "name": "wall_loot_35",
+    "x": 128,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_36",
+    "name": "wall_loot_36",
+    "x": 64,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_37",
+    "name": "wall_loot_37",
+    "x": 80,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_38",
+    "name": "wall_loot_38",
+    "x": 80,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_39",
+    "name": "wall_loot_39",
+    "x": 80,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_4",
+    "name": "wall_loot_4",
+    "x": 0,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_40",
+    "name": "wall_loot_40",
+    "x": 80,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_41",
+    "name": "wall_loot_41",
+    "x": 80,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_42",
+    "name": "wall_loot_42",
+    "x": 80,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_43",
+    "name": "wall_loot_43",
+    "x": 96,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_44",
+    "name": "wall_loot_44",
+    "x": 96,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_45",
+    "name": "wall_loot_45",
+    "x": 96,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_46",
+    "name": "wall_loot_46",
+    "x": 96,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_47",
+    "name": "wall_loot_47",
+    "x": 96,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_48",
+    "name": "wall_loot_48",
+    "x": 96,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_49",
+    "name": "wall_loot_49",
+    "x": 112,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_5",
+    "name": "wall_loot_5",
+    "x": 16,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_50",
+    "name": "wall_loot_50",
+    "x": 112,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_51",
+    "name": "wall_loot_51",
+    "x": 112,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_52",
+    "name": "wall_loot_52",
+    "x": 112,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_53",
+    "name": "wall_loot_53",
+    "x": 112,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_54",
+    "name": "wall_loot_54",
+    "x": 112,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_55",
+    "name": "wall_loot_55",
+    "x": 128,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_56",
+    "name": "wall_loot_56",
+    "x": 128,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_57",
+    "name": "wall_loot_57",
+    "x": 128,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_58",
+    "name": "wall_loot_58",
+    "x": 128,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_59",
+    "name": "wall_loot_59",
+    "x": 128,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_6",
+    "name": "wall_loot_6",
+    "x": 32,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_60",
+    "name": "wall_loot_60",
+    "x": 128,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_65",
+    "name": "wall_loot_65",
+    "x": 160,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_66",
+    "name": "wall_loot_66",
+    "x": 160,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_67",
+    "name": "wall_loot_67",
+    "x": 160,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_68",
+    "name": "wall_loot_68",
+    "x": 160,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_69",
+    "name": "wall_loot_69",
+    "x": 160,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_70",
+    "name": "wall_loot_70",
+    "x": 160,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_71",
+    "name": "wall_loot_71",
+    "x": 160,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_72",
+    "name": "wall_loot_72",
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_73",
+    "name": "wall_loot_73",
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_74",
+    "name": "wall_loot_74",
+    "x": 176,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_75",
+    "name": "wall_loot_75",
+    "x": 192,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_76",
+    "name": "wall_loot_76",
+    "x": 208,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_77",
+    "name": "wall_loot_77",
+    "x": 224,
+    "y": 96,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_78",
+    "name": "wall_loot_78",
+    "x": 176,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_79",
+    "name": "wall_loot_79",
+    "x": 192,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_8",
+    "name": "wall_loot_8",
+    "x": 0,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_80",
+    "name": "wall_loot_80",
+    "x": 208,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_81",
+    "name": "wall_loot_81",
+    "x": 224,
+    "y": 80,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_82",
+    "name": "wall_loot_82",
+    "x": 176,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_83",
+    "name": "wall_loot_83",
+    "x": 192,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_84",
+    "name": "wall_loot_84",
+    "x": 208,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_85",
+    "name": "wall_loot_85",
+    "x": 224,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_86",
+    "name": "wall_loot_86",
+    "x": 176,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_87",
+    "name": "wall_loot_87",
+    "x": 192,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_88",
+    "name": "wall_loot_88",
+    "x": 208,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_89",
+    "name": "wall_loot_89",
+    "x": 224,
+    "y": 48,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_9",
+    "name": "wall_loot_9",
+    "x": 16,
+    "y": 64,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_90",
+    "name": "wall_loot_90",
+    "x": 176,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_91",
+    "name": "wall_loot_91",
+    "x": 192,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_92",
+    "name": "wall_loot_92",
+    "x": 208,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_93",
+    "name": "wall_loot_93",
+    "x": 224,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_94",
+    "name": "wall_loot_94",
+    "x": 176,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_95",
+    "name": "wall_loot_95",
+    "x": 192,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_96",
+    "name": "wall_loot_96",
+    "x": 208,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_97",
+    "name": "wall_loot_97",
+    "x": 224,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_98",
+    "name": "wall_loot_98",
+    "x": 144,
+    "y": 32,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "wall_loot_99",
+    "name": "wall_loot_99",
+    "x": 144,
+    "y": 16,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wall_loot_0.png"
+  },
+  {
+    "id": "WallbosssummonItem_debris_0",
+    "name": "WallbosssummonItem_debris_0",
+    "x": 0,
+    "y": 0,
+    "width": 4,
+    "height": 4,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/WallbosssummonItem_debris.png"
+  },
+  {
+    "id": "WallbosssummonItem_debris_1",
+    "name": "WallbosssummonItem_debris_1",
+    "x": 4,
+    "y": 0,
+    "width": 4,
+    "height": 4,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/WallbosssummonItem_debris.png"
+  },
+  {
+    "id": "wallcracks_0top",
+    "name": "wallcracks_0top",
+    "x": 62,
+    "y": 432,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "wallcracks_0top_0",
+    "name": "wallcracks_0top",
+    "x": 62,
+    "y": 432,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "wallcracks_1top",
+    "name": "wallcracks_1top",
+    "x": 46,
+    "y": 455,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "wallcracks_1top_0",
+    "name": "wallcracks_1top",
+    "x": 46,
+    "y": 455,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "wallcracks_2top",
+    "name": "wallcracks_2top",
+    "x": 64,
+    "y": 450,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "wallcracks_2top_0",
+    "name": "wallcracks_2top",
+    "x": 64,
+    "y": 450,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "wallcracks_3",
+    "name": "wallcracks_3",
+    "x": 80,
+    "y": 432,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "wallcracks_3_0",
+    "name": "wallcracks_3",
+    "x": 80,
+    "y": 432,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "wallcracks_4",
+    "name": "wallcracks_4",
+    "x": 114,
+    "y": 402,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "wallcracks_4_0",
+    "name": "wallcracks_4",
+    "x": 114,
+    "y": 402,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "wallcracks_5",
+    "name": "wallcracks_5",
+    "x": 96,
+    "y": 405,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7.png"
+  },
+  {
+    "id": "wallcracks_5_0",
+    "name": "wallcracks_5",
+    "x": 96,
+    "y": 405,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-512x512-Uncompressed-environment-654b3db7_0.png"
+  },
+  {
+    "id": "wallGeode_0",
+    "name": "wallGeode_0",
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_1",
+    "name": "wallGeode_1",
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_10",
+    "name": "wallGeode_10",
+    "x": 160,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_11",
+    "name": "wallGeode_11",
+    "x": 176,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_12",
+    "name": "wallGeode_12",
+    "x": 192,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_13",
+    "name": "wallGeode_13",
+    "x": 208,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_14",
+    "name": "wallGeode_14",
+    "x": 224,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_2",
+    "name": "wallGeode_2",
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_3",
+    "name": "wallGeode_3",
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_4",
+    "name": "wallGeode_4",
+    "x": 64,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_5",
+    "name": "wallGeode_5",
+    "x": 80,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_6",
+    "name": "wallGeode_6",
+    "x": 96,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_7",
+    "name": "wallGeode_7",
+    "x": 112,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_8",
+    "name": "wallGeode_8",
+    "x": 128,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_9",
+    "name": "wallGeode_9",
+    "x": 144,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode.png"
+  },
+  {
+    "id": "wallGeode_sideways_0",
+    "name": "wallGeode_sideways_0",
+    "x": 0,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_1",
+    "name": "wallGeode_sideways_1",
+    "x": 6,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_10",
+    "name": "wallGeode_sideways_10",
+    "x": 60,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_11",
+    "name": "wallGeode_sideways_11",
+    "x": 66,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_12",
+    "name": "wallGeode_sideways_12",
+    "x": 72,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_13",
+    "name": "wallGeode_sideways_13",
+    "x": 78,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_14",
+    "name": "wallGeode_sideways_14",
+    "x": 84,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_2",
+    "name": "wallGeode_sideways_2",
+    "x": 12,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_3",
+    "name": "wallGeode_sideways_3",
+    "x": 18,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_4",
+    "name": "wallGeode_sideways_4",
+    "x": 24,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_5",
+    "name": "wallGeode_sideways_5",
+    "x": 30,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_6",
+    "name": "wallGeode_sideways_6",
+    "x": 36,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_7",
+    "name": "wallGeode_sideways_7",
+    "x": 42,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_8",
+    "name": "wallGeode_sideways_8",
+    "x": 48,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallGeode_sideways_9",
+    "name": "wallGeode_sideways_9",
+    "x": 54,
+    "y": 0,
+    "width": 6,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/wallGeode_sideways.png"
+  },
+  {
+    "id": "wallhearts_valentine_0",
+    "name": "wallhearts_valentine_0",
+    "x": 136,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "wallhearts_valentine_0_0",
+    "name": "wallhearts_valentine_0",
+    "x": 136,
+    "y": 0,
+    "width": 16,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  },
+  {
+    "id": "wallhearts_valentine_1",
+    "name": "wallhearts_valentine_1",
+    "x": 180,
+    "y": 144,
+    "width": 4,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e.png"
+  },
+  {
+    "id": "wallhearts_valentine_1_0",
+    "name": "wallhearts_valentine_1",
+    "x": 180,
+    "y": 144,
+    "width": 4,
+    "height": 16,
+    "rectOrigin": "bottom-left",
+    "atlas": "/game-assets/atlases/sactx-0-256x256-Uncompressed-items-c578e26e_0.png"
+  }
+]

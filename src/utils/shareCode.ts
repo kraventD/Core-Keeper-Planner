@@ -1,4 +1,5 @@
 import { BlueprintProject } from '../types/blueprint';
+import { StorageItemPlacement } from '../types/blueprint';
 
 export const SHARE_CODE_VERSION = '1.0';
 export const SHARE_CODE_PREFIX = 'CKBP_V1:';
@@ -20,6 +21,7 @@ export interface ShareCodeData {
     y: number;
     text: string;
   }>;
+  storagePlacements?: StorageItemPlacement[];
 }
 
 /**
@@ -49,6 +51,7 @@ export function encodeShareCode(project: BlueprintProject): string {
             text: a.text || '',
           }))
         : [],
+      storagePlacements: Array.isArray(project.storagePlacements) ? project.storagePlacements : [],
     };
 
     const json = JSON.stringify(data);
@@ -99,6 +102,7 @@ export function decodeShareCode(code: string): Partial<BlueprintProject> {
     cells: data.cells,
     palette: data.palette ?? [],
     annotations: data.annotations ?? [],
+    storagePlacements: data.storagePlacements ?? [],
   };
 }
 

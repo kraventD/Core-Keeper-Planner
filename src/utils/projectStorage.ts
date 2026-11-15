@@ -1,5 +1,7 @@
 import { BlueprintProject, PaletteColor } from '../types/blueprint';
 import { DEFAULT_PALETTE } from './palette';
+import { paletteWithBlockColors } from './blockCatalog';
+import { migrateStructurePlacementsToColors } from './storageCatalog';
 
 const AUTOSAVE_KEY = 'corekeeper_blueprint_autosave_v1';
 
@@ -57,18 +59,33 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
   const migratedCells: Record<string, string> = {};
   if (typeof data.cells === 'object' && data.cells !== null) {
     for (const [key, colorId] of Object.entries(data.cells)) {
-      migratedCells[key] = (colorId as string) === 'doorway' ? 'door' : (colorId as string);
+      const storedColorId = colorId as string;
+      migratedCells[key] = storedColorId === 'doorway' || storedColorId === 'door'
+        ? 'door-horizontal'
+        : storedColorId;
     }
   }
+
+  const validStoragePlacements = Array.isArray(data.storagePlacements)
+    ? data.storagePlacements.filter((item: unknown) => {
+        if (typeof item !== 'object' || item === null) return false;
+        const placement = item as Record<string, unknown>;
+        return typeof placement.id === 'string' && typeof placement.itemId === 'string' &&
+          Number.isInteger(placement.x) && Number.isInteger(placement.y) &&
+          Number.isInteger(placement.width) && Number.isInteger(placement.height);
+      })
+    : [];
+  const migratedStructures = migrateStructurePlacementsToColors(migratedCells, validStoragePlacements);
 
   return {
     id: typeof data.id === 'string' ? data.id : `proj_${Date.now()}`,
     name: typeof data.name === 'string' ? data.name : 'Core Keeper Blueprint',
     width: Math.max(5, Math.min(500, Math.round(data.width))),
     height: Math.max(5, Math.min(500, Math.round(data.height))),
-    cells: migratedCells,
-    palette: migratedPalette,
+    cells: migratedStructures.cells,
+    palette: paletteWithBlockColors(migratedPalette),
     annotations: Array.isArray(data.annotations) ? data.annotations : [],
+    storagePlacements: migratedStructures.storagePlacements,
     createdAt: data.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };

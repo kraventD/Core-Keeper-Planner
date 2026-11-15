@@ -493,7 +493,8 @@ export function resizeGridCells(
  */
 export function countCellsByColor(cells: Record<string, string>): Record<string, number> {
   const counts: Record<string, number> = {};
-  for (const colorId of Object.values(cells)) {
+  for (const storedColorId of Object.values(cells)) {
+    const colorId = storedColorId === 'door-horizontal' || storedColorId === 'door-vertical' ? 'door' : storedColorId;
     counts[colorId] = (counts[colorId] ?? 0) + 1;
   }
   return counts;

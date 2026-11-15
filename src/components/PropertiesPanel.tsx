@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
-import { PaletteColor, SelectionBox, Language } from '../types/blueprint';
+import React from 'react';
+import { PaletteColor, SelectionBox, Language, StorageItemPlacement } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
+import { StorageItemDefinition } from '../utils/storageCatalog';
+import { GameSpriteEntry } from '../utils/gameSpriteCatalog';
+import { GameSpriteThumbnail } from './GameSpriteThumbnail';
 import { getPaletteColorLabel } from '../utils/palette';
 import {
   Palette,
   Eye,
   Sliders,
-  Plus,
-  Trash2,
   Copy,
   Scissors,
   ClipboardPaste,
-  Check,
   Layers,
   Sparkles,
   FlipHorizontal,
   FlipVertical,
   Split,
+  Trash2,
+  RotateCw,
 } from 'lucide-react';
 
 interface PropertiesPanelProps {
@@ -25,6 +27,8 @@ interface PropertiesPanelProps {
   zoom: number;
   showGrid: boolean;
   onToggleGrid: () => void;
+  showLightRanges: boolean;
+  onToggleLightRanges: () => void;
   showMajorGrid: boolean;
   onToggleMajorGrid: () => void;
   gridLineWidth: number;
@@ -33,12 +37,15 @@ interface PropertiesPanelProps {
   onToggleHighContrastGrid: () => void;
   gridTheme: 'light' | 'dark';
   onChangeGridTheme: (theme: 'light' | 'dark') => void;
-  palette: PaletteColor[];
   activeColor: PaletteColor;
-  onSelectColor: (color: PaletteColor) => void;
-  onAddColor: (name: string, hex: string) => void;
-  onUpdateColor: (id: string, name: string, hex: string) => void;
-  onDeleteColor: (id: string) => void;
+  selectedStorageItem?: StorageItemDefinition | null;
+  gameSprites?: Record<string, GameSpriteEntry>;
+  selectedStoragePlacement?: StorageItemPlacement | null;
+  selectedPlacedStorageItem?: StorageItemDefinition | null;
+  onDeleteStoragePlacement?: () => void;
+  onRotateStoragePlacement?: () => void;
+  onChangeLightRadius?: (radius: number) => void;
+  onOpenBlockPalette: () => void;
   selectionBox: SelectionBox | null;
   hasClipboard: boolean;
   onCopySelection: () => void;
@@ -64,6 +71,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   zoom,
   showGrid,
   onToggleGrid,
+  showLightRanges,
+  onToggleLightRanges,
   showMajorGrid,
   onToggleMajorGrid,
   gridLineWidth,
@@ -72,12 +81,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onToggleHighContrastGrid,
   gridTheme,
   onChangeGridTheme,
-  palette,
   activeColor,
-  onSelectColor,
-  onAddColor,
-  onUpdateColor,
-  onDeleteColor,
+  selectedStorageItem,
+  gameSprites = {},
+  selectedStoragePlacement,
+  selectedPlacedStorageItem,
+  onDeleteStoragePlacement,
+  onRotateStoragePlacement,
+  onChangeLightRadius,
+  onOpenBlockPalette,
   selectionBox,
   hasClipboard,
   onCopySelection,
@@ -96,38 +108,6 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   language,
   t,
 }) => {
-  const [isAddingColor, setIsAddingColor] = useState(false);
-  const [newColorName, setNewColorName] = useState('');
-  const [newColorHex, setNewColorHex] = useState('#60a5fa');
-
-  const [editingColorId, setEditingColorId] = useState<string | null>(null);
-  const [editName, setEditName] = useState('');
-  const [editHex, setEditHex] = useState('');
-
-  const handleStartEdit = (col: PaletteColor, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditingColorId(col.id);
-    setEditName(getPaletteColorLabel(col, t, language));
-    setEditHex(col.hex);
-  };
-
-  const handleSaveEdit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingColorId && editName.trim()) {
-      onUpdateColor(editingColorId, editName.trim(), editHex);
-      setEditingColorId(null);
-    }
-  };
-
-  const handleSaveNewColor = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newColorName.trim()) {
-      onAddColor(newColorName.trim(), newColorHex);
-      setNewColorName('');
-      setIsAddingColor(false);
-    }
-  };
-
   // Selection metrics
   const selWidth = selectionBox ? selectionBox.maxX - selectionBox.minX + 1 : 0;
   const selHeight = selectionBox ? selectionBox.maxY - selectionBox.minY + 1 : 0;
@@ -187,6 +167,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               onChange={onToggleGrid}
               className="rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-0"
             />
+          </label>
+
+          <label className="flex items-center justify-between cursor-pointer py-0.5">
+            <span className="text-zinc-300 text-[11px]">{language === 'es' ? 'Cobertura de luces (aprox.)' : 'Light coverage (approx.)'}</span>
+            <input type="checkbox" checked={showLightRanges} onChange={onToggleLightRanges} className="rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-0" />
           </label>
 
           <label className="flex items-center justify-between cursor-pointer py-0.5">
@@ -448,176 +433,74 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
               <Palette className="w-3.5 h-3.5 text-amber-400" />
-              {t.palette}
+              {language === 'es' ? 'Catálogo de construcción' : 'Construction catalog'}
             </span>
-            <button
-              onClick={() => setIsAddingColor(!isAddingColor)}
-              className="text-[11px] text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1"
-            >
-              <Plus className="w-3 h-3" />
-              {t.addColor}
-            </button>
           </div>
-
-          {/* New color form */}
-          {isAddingColor && (
-            <form onSubmit={handleSaveNewColor} className="mb-3 p-2.5 bg-[#18191f] rounded-lg border border-amber-500/40 space-y-2">
-              <div className="text-[11px] font-semibold text-amber-400">{t.newColor}</div>
-              <input
-                type="text"
-                placeholder={t.colorName}
-                value={newColorName}
-                onChange={e => setNewColorName(e.target.value)}
-                className="w-full bg-[#121316] border border-zinc-700 rounded px-2 py-1 text-xs text-zinc-100"
-                autoFocus
-              />
-              <div className="flex items-center gap-2">
-                <input
-                  type="color"
-                  value={newColorHex}
-                  onChange={e => setNewColorHex(e.target.value)}
-                  className="w-8 h-8 rounded border-0 cursor-pointer bg-transparent"
-                />
-                <input
-                  type="text"
-                  value={newColorHex}
-                  onChange={e => setNewColorHex(e.target.value)}
-                  className="flex-1 bg-[#121316] border border-zinc-700 rounded px-2 py-1 text-xs font-mono text-zinc-200"
-                />
+          <div className="rounded-lg border border-zinc-800 bg-[#18191f] p-2.5">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-5 w-5 rounded border border-white/10" style={{ backgroundColor: activeColor.id === 'door' ? 'transparent' : activeColor.hex }}>
+                {activeColor.id === 'door' && <span className="mt-2 block h-1 w-full bg-zinc-300" />}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-xs font-medium">{getPaletteColorLabel(activeColor, t, language)}</div>
+                <div className="font-mono text-[10px] text-zinc-500">{activeColor.id === 'door' ? (language === 'es' ? 'Marcador de puerta' : 'Door marker') : activeColor.hex}</div>
               </div>
-              <div className="flex justify-end gap-1.5 pt-1">
-                <button
-                  type="button"
-                  onClick={() => setIsAddingColor(false)}
-                  className="px-2 py-1 rounded text-[11px] text-zinc-400 hover:text-zinc-200"
-                >
-                  {t.cancel}
-                </button>
-                <button
-                  type="submit"
-                  className="px-2.5 py-1 rounded bg-amber-500 text-zinc-950 font-semibold text-[11px]"
-                >
-                  {t.saveColor}
-                </button>
+            </div>
+            {selectedStorageItem && (
+              <div className="mb-2 flex items-center gap-2 rounded-md border border-zinc-800 bg-[#111216] p-2">
+                {selectedStorageItem.spriteId && gameSprites[selectedStorageItem.spriteId]
+                  ? <GameSpriteThumbnail compact sprite={gameSprites[selectedStorageItem.spriteId]} label={language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn} fallbackColor={selectedStorageItem.color} />
+                  : selectedStorageItem.imageUrl
+                    ? <img src={selectedStorageItem.imageUrl} alt={language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn} className="h-8 w-8 object-contain [image-rendering:pixelated]" onError={event => {
+                        event.currentTarget.style.display = 'none';
+                        const fallback = event.currentTarget.parentElement?.querySelector('[data-selected-item-fallback]') as HTMLElement | null;
+                        if (fallback) fallback.style.display = 'flex';
+                      }} />
+                    : <span className="flex h-8 w-8 items-center justify-center rounded border border-white/10 bg-zinc-800 text-xs font-bold text-amber-300" style={{ backgroundColor: selectedStorageItem.color ?? '#27272a' }}>{selectedStorageItem.nameEn.slice(0, 1)}</span>}
+                {selectedStorageItem.imageUrl && <span data-selected-item-fallback className="hidden h-8 w-8 items-center justify-center rounded border border-white/10 text-xs font-bold text-amber-100" style={{ backgroundColor: selectedStorageItem.color ?? '#27272a' }}>{selectedStorageItem.nameEn.slice(0, 1)}</span>}
+                <div className="min-w-0">
+                  <div className="truncate text-[11px] font-medium">{language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn}</div>
+                  <div className="font-mono text-[10px] text-amber-300">{selectedStorageItem.width}×{selectedStorageItem.height} {language === 'es' ? 'casillas' : 'tiles'}</div>
+                </div>
               </div>
-            </form>
-          )}
-
-          {/* Color list / grid */}
-          <div className="space-y-1 max-h-56 overflow-y-auto pr-0.5">
-            {palette.map(col => {
-              const isSelected = activeColor.id === col.id;
-              const isEditing = editingColorId === col.id;
-              const cellCount = cellColorCounts[col.id] || 0;
-
-              if (isEditing) {
-                return (
-                  <form
-                    key={col.id}
-                    onSubmit={handleSaveEdit}
-                    className="p-2 bg-[#18191f] rounded-lg border border-zinc-700 space-y-1.5"
-                  >
-                    <input
-                      type="text"
-                      value={editName}
-                      onChange={e => setEditName(e.target.value)}
-                      className="w-full bg-[#121316] border border-zinc-700 rounded px-2 py-0.5 text-xs text-zinc-100"
-                    />
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="color"
-                        value={editHex}
-                        onChange={e => setEditHex(e.target.value)}
-                        className="w-6 h-6 rounded cursor-pointer bg-transparent"
-                      />
-                      <input
-                        type="text"
-                        value={editHex}
-                        onChange={e => setEditHex(e.target.value)}
-                        className="flex-1 bg-[#121316] border border-zinc-700 rounded px-2 py-0.5 text-xs font-mono"
-                      />
-                    </div>
-                    <div className="flex justify-end gap-1">
-                      <button
-                        type="button"
-                        onClick={() => setEditingColorId(null)}
-                        className="px-2 py-0.5 text-[10px] text-zinc-400"
-                      >
-                        {t.cancel}
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-2 py-0.5 text-[10px] bg-amber-500 text-zinc-950 font-semibold rounded"
-                      >
-                        {t.saveColor}
-                      </button>
-                    </div>
-                  </form>
-                );
-              }
-
-              return (
-                <div
-                  key={col.id}
-                  onClick={() => onSelectColor(col)}
-                  className={`flex items-center justify-between p-1.5 rounded-lg border transition cursor-pointer group ${
-                    isSelected
-                      ? 'border-amber-500/70 bg-amber-500/10 text-amber-200 shadow-sm'
-                      : 'border-zinc-800/80 bg-[#18191f] text-zinc-300 hover:border-zinc-700 hover:bg-[#1f2029]'
-                  }`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div
-                      className="w-4 h-4 rounded-sm border border-black/40 shrink-0 shadow-inner relative"
-                      style={{
-                        backgroundColor: col.id === 'door' ? 'transparent' : col.hex,
-                      }}
-                    >
-                      {col.id === 'door' && (
-                        <div
-                          className="absolute left-1 right-1 top-1/2 -translate-y-1/2 h-2"
-                          style={{ backgroundColor: col.hex }}
-                        />
-                      )}
-                    </div>
-                    <span className="text-xs truncate font-medium">{getPaletteColorLabel(col, t, language)}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {cellCount > 0 && (
-                      <span className="px-1.5 py-0.2 rounded bg-zinc-800/80 text-[10px] font-mono text-zinc-400">
-                        {cellCount}
-                      </span>
-                    )}
-
-                    {isSelected && <Check className="w-3.5 h-3.5 text-amber-400" />}
-
-                    <button
-                      type="button"
-                      onClick={e => handleStartEdit(col, e)}
-                      title={t.editColorTooltip}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition"
-                    >
-                      <Sliders className="w-3 h-3" />
-                    </button>
-
-                    {!col.isDefault && col.id !== 'door' && (
-                      <button
-                        type="button"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onDeleteColor(col.id);
-                        }}
-                        title={t.deleteColorTooltip}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-red-400 hover:text-red-300 rounded hover:bg-red-950/30 transition"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    )}
+            )}
+            {selectedStoragePlacement && selectedPlacedStorageItem && (
+              <div className="mb-2 rounded-md border border-cyan-500/40 bg-cyan-500/5 p-2">
+                <div className="mb-2 flex items-center gap-2">
+                  {selectedPlacedStorageItem.spriteId && gameSprites[selectedPlacedStorageItem.spriteId]
+                    ? <GameSpriteThumbnail compact sprite={gameSprites[selectedPlacedStorageItem.spriteId]} label={language === 'es' ? selectedPlacedStorageItem.nameEs : selectedPlacedStorageItem.nameEn} fallbackColor={selectedPlacedStorageItem.color} />
+                    : selectedPlacedStorageItem.imageUrl
+                      ? <img src={selectedPlacedStorageItem.imageUrl} alt={language === 'es' ? selectedPlacedStorageItem.nameEs : selectedPlacedStorageItem.nameEn} className="h-8 w-8 object-contain [image-rendering:pixelated]" onError={event => { event.currentTarget.style.display = 'none'; }} />
+                      : <span className="flex h-8 w-8 items-center justify-center rounded border border-white/10 bg-zinc-800 text-xs font-bold text-cyan-300" style={{ backgroundColor: selectedPlacedStorageItem.color ?? '#27272a' }}>{selectedPlacedStorageItem.nameEn.slice(0, 1)}</span>}
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[11px] font-medium">{language === 'es' ? selectedPlacedStorageItem.nameEs : selectedPlacedStorageItem.nameEn}</div>
+                    <div className="font-mono text-[10px] text-cyan-300">{selectedStoragePlacement.width}×{selectedStoragePlacement.height} {language === 'es' ? 'casillas · arrastrar para mover' : 'tiles · drag to move'}</div>
                   </div>
                 </div>
-              );
-            })}
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button onClick={onRotateStoragePlacement} className="flex items-center justify-center gap-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1.5 text-[10px] text-zinc-200 hover:border-cyan-500/50 hover:text-cyan-200">
+                    <RotateCw className="h-3 w-3" /> {language === 'es' ? 'Girar 90°' : 'Rotate 90°'}
+                  </button>
+                  <button onClick={onDeleteStoragePlacement} className="flex items-center justify-center gap-1 rounded border border-red-900/70 bg-red-950/30 px-2 py-1.5 text-[10px] text-red-300 hover:bg-red-900/40">
+                    <Trash2 className="h-3 w-3" /> {language === 'es' ? 'Eliminar' : 'Delete'}
+                  </button>
+                </div>
+                {selectedPlacedStorageItem.defaultLightRadius !== undefined && (
+                  <div className="mt-2 border-t border-zinc-800 pt-2">
+                    <div className="mb-1 text-[10px] text-zinc-400">{language === 'es' ? 'Cobertura orientativa' : 'Reference coverage'}</div>
+                    <div className="flex items-center justify-between rounded bg-[#111216] px-2 py-1">
+                      <button onClick={() => onChangeLightRadius?.(Math.max(1, (selectedStoragePlacement.lightRadius ?? selectedPlacedStorageItem.defaultLightRadius!) - 1))} className="h-6 w-7 rounded text-sm text-zinc-300 hover:bg-zinc-800" aria-label={language === 'es' ? 'Reducir alcance' : 'Reduce range'}>−</button>
+                      <span className="font-mono text-[11px] text-amber-200">≈ {selectedStoragePlacement.lightRadius ?? selectedPlacedStorageItem.defaultLightRadius} {language === 'es' ? 'casillas' : 'tiles'}</span>
+                      <button onClick={() => onChangeLightRadius?.(Math.min(12, (selectedStoragePlacement.lightRadius ?? selectedPlacedStorageItem.defaultLightRadius!) + 1))} className="h-6 w-7 rounded text-sm text-zinc-300 hover:bg-zinc-800" aria-label={language === 'es' ? 'Aumentar alcance' : 'Increase range'}>+</button>
+                    </div>
+                    <p className="mt-1 text-[9px] leading-relaxed text-zinc-500">{language === 'es' ? 'Guía visual: el juego usa iluminación direccional y no tiene un radio exacto fijo.' : 'Visual guide: the game uses directional lighting and has no exact fixed radius.'}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            <button onClick={onOpenBlockPalette} className="w-full rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-2 text-xs font-medium text-amber-200 transition hover:bg-amber-500/20">
+              {language === 'es' ? 'Buscar piezas de construcción' : 'Browse construction pieces'}
+            </button>
           </div>
         </div>
 

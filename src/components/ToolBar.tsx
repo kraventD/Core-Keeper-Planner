@@ -32,6 +32,7 @@ import {
   Grid2X2,
   Sparkles,
   MessageSquare,
+  PackageOpen,
 } from 'lucide-react';
 
 interface ToolBarProps {
@@ -138,6 +139,13 @@ export const ToolBar: React.FC<ToolBarProps> = ({
       icon: Sparkles,
       shortcut: 'K',
       tooltip: t.tooltips.place_core,
+    },
+    {
+      id: 'place_storage',
+      name: language === 'es' ? 'Colocar objeto' : 'Place object',
+      icon: PackageOpen,
+      shortcut: '',
+      tooltip: language === 'es' ? 'Coloca el objeto de almacenamiento seleccionado en el lienzo' : 'Place the selected storage item on the canvas',
     },
     {
       id: 'annotation',

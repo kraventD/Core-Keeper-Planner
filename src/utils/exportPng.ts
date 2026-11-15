@@ -1,5 +1,6 @@
 import { BlueprintProject, PaletteColor } from '../types/blueprint';
 import { coordKey } from './gridLogic';
+import { getCanonicalCellColorId, getDoorCellOrientation } from './doorCells';
 
 export interface ExportOptions {
   cellSize: number; // e.g. 16, 24, 32, 48
@@ -27,7 +28,7 @@ export function exportBlueprintToPng(
       // Legend metrics
       const activeColorsUsed: PaletteColor[] = [];
       if (includeLegend) {
-        const usedIds = new Set(Object.values(cells));
+        const usedIds = new Set(Object.values(cells).map(getCanonicalCellColorId));
         for (const p of palette) {
           if (usedIds.has(p.id)) {
             activeColorsUsed.push(p);
@@ -116,10 +117,20 @@ export function exportBlueprintToPng(
         const [xStr, yStr] = key.split(',');
         const x = parseInt(xStr, 10);
         const y = parseInt(yStr, 10);
-        const hex = colorMap.get(colorId) || '#64748b';
+        const doorOrientation = getDoorCellOrientation(colorId);
+        const hex = colorMap.get(doorOrientation ? 'door' : colorId) || '#64748b';
+        const cellX = startX + x * cellSize;
+        const cellY = startY + y * cellSize;
 
         ctx.fillStyle = hex;
-        ctx.fillRect(startX + x * cellSize, startY + y * cellSize, cellSize, cellSize);
+        if (doorOrientation) {
+          const thickness = cellSize * 0.25;
+          const offset = cellSize * 0.375;
+          if (doorOrientation === 'horizontal') ctx.fillRect(cellX, cellY + offset, cellSize, thickness);
+          else ctx.fillRect(cellX + offset, cellY, thickness, cellSize);
+        } else {
+          ctx.fillRect(cellX, cellY, cellSize, cellSize);
+        }
 
         // Individual block outline for distinct countability
         if (showGrid) {

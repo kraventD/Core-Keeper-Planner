@@ -1,0 +1,15 @@
+Wiki item sprites in this folder were downloaded from the Core Keeper Wiki (Atma mirror).
+The Wiki states that community content is available under CC BY-NC-SA 4.0; Core Keeper
+content remains the intellectual property of its respective owners.
+
+Campfire: https://corekeeper.atma.gg/en/Campfire
+Rail: https://corekeeper.atma.gg/en/Rail
+Crystal Lamp: https://corekeeper.atma.gg/en/Crystal_Lamp
+Easter Meadow Stool: https://corekeeper.atma.gg/en/Easter_Meadow_Stool
+Pressure Plate: https://corekeeper.atma.gg/en/Pressure_Plate
+Electrical Wire: https://corekeeper.atma.gg/en/Electrical_Wire
+Sprinkler: https://corekeeper.atma.gg/en/Sprinkler
+Materializer: https://corekeeper.atma.gg/en/Materializer
+Pulse Circuit: https://core-keeper.run-digital.com/en/items/pulse-circuit/
+
+The primary Wiki has no Pulse Circuit image file; the sprite is from the Wikidom item page.

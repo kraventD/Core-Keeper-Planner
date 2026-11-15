@@ -29,6 +29,7 @@ export interface Translations {
     move: string;
     hand: string;
     place_core: string;
+    place_storage: string;
     annotation: string;
   };
   tooltips: {
@@ -39,6 +40,7 @@ export interface Translations {
     rectangle: string;
     circle: string;
     place_core: string;
+    place_storage: string;
     rect_select: string;
     fill: string;
     move: string;
@@ -336,6 +338,7 @@ export const translations: Record<Language, Translations> = {
       fill: 'Rellenar área',
       move: 'Mover selección',
       place_core: 'Colocar Core',
+      place_storage: 'Colocar objeto',
       hand: 'Mano',
       annotation: 'Anotación',
     },
@@ -347,6 +350,7 @@ export const translations: Record<Language, Translations> = {
       rectangle: 'Dibujar habitación o bloque rectangular (R)',
       circle: 'Dibujar habitación o estructura circular perfecta (C)',
       place_core: 'Colocar Core y estatuas inamovibles de inicio (K)',
+      place_storage: 'Colocar muebles, estaciones y estructuras',
       hand: 'Mover el lienzo arrastrando (H)',
       rect_select: 'Seleccionar región para copiar, mover o borrar (S)',
       fill: 'Rellenar área conectada de casillas (B / G)',
@@ -636,6 +640,7 @@ export const translations: Record<Language, Translations> = {
       fill: 'Fill Area',
       move: 'Move Selection',
       place_core: 'Place Core',
+      place_storage: 'Place object',
       hand: 'Hand',
       annotation: 'Annotation',
     },
@@ -647,6 +652,7 @@ export const translations: Record<Language, Translations> = {
       rectangle: 'Draw room or rectangular block (R)',
       circle: 'Draw perfect circular room or structure (C)',
       place_core: 'Place Core and default immovable boss statues (K)',
+      place_storage: 'Place furniture, stations, and structures',
       hand: 'Pan canvas by dragging (H)',
       rect_select: 'Select region to copy, move or delete (S)',
       fill: 'Flood fill connected area (B / G)',

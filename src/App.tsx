@@ -15,6 +15,7 @@ import {
   MirrorMode,
 } from './types/blueprint';
 import { DEFAULT_PALETTE } from './utils/palette';
+import { getDoorPlacementColorId, normalizeDoorCells } from './utils/doorCells';
 import {
   copySelection,
   deleteSelection,
@@ -48,6 +49,11 @@ import { ExportModal } from './components/Modals/ExportModal';
 import { ExportCodeModal } from './components/Modals/ExportCodeModal';
 import { ImportCodeModal } from './components/Modals/ImportCodeModal';
 import { ShortcutsModal } from './components/Modals/ShortcutsModal';
+import { BlockPaletteModal } from './components/Modals/BlockPaletteModal';
+import { DEFAULT_ACTIVE_COLOR, paletteWithBlockColors } from './utils/blockCatalog';
+import { StorageItemDefinition } from './utils/storageCatalog';
+import { migrateStructurePlacementsToColors, STORAGE_ITEM_BY_ID } from './utils/storageCatalog';
+import { GameSpriteEntry, loadGameSpriteCatalog } from './utils/gameSpriteCatalog';
 
 const INITIAL_PROJECT: BlueprintProject = {
   id: 'proj_default',
@@ -55,6 +61,7 @@ const INITIAL_PROJECT: BlueprintProject = {
   width: 60,
   height: 50,
   cells: {},
+  storagePlacements: [],
   palette: DEFAULT_PALETTE,
   annotations: [],
   createdAt: new Date().toISOString(),
@@ -91,7 +98,9 @@ export default function App() {
   const [includeWaypoint, setIncludeWaypoint] = useState<boolean>(true);
   const [mirrorMode, setMirrorMode] = useState<MirrorMode>('none');
   const [brushSize, setBrushSize] = useState<number>(1);
-  const [activeColor, setActiveColor] = useState<PaletteColor>(() => project.palette[0] || DEFAULT_PALETTE[0]);
+  const [activeColor, setActiveColor] = useState<PaletteColor>(() =>
+    project.palette.find(color => color.id === DEFAULT_ACTIVE_COLOR.id) ?? DEFAULT_ACTIVE_COLOR,
+  );
   const [doorOrientation, setDoorOrientation] = useState<DoorOrientation>('horizontal');
 
   // Door tooltip: shown once, persisted in localStorage
@@ -110,7 +119,7 @@ export default function App() {
     if (current) {
       setActiveColor(current);
     } else if (project.palette.length > 0) {
-      setActiveColor(project.palette[0]);
+      setActiveColor(project.palette.find(color => color.id === DEFAULT_ACTIVE_COLOR.id) ?? project.palette[0]);
     }
   }, [project.palette, activeColor.id]);
 
@@ -122,6 +131,7 @@ export default function App() {
   const [showGrid, setShowGrid] = useState<boolean>(true);
   const [showMajorGrid, setShowMajorGrid] = useState<boolean>(true);
   const [showCoordinates, setShowCoordinates] = useState<boolean>(true);
+  const [showLightRanges, setShowLightRanges] = useState<boolean>(true);
   const [gridLineWidth, setGridLineWidth] = useState<number>(1.5);
   const [highContrastGrid, setHighContrastGrid] = useState<boolean>(true);
   const [gridTheme, setGridTheme] = useState<'light' | 'dark'>('light');
@@ -134,6 +144,7 @@ export default function App() {
       cells: { ...project.cells },
       width: project.width,
       height: project.height,
+      storagePlacements: project.storagePlacements ?? [],
     },
   ]);
   const [historyIndex, setHistoryIndex] = useState<number>(0);
@@ -143,7 +154,7 @@ export default function App() {
 
   // Push new history state
   const pushHistory = useCallback(
-    (newCells: Record<string, string>, desc: string, width = project.width, height = project.height) => {
+    (newCells: Record<string, string>, desc: string, width = project.width, height = project.height, storagePlacements = project.storagePlacements ?? []) => {
       setHistory(prev => {
         const sliced = prev.slice(0, historyIndex + 1);
         const newStep: HistoryStep = {
@@ -151,6 +162,7 @@ export default function App() {
           cells: newCells,
           width,
           height,
+          storagePlacements,
         };
         const maxSteps = 50;
         const updated = [...sliced, newStep];
@@ -158,7 +170,7 @@ export default function App() {
       });
       setHistoryIndex(prev => Math.min(prev + 1, 49));
     },
-    [historyIndex, project.width, project.height]
+    [historyIndex, project.width, project.height, project.storagePlacements]
   );
 
   const handleUndo = useCallback(() => {
@@ -172,6 +184,7 @@ export default function App() {
         cells: { ...step.cells },
         width: step.width,
         height: step.height,
+        storagePlacements: step.storagePlacements ?? [],
         updatedAt: new Date().toISOString(),
       }));
     }
@@ -188,6 +201,7 @@ export default function App() {
         cells: { ...step.cells },
         width: step.width,
         height: step.height,
+        storagePlacements: step.storagePlacements ?? [],
         updatedAt: new Date().toISOString(),
       }));
     }
@@ -222,6 +236,14 @@ export default function App() {
   const [isExportCodeOpen, setIsExportCodeOpen] = useState(false);
   const [isImportCodeOpen, setIsImportCodeOpen] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [isBlockPaletteOpen, setIsBlockPaletteOpen] = useState(false);
+  const [selectedStorageItemId, setSelectedStorageItemId] = useState<string | null>(null);
+  const [selectedStoragePlacementId, setSelectedStoragePlacementId] = useState<string | null>(null);
+  const [gameSprites, setGameSprites] = useState<Record<string, GameSpriteEntry>>({});
+
+  useEffect(() => {
+    loadGameSpriteCatalog().then(setGameSprites).catch(() => setGameSprites({}));
+  }, []);
 
   // Toast alert
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -273,9 +295,9 @@ export default function App() {
 
   const handleFillSelection = useCallback(() => {
     if (!selectionBox) return;
-    const filled = fillSelection(project.cells, selectionBox, activeColor.id, project.width, project.height);
+    const filled = fillSelection(project.cells, selectionBox, getDoorPlacementColorId(activeColor.id, doorOrientation), project.width, project.height);
     handleUpdateCells(filled, 'Rellenar selección');
-  }, [selectionBox, project.cells, activeColor.id, project.width, project.height, handleUpdateCells]);
+  }, [selectionBox, project.cells, activeColor.id, doorOrientation, project.width, project.height, handleUpdateCells]);
 
   const handleClearSelection = useCallback(() => {
     setSelectionBox(null);
@@ -473,14 +495,18 @@ export default function App() {
   // 9. Resize & Clear Blueprint
   const handleApplyResize = (newWidth: number, newHeight: number) => {
     const { updatedCells } = resizeGridCells(project.cells, newWidth, newHeight);
+    const storagePlacements = (project.storagePlacements ?? []).filter(item =>
+      item.x + item.width <= newWidth && item.y + item.height <= newHeight,
+    );
     setProject(prev => ({
       ...prev,
       width: newWidth,
       height: newHeight,
       cells: updatedCells,
+      storagePlacements,
       updatedAt: new Date().toISOString(),
     }));
-    pushHistory(updatedCells, `Redimensionar a ${newWidth}×${newHeight}`, newWidth, newHeight);
+    pushHistory(updatedCells, `Redimensionar a ${newWidth}×${newHeight}`, newWidth, newHeight, storagePlacements);
     if (selectionBox) {
       if (selectionBox.minX >= newWidth || selectionBox.minY >= newHeight) {
         setSelectionBox(null);
@@ -496,7 +522,8 @@ export default function App() {
   };
 
   const handleClearBlueprint = () => {
-    handleUpdateCells({}, 'Limpiar plano');
+    setProject(prev => ({ ...prev, cells: {}, storagePlacements: [], updatedAt: new Date().toISOString() }));
+    pushHistory({}, 'Limpiar plano', project.width, project.height, []);
     setSelectionBox(null);
   };
 
@@ -508,6 +535,7 @@ export default function App() {
       width,
       height,
       cells: {},
+      storagePlacements: [],
       palette: project.palette,
       annotations: [],
       createdAt: new Date().toISOString(),
@@ -521,6 +549,7 @@ export default function App() {
         cells: {},
         width,
         height,
+        storagePlacements: [],
       },
     ]);
     setHistoryIndex(0);
@@ -538,6 +567,7 @@ export default function App() {
           cells: { ...loaded.cells },
           width: loaded.width,
           height: loaded.height,
+          storagePlacements: loaded.storagePlacements ?? [],
         },
       ]);
       setHistoryIndex(0);
@@ -563,12 +593,17 @@ export default function App() {
   };
 
   const handleImportCodeFromData = (projectData: Partial<BlueprintProject>) => {
+    const migratedStructures = migrateStructurePlacementsToColors(
+      normalizeDoorCells(projectData.cells ?? {}),
+      projectData.storagePlacements ?? [],
+    );
     setProject(prev => ({
       ...prev,
       width: projectData.width ?? prev.width,
       height: projectData.height ?? prev.height,
-      cells: projectData.cells ?? prev.cells,
-      palette: projectData.palette ?? prev.palette,
+      cells: projectData.cells || projectData.storagePlacements ? migratedStructures.cells : prev.cells,
+      storagePlacements: projectData.storagePlacements ? migratedStructures.storagePlacements : prev.storagePlacements ?? [],
+      palette: paletteWithBlockColors(projectData.palette ?? prev.palette),
       annotations: projectData.annotations ?? prev.annotations,
       updatedAt: new Date().toISOString(),
     }));
@@ -576,33 +611,97 @@ export default function App() {
     showToast(t.alerts.projectLoaded);
   };
 
-  // 11. Palette handlers
-  const handleAddColor = (name: string, hex: string) => {
-    const id = `col_${Date.now()}`;
-    const newColor: PaletteColor = { id, name, hex, isDefault: false };
-    setProject(prev => ({
-      ...prev,
-      palette: [...prev.palette, newColor],
-      updatedAt: new Date().toISOString(),
-    }));
-    setActiveColor(newColor);
-  };
+  const handlePlaceStorageItem = useCallback((x: number, y: number, item: StorageItemDefinition) => {
+    const currentPlacements = project.storagePlacements ?? [];
+    if (x + item.width > project.width || y + item.height > project.height) {
+      showToast(language === 'es' ? 'El objeto queda fuera del plano.' : 'The item would extend beyond the blueprint.');
+      return;
+    }
+    const layer = item.layer ?? 'object';
+    const overlaps = currentPlacements.some(existing => (existing.layer ?? 'object') === layer &&
+      x < existing.x + existing.width && x + item.width > existing.x &&
+      y < existing.y + existing.height && y + item.height > existing.y,
+    );
+    if (overlaps) {
+      showToast(language === 'es' ? 'Ese espacio ya está ocupado por otro objeto.' : 'That space is occupied by another item.');
+      return;
+    }
+    const nextPlacements = [...currentPlacements, {
+      id: `storage_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      itemId: item.id,
+      x,
+      y,
+      width: item.width,
+      height: item.height,
+      layer,
+      lightRadius: item.defaultLightRadius,
+      rotation: 0 as const,
+    }];
+    const placedId = nextPlacements[nextPlacements.length - 1].id;
+    setSelectedStoragePlacementId(placedId);
+    setProject(prev => {
+      const updated = { ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
+      saveAutosave(updated);
+      return updated;
+    });
+    pushHistory(project.cells, `Colocar ${language === 'es' ? item.nameEs : item.nameEn} (${item.width}×${item.height})`, project.width, project.height, nextPlacements);
+  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
 
-  const handleUpdateColor = (id: string, name: string, hex: string) => {
-    setProject(prev => ({
-      ...prev,
-      palette: prev.palette.map(p => (p.id === id ? { ...p, name, hex } : p)),
-      updatedAt: new Date().toISOString(),
-    }));
-  };
+  const handleRemoveStorageItem = useCallback((placementId: string) => {
+    const nextPlacements = (project.storagePlacements ?? []).filter(item => item.id !== placementId);
+    setProject(prev => {
+      const updated = { ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
+      saveAutosave(updated);
+      return updated;
+    });
+    pushHistory(project.cells, 'Eliminar objeto de almacenamiento', project.width, project.height, nextPlacements);
+    setSelectedStoragePlacementId(current => current === placementId ? null : current);
+  }, [project.cells, project.storagePlacements, project.width, project.height, pushHistory]);
 
-  const handleDeleteColor = (id: string) => {
-    setProject(prev => ({
-      ...prev,
-      palette: prev.palette.filter(p => p.id !== id),
-      updatedAt: new Date().toISOString(),
-    }));
-  };
+  const handleMoveStorageItem = useCallback((placementId: string, x: number, y: number) => {
+    const placements = project.storagePlacements ?? [];
+    const moving = placements.find(item => item.id === placementId);
+    if (!moving || (moving.x === x && moving.y === y)) return;
+    const overlaps = placements.some(item => item.id !== placementId && (item.layer ?? 'object') === (moving.layer ?? 'object') &&
+      x < item.x + item.width && x + moving.width > item.x &&
+      y < item.y + item.height && y + moving.height > item.y);
+    if (x < 0 || y < 0 || x + moving.width > project.width || y + moving.height > project.height || overlaps) {
+      showToast(language === 'es' ? 'No se puede mover: el espacio está fuera del plano u ocupado.' : 'Cannot move: the space is outside the blueprint or occupied.');
+      return;
+    }
+    const nextPlacements = placements.map(item => item.id === placementId ? { ...item, x, y } : item);
+    setProject(prev => ({ ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() }));
+    pushHistory(project.cells, 'Mover objeto', project.width, project.height, nextPlacements);
+  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+
+  const handleRotateStorageItem = useCallback((placementId: string) => {
+    const placements = project.storagePlacements ?? [];
+    const current = placements.find(item => item.id === placementId);
+    if (!current) return;
+    const width = current.height;
+    const height = current.width;
+    const overlaps = placements.some(item => item.id !== placementId && (item.layer ?? 'object') === (current.layer ?? 'object') &&
+      current.x < item.x + item.width && current.x + width > item.x &&
+      current.y < item.y + item.height && current.y + height > item.y);
+    if (current.x + width > project.width || current.y + height > project.height || overlaps) {
+      showToast(language === 'es' ? 'No se puede girar: el espacio está fuera del plano u ocupado.' : 'Cannot rotate: the space is outside the blueprint or occupied.');
+      return;
+    }
+    const nextPlacements = placements.map(item => item.id === placementId ? {
+      ...item,
+      width,
+      height,
+      rotation: ((item.rotation ?? 0) === 0 ? 90 : 0) as 0 | 90,
+    } : item);
+    setProject(prev => ({ ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() }));
+    pushHistory(project.cells, 'Girar objeto', project.width, project.height, nextPlacements);
+  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+
+  const handleChangeLightRadius = useCallback((placementId: string, lightRadius: number) => {
+    const nextPlacements = (project.storagePlacements ?? []).map(item => item.id === placementId ? { ...item, lightRadius } : item);
+    setProject(prev => ({ ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() }));
+    pushHistory(project.cells, 'Ajustar alcance de luz', project.width, project.height, nextPlacements);
+  }, [project.cells, project.height, project.storagePlacements, project.width, pushHistory]);
 
   // 12. Global Keyboard Shortcuts
   useEffect(() => {
@@ -647,7 +746,10 @@ export default function App() {
 
       // Delete
       if (e.key === 'Delete' || e.key === 'Backspace') {
-        if (selectionBox) {
+        if (selectedStoragePlacementId) {
+          e.preventDefault();
+          handleRemoveStorageItem(selectedStoragePlacementId);
+        } else if (selectionBox) {
           e.preventDefault();
           handleDeleteSelection();
         }
@@ -657,6 +759,7 @@ export default function App() {
       // Escape clear selection
       if (e.key === 'Escape') {
         handleClearSelection();
+        setSelectedStoragePlacementId(null);
         return;
       }
 
@@ -694,6 +797,8 @@ export default function App() {
     handleDeleteSelection,
     handleClearSelection,
     selectionBox,
+    selectedStoragePlacementId,
+    handleRemoveStorageItem,
     project.palette,
     setActiveColor,
   ]);
@@ -702,6 +807,9 @@ export default function App() {
   const cellColorCounts = useMemo(() => {
     return countCellsByColor(project.cells);
   }, [project.cells]);
+  const selectedStorageItem = selectedStorageItemId ? STORAGE_ITEM_BY_ID.get(selectedStorageItemId) ?? null : null;
+  const selectedStoragePlacement = (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId) ?? null;
+  const selectedPlacedStorageItem = selectedStoragePlacement ? STORAGE_ITEM_BY_ID.get(selectedStoragePlacement.itemId) ?? null : null;
 
   return (
     <div className="flex flex-col h-screen w-screen bg-[#101115] text-zinc-100 overflow-hidden font-sans">
@@ -767,12 +875,20 @@ export default function App() {
             showGrid={showGrid}
             showMajorGrid={showMajorGrid}
             showCoordinates={showCoordinates}
+            showLightRanges={showLightRanges}
             gridLineWidth={gridLineWidth}
             highContrastGrid={highContrastGrid}
             gridTheme={gridTheme}
             selectionBox={selectionBox}
             onSetSelectionBox={setSelectionBox}
             onUpdateCells={handleUpdateCells}
+            selectedStorageItem={selectedStorageItem}
+            gameSprites={gameSprites}
+            onPlaceStorageItem={handlePlaceStorageItem}
+            onRemoveStorageItem={handleRemoveStorageItem}
+            selectedStoragePlacementId={selectedStoragePlacementId}
+            onSelectStoragePlacement={setSelectedStoragePlacementId}
+            onMoveStorageItem={handleMoveStorageItem}
             onZoomChange={setCurrentZoom}
             annotations={project.annotations}
             onAddAnnotation={handleAddAnnotation}
@@ -791,6 +907,8 @@ export default function App() {
           zoom={currentZoom}
           showGrid={showGrid}
           onToggleGrid={() => setShowGrid(v => !v)}
+          showLightRanges={showLightRanges}
+          onToggleLightRanges={() => setShowLightRanges(v => !v)}
           showMajorGrid={showMajorGrid}
           onToggleMajorGrid={() => setShowMajorGrid(v => !v)}
           gridLineWidth={gridLineWidth}
@@ -799,12 +917,15 @@ export default function App() {
           onToggleHighContrastGrid={() => setHighContrastGrid(v => !v)}
           gridTheme={gridTheme}
           onChangeGridTheme={setGridTheme}
-          palette={project.palette}
           activeColor={activeColor}
-          onSelectColor={setActiveColor}
-          onAddColor={handleAddColor}
-          onUpdateColor={handleUpdateColor}
-          onDeleteColor={handleDeleteColor}
+          onOpenBlockPalette={() => setIsBlockPaletteOpen(true)}
+          selectedStorageItem={selectedStorageItem}
+          gameSprites={gameSprites}
+          selectedStoragePlacement={selectedStoragePlacement}
+          selectedPlacedStorageItem={selectedPlacedStorageItem}
+          onDeleteStoragePlacement={() => selectedStoragePlacementId && handleRemoveStorageItem(selectedStoragePlacementId)}
+          onRotateStoragePlacement={() => selectedStoragePlacementId && handleRotateStorageItem(selectedStoragePlacementId)}
+          onChangeLightRadius={radius => selectedStoragePlacementId && handleChangeLightRadius(selectedStoragePlacementId, radius)}
           selectionBox={selectionBox}
           hasClipboard={clipboard !== null}
           onCopySelection={handleCopySelection}
@@ -880,6 +1001,21 @@ export default function App() {
         onClose={() => setIsImportCodeOpen(false)}
         onImport={handleImportCodeFromData}
         t={t}
+      />
+
+      <BlockPaletteModal
+        isOpen={isBlockPaletteOpen}
+        onClose={() => setIsBlockPaletteOpen(false)}
+        onSelectColor={setActiveColor}
+        activeColor={activeColor}
+        language={language}
+        selectedStorageItemId={selectedStorageItemId}
+        gameSprites={gameSprites}
+        onSelectStorageItem={item => {
+          setSelectedStorageItemId(item.id);
+          setActiveTool('place_storage');
+          setIsBlockPaletteOpen(false);
+        }}
       />
     </div>
   );

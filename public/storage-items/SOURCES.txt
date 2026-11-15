@@ -1,0 +1,8 @@
+Storage item sprites downloaded from the Core Keeper Wiki's item pages and image CDN.
+Wiki: https://core-keeper.fandom.com/wiki/Storage_items
+Mirror used for image delivery: https://corekeeper.atma.gg/
+The unobtainable Ancient Fountain is intentionally excluded from the app catalog.
+
+Additional workbench, station, and furniture sprites were copied from the local
+AssetRipper export supplied by the project owner. Only the individual PNGs used
+by the catalog are included here; the full export stays outside the project.

@@ -13,6 +13,10 @@ import {
   DoorOrientation,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
+import { STORAGE_ITEM_BY_ID, StorageItemDefinition } from '../utils/storageCatalog';
+import { StorageItemPlacement } from '../types/blueprint';
+import { GameSpriteEntry } from '../utils/gameSpriteCatalog';
+import { getDoorCellOrientation, getDoorPlacementColorId } from '../utils/doorCells';
 import {
   coordKey,
   getBresenhamLine,
@@ -37,6 +41,30 @@ import {
   Crosshair,
   RotateCcw,
 } from 'lucide-react';
+
+interface SpriteContentBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+const STORAGE_LAYER_ORDER: Record<NonNullable<StorageItemPlacement['layer']>, number> = {
+  bridge: 0,
+  floor: 1,
+  rail: 2,
+  fence: 3,
+  wall: 4,
+  object: 5,
+  light: 6,
+};
+
+const storageLayerOrder = (placement: StorageItemPlacement) => STORAGE_LAYER_ORDER[placement.layer ?? 'object'];
+const placementAtCell = (placements: StorageItemPlacement[], x: number, y: number) =>
+  placements
+    .filter(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height)
+    .sort((a, b) => storageLayerOrder(b) - storageLayerOrder(a))
+    .at(0);
 
 // Helper to build a themed crosshair cursor SVG
 const makeCrosshairCursor = (strokeColor: string, glowColor: string): string =>
@@ -71,12 +99,20 @@ interface CanvasAreaProps {
   showGrid: boolean;
   showMajorGrid: boolean;
   showCoordinates: boolean;
+  showLightRanges?: boolean;
   gridLineWidth?: number;
   highContrastGrid?: boolean;
   gridTheme?: 'light' | 'dark';
   selectionBox: SelectionBox | null;
   onSetSelectionBox: (box: SelectionBox | null) => void;
   onUpdateCells: (newCells: Record<string, string>, description: string) => void;
+  selectedStorageItem?: StorageItemDefinition | null;
+  gameSprites?: Record<string, GameSpriteEntry>;
+  onPlaceStorageItem?: (x: number, y: number, item: StorageItemDefinition) => void;
+  onRemoveStorageItem?: (placementId: string) => void;
+  selectedStoragePlacementId?: string | null;
+  onSelectStoragePlacement?: (id: string | null) => void;
+  onMoveStorageItem?: (id: string, x: number, y: number) => void;
   onZoomChange?: (zoom: number) => void;
   annotations: Annotation[];
   onAddAnnotation: (x: number, y: number) => void;
@@ -101,12 +137,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   showGrid,
   showMajorGrid,
   showCoordinates,
+  showLightRanges = true,
   gridLineWidth = 1.5,
   highContrastGrid = true,
   gridTheme = 'light',
   selectionBox,
   onSetSelectionBox,
   onUpdateCells,
+  selectedStorageItem = null,
+  gameSprites = {},
+  onPlaceStorageItem,
+  onRemoveStorageItem,
+  selectedStoragePlacementId = null,
+  onSelectStoragePlacement,
+  onMoveStorageItem,
   onZoomChange,
   annotations = [],
   onAddAnnotation,
@@ -131,6 +175,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [isPointerDown, setIsPointerDown] = useState<boolean>(false);
   const [dragStartCell, setDragStartCell] = useState<CellCoord | null>(null);
   const [dragCurrentCell, setDragCurrentCell] = useState<CellCoord | null>(null);
+  const storageDragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
+  const [storageDragPreview, setStorageDragPreview] = useState<CellCoord | null>(null);
 
   // Annotation drag state
   const [draggingAnnotationId, setDraggingAnnotationId] = useState<string | null>(null);
@@ -148,6 +194,62 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   // Recently changed cells for subtle animation (key -> timestamp)
   const recentChangesRef = useRef<Record<string, number>>({});
   const ANIMATION_DURATION_MS = 400;
+
+  // Cache for palette sprites (URL -> image)
+  const spriteCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
+  const spriteBoundsCacheRef = useRef<WeakMap<HTMLImageElement, SpriteContentBounds>>(new WeakMap());
+
+  const getSpriteImage = (src?: string): HTMLImageElement | null => {
+    if (!src) return null;
+    let img = spriteCacheRef.current.get(src);
+    if (!img) {
+      img = new Image();
+      img.src = src;
+      spriteCacheRef.current.set(src, img);
+    }
+    return img.complete && img.naturalWidth > 0 ? img : null;
+  };
+
+  const getSpriteContentBounds = (image: HTMLImageElement): SpriteContentBounds => {
+    const cached = spriteBoundsCacheRef.current.get(image);
+    if (cached) return cached;
+
+    let bounds: SpriteContentBounds = { x: 0, y: 0, width: image.naturalWidth, height: image.naturalHeight };
+    try {
+      const scratch = document.createElement('canvas');
+      scratch.width = image.naturalWidth;
+      scratch.height = image.naturalHeight;
+      const scratchContext = scratch.getContext('2d', { willReadFrequently: true });
+      if (!scratchContext) return bounds;
+      scratchContext.drawImage(image, 0, 0);
+      const { data, width, height } = scratchContext.getImageData(0, 0, scratch.width, scratch.height);
+      let minX = width;
+      let minY = height;
+      let maxX = -1;
+      let maxY = -1;
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          if (data[(y * width + x) * 4 + 3] === 0) continue;
+          minX = Math.min(minX, x);
+          minY = Math.min(minY, y);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      }
+      if (maxX >= minX && maxY >= minY) {
+        bounds = { x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1 };
+      }
+    } catch {
+      // Keep the full sprite if a browser cannot inspect its alpha channel.
+    }
+    spriteBoundsCacheRef.current.set(image, bounds);
+    return bounds;
+  };
+
+  const drawStorageSprite = (context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number) => {
+    const bounds = getSpriteContentBounds(image);
+    context.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, x, y, width, height);
+  };
 
   // Track cells changed during pointer up for animation
   const markRecentChanges = useCallback((cells: Record<string, string>) => {
@@ -352,6 +454,38 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     setIsPointerDown(true);
 
+    if (activeTool === 'place_storage') {
+      if (cell && selectedStorageItem && onPlaceStorageItem) {
+        onPlaceStorageItem(cell.x, cell.y, selectedStorageItem);
+      }
+      setIsPointerDown(false);
+      return;
+    }
+
+    if (activeTool === 'eraser' && cell && onRemoveStorageItem) {
+      const placement = placementAtCell(project.storagePlacements ?? [], cell.x, cell.y);
+      if (placement) {
+        onRemoveStorageItem(placement.id);
+        if (placement.id === selectedStoragePlacementId) onSelectStoragePlacement?.(null);
+        setIsPointerDown(false);
+        return;
+      }
+    }
+
+    if (activeTool === 'select' && cell) {
+      const placement = placementAtCell(project.storagePlacements ?? [], cell.x, cell.y);
+      if (placement) {
+        onSelectStoragePlacement?.(placement.id);
+        onSetSelectionBox(null);
+        storageDragRef.current = { id: placement.id, offsetX: cell.x - placement.x, offsetY: cell.y - placement.y };
+        setStorageDragPreview({ x: placement.x, y: placement.y });
+        setDragStartCell(null);
+        setDragCurrentCell(null);
+        return;
+      }
+      onSelectStoragePlacement?.(null);
+    }
+
     // Detectar primera puerta colocada (para tooltip de bienvenida)
     if (
       activeColor.id === 'door' &&
@@ -386,7 +520,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           project.cells,
           cell.x,
           cell.y,
-          activeColor.id,
+          getDoorPlacementColorId(activeColor.id, doorOrientation),
           project.width,
           project.height
         );
@@ -429,7 +563,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       if (activeTool === 'pencil' || activeTool === 'eraser') {
         // Apply immediate initial stroke
         const workingCells = { ...project.cells };
-        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? activeColor.id : null);
+        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
         strokeBufferRef.current = workingCells;
       }
     } else {
@@ -475,6 +609,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const cell = screenToCell(e.clientX, e.clientY);
     setHoverCell(cell);
 
+    if (storageDragRef.current && cell) {
+      setStorageDragPreview({ x: cell.x - storageDragRef.current.offsetX, y: cell.y - storageDragRef.current.offsetY });
+      return;
+    }
+
     // Arrastrar anotación para moverla
     if (draggingAnnotationId && cell) {
       const ann = annotations.find(a => a.id === draggingAnnotationId);
@@ -502,7 +641,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       if (activeTool === 'pencil' || activeTool === 'eraser') {
         const workingCells = { ...strokeBufferRef.current };
-        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? activeColor.id : null);
+        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
         strokeBufferRef.current = workingCells;
       }
     }
@@ -516,6 +655,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     if (isPanning) {
       setIsPanning(false);
+      return;
+    }
+
+    if (storageDragRef.current) {
+      const cell = screenToCell(e.clientX, e.clientY);
+      const drag = storageDragRef.current;
+      const placement = (project.storagePlacements ?? []).find(item => item.id === drag.id);
+      if (cell && placement) onMoveStorageItem?.(drag.id, cell.x - drag.offsetX, cell.y - drag.offsetY);
+      storageDragRef.current = null;
+      setStorageDragPreview(null);
+      setIsPointerDown(false);
+      setDragStartCell(null);
+      setDragCurrentCell(null);
       return;
     }
 
@@ -543,7 +695,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       );
       const updated = { ...project.cells };
       for (const c of lineCells) {
-        updated[coordKey(c.x, c.y)] = activeColor.id;
+        updated[coordKey(c.x, c.y)] = getDoorPlacementColorId(activeColor.id, doorOrientation);
       }
       markRecentChanges(updated);
       onUpdateCells(updated, 'Línea');
@@ -559,7 +711,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       );
       const updated = { ...project.cells };
       for (const c of rectCells) {
-        updated[coordKey(c.x, c.y)] = activeColor.id;
+        updated[coordKey(c.x, c.y)] = getDoorPlacementColorId(activeColor.id, doorOrientation);
       }
       markRecentChanges(updated);
       onUpdateCells(updated, rectangleMode === 'outline' ? 'Muros de habitación' : 'Rectángulo lleno');
@@ -576,7 +728,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       );
       const updated = { ...project.cells };
       for (const c of circleRes.cells) {
-        updated[coordKey(c.x, c.y)] = activeColor.id;
+        updated[coordKey(c.x, c.y)] = getDoorPlacementColorId(activeColor.id, doorOrientation);
       }
       markRecentChanges(updated);
       onUpdateCells(
@@ -686,19 +838,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const cy = parseInt(yStr, 10);
 
         if (cx >= minVisibleX && cx <= maxVisibleX && cy >= minVisibleY && cy <= maxVisibleY) {
-          const hex = colorMap.get(colorId) || '#64748b';
+          const cellDoorOrientation = getDoorCellOrientation(colorId);
+          const hex = colorMap.get(cellDoorOrientation ? 'door' : colorId) || '#64748b';
           const cellScreenX = bpX + cx * currentCellSize;
           const cellScreenY = bpY + cy * currentCellSize;
-
-          // Render door as thin line (25% of cell thickness) with rotation
-          if (colorId === 'door') {
+          if (cellDoorOrientation) {
             const doorThickness = currentCellSize * 0.25;
             const doorOffset = currentCellSize * 0.375; // (1 - 0.25) / 2 = 0.375
 
             ctx.save();
             ctx.fillStyle = hex;
 
-            if (doorOrientation === 'horizontal') {
+            if (cellDoorOrientation === 'horizontal') {
               // Horizontal door: thin horizontal line across the center of the cell
               ctx.fillRect(
                 cellScreenX,
@@ -836,6 +987,112 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       ctx.strokeStyle = gridTheme === 'light' ? '#0f172a' : 'rgba(251, 191, 36, 0.55)';
       ctx.lineWidth = 2;
       ctx.strokeRect(bpX, bpY, bpW, bpH);
+
+      // Approximate light guides are kept separate from the game's lighting simulation.
+      if (showLightRanges) {
+        const lightPlacements = (project.storagePlacements ?? []).filter(item =>
+          item.lightRadius !== undefined || !!STORAGE_ITEM_BY_ID.get(item.itemId)?.defaultLightRadius,
+        );
+        if (lightPlacements.length) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(bpX, bpY, bpW, bpH);
+          ctx.clip();
+          for (const placement of lightPlacements) {
+            const item = STORAGE_ITEM_BY_ID.get(placement.itemId);
+            const radius = placement.lightRadius ?? item?.defaultLightRadius;
+            if (!radius) continue;
+            const centerX = bpX + (placement.x + placement.width / 2) * currentCellSize;
+            const centerY = bpY + (placement.y + placement.height / 2) * currentCellSize;
+            const radiusPx = radius * currentCellSize;
+            const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radiusPx);
+            glow.addColorStop(0, 'rgba(250, 204, 21, 0.18)');
+            glow.addColorStop(0.6, 'rgba(250, 204, 21, 0.07)');
+            glow.addColorStop(1, 'rgba(250, 204, 21, 0)');
+            ctx.fillStyle = glow;
+            ctx.fillRect(centerX - radiusPx, centerY - radiusPx, radiusPx * 2, radiusPx * 2);
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.55)';
+            ctx.lineWidth = 1.25;
+            ctx.setLineDash([5, 4]);
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radiusPx, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            if (currentCellSize >= 12) {
+              const label = `≈${radius}`;
+              ctx.font = 'bold 10px monospace';
+              const labelWidth = ctx.measureText(label).width + 8;
+              ctx.fillStyle = 'rgba(24, 24, 27, 0.9)';
+              ctx.fillRect(centerX - labelWidth / 2, centerY - radiusPx - 17, labelWidth, 14);
+              ctx.fillStyle = '#fde68a';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(label, centerX, centerY - radiusPx - 10);
+              ctx.textAlign = 'start';
+              ctx.textBaseline = 'alphabetic';
+            }
+          }
+          ctx.restore();
+        }
+      }
+
+      // Storage items render across their full footprint, one tile per grid cell.
+      const orderedPlacements = [...(project.storagePlacements ?? [])].sort((a, b) => storageLayerOrder(a) - storageLayerOrder(b));
+      for (const storedPlacement of orderedPlacements as StorageItemPlacement[]) {
+        const preview = storageDragPreview && storageDragRef.current?.id === storedPlacement.id ? storageDragPreview : null;
+        const placement = preview ? { ...storedPlacement, x: preview.x, y: preview.y } : storedPlacement;
+        const item = STORAGE_ITEM_BY_ID.get(placement.itemId);
+        if (!item) continue;
+        if (placement.x + placement.width < minVisibleX || placement.x > maxVisibleX || placement.y + placement.height < minVisibleY || placement.y > maxVisibleY) continue;
+        const gameSprite = item.spriteId ? gameSprites[item.spriteId] : undefined;
+        const image = getSpriteImage(gameSprite?.atlas ?? item.imageUrl);
+        const itemX = bpX + placement.x * currentCellSize;
+        const itemY = bpY + placement.y * currentCellSize;
+        const itemW = placement.width * currentCellSize;
+        const itemH = placement.height * currentCellSize;
+        if (image && item.category !== 'bridge' && item.category !== 'fence') {
+          ctx.save();
+          ctx.imageSmoothingEnabled = false;
+          if (gameSprite) {
+            const sourceY = gameSprite.rect.origin === 'bottom-left'
+              ? image.naturalHeight - gameSprite.rect.y - gameSprite.rect.height
+              : gameSprite.rect.y;
+            if ((placement.rotation ?? 0) === 90) {
+              ctx.translate(itemX + itemW / 2, itemY + itemH / 2);
+              ctx.rotate(Math.PI / 2);
+              ctx.drawImage(image, gameSprite.rect.x, sourceY, gameSprite.rect.width, gameSprite.rect.height, -itemH / 2, -itemW / 2, itemH, itemW);
+            } else {
+              ctx.drawImage(image, gameSprite.rect.x, sourceY, gameSprite.rect.width, gameSprite.rect.height, itemX, itemY, itemW, itemH);
+            }
+          } else if ((placement.rotation ?? 0) === 90) {
+            ctx.translate(itemX + itemW / 2, itemY + itemH / 2);
+            ctx.rotate(Math.PI / 2);
+            drawStorageSprite(ctx, image, -itemH / 2, -itemW / 2, itemH, itemW);
+          } else {
+            drawStorageSprite(ctx, image, itemX, itemY, itemW, itemH);
+          }
+          ctx.restore();
+        } else {
+          ctx.fillStyle = item.color ?? 'rgba(245, 158, 11, 0.30)';
+          ctx.fillRect(itemX, itemY, itemW, itemH);
+          if ((placement.width > 1 || placement.height > 1) && itemW >= 24 && itemH >= 18) {
+            ctx.fillStyle = '#fde68a';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.nameEn, itemX + itemW / 2, itemY + itemH / 2, Math.max(8, itemW - 6));
+            ctx.textAlign = 'start';
+            ctx.textBaseline = 'alphabetic';
+          }
+        }
+        ctx.strokeStyle = placement.id === selectedStoragePlacementId ? '#22d3ee' : '#f59e0b';
+        ctx.lineWidth = placement.id === selectedStoragePlacementId ? Math.max(2, currentCellSize * 0.12) : Math.max(1.5, Math.min(currentCellSize * 0.08, 2.5));
+        if (preview) {
+          ctx.fillStyle = 'rgba(34, 211, 238, 0.12)';
+          ctx.fillRect(itemX, itemY, itemW, itemH);
+        }
+        ctx.strokeRect(itemX, itemY, itemW, itemH);
+      }
 
       // 4.5 Symmetry Axis Indicators for Real-time Mirror Mode
       if (mirrorMode !== 'none') {
@@ -1139,6 +1396,46 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           ctx.strokeRect(badgeX, badgeY, textMetrics.width + 16, 20);
           ctx.fillStyle = '#fbbf24';
           ctx.fillText(badgeText, badgeX + 8, badgeY + 14);
+        } else if (activeTool === 'place_storage' && selectedStorageItem) {
+          const { width: itemWidth, height: itemHeight } = selectedStorageItem;
+          const x = bpX + hoverCell.x * currentCellSize;
+          const y = bpY + hoverCell.y * currentCellSize;
+          const w = itemWidth * currentCellSize;
+          const h = itemHeight * currentCellSize;
+          const fits = hoverCell.x + itemWidth <= project.width && hoverCell.y + itemHeight <= project.height;
+          const blocked = (project.storagePlacements ?? []).some(item => (item.layer ?? 'object') === (selectedStorageItem.layer ?? 'object') &&
+            hoverCell.x < item.x + item.width && hoverCell.x + itemWidth > item.x &&
+            hoverCell.y < item.y + item.height && hoverCell.y + itemHeight > item.y,
+          );
+          const previewSprite = selectedStorageItem.spriteId ? gameSprites[selectedStorageItem.spriteId] : undefined;
+          const image = getSpriteImage(previewSprite?.atlas ?? selectedStorageItem.imageUrl);
+          ctx.fillStyle = fits && !blocked ? 'rgba(245, 158, 11, 0.24)' : 'rgba(239, 68, 68, 0.28)';
+          ctx.fillRect(x, y, w, h);
+          if (image && fits) {
+            ctx.save();
+            ctx.globalAlpha = 0.72;
+            ctx.imageSmoothingEnabled = false;
+            if (previewSprite) {
+              const sourceY = previewSprite.rect.origin === 'bottom-left'
+                ? image.naturalHeight - previewSprite.rect.y - previewSprite.rect.height
+                : previewSprite.rect.y;
+              ctx.drawImage(image, previewSprite.rect.x, sourceY, previewSprite.rect.width, previewSprite.rect.height, x, y, w, h);
+            } else {
+              drawStorageSprite(ctx, image, x, y, w, h);
+            }
+            ctx.restore();
+          }
+          ctx.strokeStyle = fits && !blocked ? '#f59e0b' : '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 4]);
+          ctx.strokeRect(x, y, w, h);
+          ctx.setLineDash([]);
+          ctx.font = 'bold 11px monospace';
+          const badge = `${itemWidth}×${itemHeight} tiles`;
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+          ctx.fillRect(x, y - 20, ctx.measureText(badge).width + 12, 18);
+          ctx.fillStyle = '#fbbf24';
+          ctx.fillText(badge, x + 6, y - 7);
         }
       }
 
@@ -1190,11 +1487,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     };
   }, [
     project,
+    selectedStorageItem,
+    gameSprites,
     pan,
     currentCellSize,
     showGrid,
     showMajorGrid,
     showCoordinates,
+    showLightRanges,
     gridLineWidth,
     highContrastGrid,
     gridTheme,
@@ -1206,6 +1506,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     includeWaypoint,
     mirrorMode,
     selectionBox,
+    selectedStoragePlacementId,
+    storageDragPreview,
     hoverCell,
     isPanning,
     isPointerDown,

@@ -10,6 +10,7 @@ export type ToolType =
   | 'fill'
   | 'move'
   | 'annotation'
+  | 'place_storage'
   | 'hand';
 
 export type RectangleMode = 'outline' | 'filled';
@@ -26,8 +27,11 @@ export interface CellCoord {
 export interface PaletteColor {
   id: string;
   name: string;
+  nameEn?: string;
+  nameEs?: string;
   hex: string;
   isDefault?: boolean;
+  estimated?: boolean;
 }
 
 export interface SelectionBox {
@@ -54,6 +58,18 @@ export interface Annotation {
   text: string;
 }
 
+export interface StorageItemPlacement {
+  id: string;
+  itemId: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation?: 0 | 90;
+  layer?: 'bridge' | 'floor' | 'rail' | 'fence' | 'wall' | 'object' | 'light';
+  lightRadius?: number;
+}
+
 export interface BlueprintProject {
   id: string;
   name: string;
@@ -62,6 +78,7 @@ export interface BlueprintProject {
   cells: Record<string, string>; // key: "x,y", value: colorId
   palette: PaletteColor[];
   annotations: Annotation[];
+  storagePlacements?: StorageItemPlacement[];
   createdAt: string;
   updatedAt: string;
 }
@@ -71,6 +88,7 @@ export interface HistoryStep {
   cells: Record<string, string>;
   width: number;
   height: number;
+  storagePlacements?: StorageItemPlacement[];
 }
 
 export type Language = 'es' | 'en';
