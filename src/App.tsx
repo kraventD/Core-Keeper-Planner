@@ -11,6 +11,7 @@ import {
   ShapeMode,
   CircleOrigin,
   SelectionBox,
+  StorageItemPlacement,
   ToolType,
   MirrorMode,
 } from './types/blueprint';
@@ -209,19 +210,20 @@ export default function App() {
 
   // Update Cells with history recording and autosave
   const handleUpdateCells = useCallback(
-    (newCells: Record<string, string>, description: string) => {
+    (newCells: Record<string, string>, description: string, storagePlacements = project.storagePlacements ?? []) => {
       setProject(prev => {
         const updated = {
           ...prev,
           cells: newCells,
+          storagePlacements,
           updatedAt: new Date().toISOString(),
         };
         saveAutosave(updated);
         return updated;
       });
-      pushHistory(newCells, description);
+      pushHistory(newCells, description, project.width, project.height, storagePlacements);
     },
-    [pushHistory]
+    [project.height, project.storagePlacements, project.width, pushHistory]
   );
 
   // Autosave when project changes
@@ -252,22 +254,100 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   }, []);
 
+  const handleSetSelectionBox = useCallback((box: SelectionBox | null) => {
+    setSelectionBox(box);
+    if (box) setSelectedStoragePlacementId(null);
+  }, []);
+
+  const handleMoveSelection = useCallback((box: SelectionBox, deltaX: number, deltaY: number): boolean => {
+    const placements = project.storagePlacements ?? [];
+    const selected = placements.filter(item =>
+      item.x >= box.minX && item.y >= box.minY &&
+      item.x + item.width - 1 <= box.maxX && item.y + item.height - 1 <= box.maxY,
+    );
+    const selectedIds = new Set(selected.map(item => item.id));
+    const movedPlacements = selected.map(item => ({ ...item, x: item.x + deltaX, y: item.y + deltaY }));
+    const outside = movedPlacements.some(item => item.x < 0 || item.y < 0 || item.x + item.width > project.width || item.y + item.height > project.height);
+    const overlapsExisting = movedPlacements.some(moving => placements.some(existing =>
+      !selectedIds.has(existing.id) && (existing.layer ?? 'object') === (moving.layer ?? 'object') &&
+      moving.x < existing.x + existing.width && moving.x + moving.width > existing.x &&
+      moving.y < existing.y + existing.height && moving.y + moving.height > existing.y,
+    ));
+    const overlapsWithinSelection = movedPlacements.some((moving, index) => movedPlacements.slice(index + 1).some(other =>
+      (other.layer ?? 'object') === (moving.layer ?? 'object') &&
+      moving.x < other.x + other.width && moving.x + moving.width > other.x &&
+      moving.y < other.y + other.height && moving.y + moving.height > other.y,
+    ));
+    if (outside || overlapsExisting || overlapsWithinSelection) {
+      showToast(language === 'es'
+        ? 'No se puede mover la selección: un objeto quedaría fuera del plano o chocaría con otro.'
+        : 'Cannot move the selection: an item would leave the blueprint or overlap another item.');
+      return false;
+    }
+
+    const movedCells = moveCells(project.cells, box, deltaX, deltaY, project.width, project.height);
+    const movedById = new Map(movedPlacements.map(item => [item.id, item]));
+    const nextPlacements = placements.map(item => movedById.get(item.id) ?? item);
+    setProject(prev => {
+      const updated = { ...prev, cells: movedCells, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
+      saveAutosave(updated);
+      return updated;
+    });
+    pushHistory(movedCells, 'Mover selección', project.width, project.height, nextPlacements);
+    return true;
+  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+
   // 8. Selection Operations
+  const getSelectionClipboard = useCallback((): ClipboardData | null => {
+    let box = selectionBox;
+    let placementsToCopy: StorageItemPlacement[] = [];
+    if (box) {
+      placementsToCopy = (project.storagePlacements ?? []).filter(item =>
+        item.x >= box!.minX && item.y >= box!.minY &&
+        item.x + item.width - 1 <= box!.maxX && item.y + item.height - 1 <= box!.maxY,
+      );
+    } else if (selectedStoragePlacementId) {
+      const selected = (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId);
+      if (!selected) return null;
+      box = { minX: selected.x, minY: selected.y, maxX: selected.x + selected.width - 1, maxY: selected.y + selected.height - 1 };
+      placementsToCopy = [selected];
+    } else {
+      return null;
+    }
+
+    const clipboardData = copySelection(project.cells, box);
+    if (!selectionBox) clipboardData.cells = [];
+    clipboardData.storagePlacements = placementsToCopy.map(({ id: _id, x, y, ...item }) => ({
+      ...item,
+      relX: x - box!.minX,
+      relY: y - box!.minY,
+    }));
+    return clipboardData;
+  }, [project.cells, project.storagePlacements, selectedStoragePlacementId, selectionBox]);
+
   const handleCopySelection = useCallback(() => {
-    if (!selectionBox) return;
-    const data = copySelection(project.cells, selectionBox);
+    const data = getSelectionClipboard();
+    if (!data) return;
     setClipboard(data);
     showToast(t.alerts.copied);
-  }, [selectionBox, project.cells, showToast, t.alerts.copied]);
+  }, [getSelectionClipboard, showToast, t.alerts.copied]);
 
   const handleCutSelection = useCallback(() => {
-    if (!selectionBox) return;
-    const data = copySelection(project.cells, selectionBox);
+    const data = getSelectionClipboard();
+    if (!data) return;
     setClipboard(data);
-    const deleted = deleteSelection(project.cells, selectionBox);
-    handleUpdateCells(deleted, 'Cortar selección');
+    const deleted = selectionBox ? deleteSelection(project.cells, selectionBox) : project.cells;
+    const selectedIds = new Set(selectionBox
+      ? (project.storagePlacements ?? []).filter(placement =>
+        placement.x >= selectionBox.minX && placement.y >= selectionBox.minY &&
+        placement.x + placement.width - 1 <= selectionBox.maxX && placement.y + placement.height - 1 <= selectionBox.maxY,
+      ).map(placement => placement.id)
+      : selectedStoragePlacementId ? [selectedStoragePlacementId] : []);
+    const remainingPlacements = (project.storagePlacements ?? []).filter(item => !selectedIds.has(item.id));
+    handleUpdateCells(deleted, 'Cortar selección', remainingPlacements);
+    setSelectedStoragePlacementId(null);
     showToast(t.alerts.cut);
-  }, [selectionBox, project.cells, handleUpdateCells, showToast, t.alerts.cut]);
+  }, [getSelectionClipboard, selectionBox, project.cells, project.storagePlacements, selectedStoragePlacementId, handleUpdateCells, showToast, t.alerts.cut]);
 
   const handlePasteSelection = useCallback(() => {
     if (!clipboard) {
@@ -276,22 +356,49 @@ export default function App() {
     }
     const destX = selectionBox ? selectionBox.minX : 0;
     const destY = selectionBox ? selectionBox.minY : 0;
+    const copiedPlacements = clipboard.storagePlacements ?? [];
+    const pastedPlacements = copiedPlacements.map(({ relX, relY, ...item }, index) => ({
+      ...item,
+      id: `storage_${Date.now()}_${index}_${Math.random().toString(36).slice(2, 7)}`,
+      x: destX + relX,
+      y: destY + relY,
+    }));
+    const currentPlacements = project.storagePlacements ?? [];
+    const placementOverlap = pastedPlacements.some((pasted, index) =>
+      pasted.x < 0 || pasted.y < 0 || pasted.x + pasted.width > project.width || pasted.y + pasted.height > project.height ||
+      currentPlacements.some(existing => (existing.layer ?? 'object') === (pasted.layer ?? 'object') &&
+        pasted.x < existing.x + existing.width && pasted.x + pasted.width > existing.x &&
+        pasted.y < existing.y + existing.height && pasted.y + pasted.height > existing.y) ||
+      pastedPlacements.slice(index + 1).some(other => (other.layer ?? 'object') === (pasted.layer ?? 'object') &&
+        pasted.x < other.x + other.width && pasted.x + pasted.width > other.x &&
+        pasted.y < other.y + other.height && pasted.y + pasted.height > other.y),
+    );
+    if (placementOverlap) {
+      showToast(language === 'es'
+        ? 'No se puede pegar: un objeto quedaría fuera del plano o chocaría con otro.'
+        : 'Cannot paste: an item would leave the blueprint or overlap another item.');
+      return;
+    }
     const pasted = pasteSelection(project.cells, clipboard, destX, destY, project.width, project.height);
-    handleUpdateCells(pasted, 'Pegar portapapeles');
-    setSelectionBox({
+    handleUpdateCells(pasted, 'Pegar portapapeles', [...currentPlacements, ...pastedPlacements]);
+    handleSetSelectionBox({
       minX: destX,
       minY: destY,
       maxX: Math.min(project.width - 1, destX + clipboard.width - 1),
       maxY: Math.min(project.height - 1, destY + clipboard.height - 1),
     });
     showToast(t.alerts.pasted);
-  }, [clipboard, selectionBox, project.cells, project.width, project.height, handleUpdateCells, showToast, t.alerts]);
+  }, [clipboard, selectionBox, project.cells, project.storagePlacements, project.width, project.height, handleUpdateCells, handleSetSelectionBox, showToast, t.alerts, language]);
 
   const handleDeleteSelection = useCallback(() => {
     if (!selectionBox) return;
     const deleted = deleteSelection(project.cells, selectionBox);
-    handleUpdateCells(deleted, 'Eliminar selección');
-  }, [selectionBox, project.cells, handleUpdateCells]);
+    const remainingPlacements = (project.storagePlacements ?? []).filter(item =>
+      !(item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
+        item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY),
+    );
+    handleUpdateCells(deleted, 'Eliminar selección', remainingPlacements);
+  }, [selectionBox, project.cells, project.storagePlacements, handleUpdateCells]);
 
   const handleFillSelection = useCallback(() => {
     if (!selectionBox) return;
@@ -368,38 +475,29 @@ export default function App() {
     if (!selectionBox) return;
     const centered = centerSelectionHorizontally(selectionBox, project.width, project.height);
     const dx = centered.minX - selectionBox.minX;
-    if (dx !== 0) {
-      const moved = moveCells(project.cells, selectionBox, dx, 0, project.width, project.height);
-      handleUpdateCells(moved, 'Centrar selección horizontalmente');
-    }
-    setSelectionBox(centered);
+    if (dx !== 0 && !handleMoveSelection(selectionBox, dx, 0)) return;
+    handleSetSelectionBox(centered);
     showToast(t.mirror.centeredH);
-  }, [selectionBox, project.width, project.height, setSelectionBox, handleUpdateCells, showToast, t.mirror.centeredH]);
+  }, [selectionBox, project.width, project.height, handleMoveSelection, handleSetSelectionBox, showToast, t.mirror.centeredH]);
 
   const handleCenterSelectionVertically = useCallback(() => {
     if (!selectionBox) return;
     const centered = centerSelectionVertically(selectionBox, project.width, project.height);
     const dy = centered.minY - selectionBox.minY;
-    if (dy !== 0) {
-      const moved = moveCells(project.cells, selectionBox, 0, dy, project.width, project.height);
-      handleUpdateCells(moved, 'Centrar selección verticalmente');
-    }
-    setSelectionBox(centered);
+    if (dy !== 0 && !handleMoveSelection(selectionBox, 0, dy)) return;
+    handleSetSelectionBox(centered);
     showToast(t.mirror.centeredV);
-  }, [selectionBox, project.width, project.height, setSelectionBox, handleUpdateCells, showToast, t.mirror.centeredV]);
+  }, [selectionBox, project.width, project.height, handleMoveSelection, handleSetSelectionBox, showToast, t.mirror.centeredV]);
 
   const handleCenterSelectionBoth = useCallback(() => {
     if (!selectionBox) return;
     const centered = centerSelectionBoth(selectionBox, project.width, project.height);
     const dx = centered.minX - selectionBox.minX;
     const dy = centered.minY - selectionBox.minY;
-    if (dx !== 0 || dy !== 0) {
-      const moved = moveCells(project.cells, selectionBox, dx, dy, project.width, project.height);
-      handleUpdateCells(moved, 'Centrar selección en ambos ejes');
-    }
-    setSelectionBox(centered);
+    if ((dx !== 0 || dy !== 0) && !handleMoveSelection(selectionBox, dx, dy)) return;
+    handleSetSelectionBox(centered);
     showToast(t.mirror.centeredBoth);
-  }, [selectionBox, project.width, project.height, setSelectionBox, handleUpdateCells, showToast, t.mirror.centeredBoth]);
+  }, [selectionBox, project.width, project.height, handleMoveSelection, handleSetSelectionBox, showToast, t.mirror.centeredBoth]);
 
   // Annotation handlers
   const handleAddAnnotation = useCallback((x: number, y: number) => {
@@ -880,7 +978,8 @@ export default function App() {
             highContrastGrid={highContrastGrid}
             gridTheme={gridTheme}
             selectionBox={selectionBox}
-            onSetSelectionBox={setSelectionBox}
+            onSetSelectionBox={handleSetSelectionBox}
+            onMoveSelection={handleMoveSelection}
             onUpdateCells={handleUpdateCells}
             selectedStorageItem={selectedStorageItem}
             gameSprites={gameSprites}
@@ -978,6 +1077,7 @@ export default function App() {
         isOpen={isExportOpen}
         onClose={() => setIsExportOpen(false)}
         project={project}
+        language={language}
         t={t}
         onSuccess={showToast}
       />

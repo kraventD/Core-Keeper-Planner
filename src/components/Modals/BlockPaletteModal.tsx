@@ -71,7 +71,7 @@ export const BlockPaletteModal: React.FC<BlockPaletteModalProps> = ({
             <h2 className="text-lg font-semibold">{isSpanish ? 'Catálogo de construcción' : 'Construction catalog'}</h2>
             <p className="mt-1 text-xs text-zinc-400">
               {section === 'storage'
-                ? (isSpanish ? 'Muebles, estaciones e iluminación' : 'Furniture, stations and lighting')
+                ? (isSpanish ? 'Muebles, estaciones, iluminación, plantas y árboles' : 'Furniture, stations, lighting, plants and trees')
                 : (isSpanish ? 'Bloques, paredes, suelos, puentes, cercas, rieles, tapetes y alfombras como colores' : 'Blocks, walls, floors, bridges, fences, rails, mats and rugs as colors')}
               <span className="ml-2 text-zinc-500">{section === 'storage'
                 ? `${STORAGE_ITEMS.length + FUNCTIONAL_ITEMS.length + STRUCTURE_ITEMS.filter(item => item.category === 'light').length} ${isSpanish ? 'objetos' : 'items'}`
@@ -85,7 +85,7 @@ export const BlockPaletteModal: React.FC<BlockPaletteModalProps> = ({
 
         <div className="flex border-b border-zinc-800 px-4 pt-3">
           <button onClick={() => { setSection('blocks'); setCategoryFilter('all'); }} className={`border-b-2 px-3 pb-2 text-xs font-medium ${section === 'blocks' ? 'border-amber-400 text-amber-300' : 'border-transparent text-zinc-500 hover:text-zinc-300'}`}>{isSpanish ? 'Bloques y colores' : 'Blocks and colors'}</button>
-          <button onClick={() => { setSection('storage'); setCategoryFilter('all'); }} className={`border-b-2 px-3 pb-2 text-xs font-medium ${section === 'storage' ? 'border-amber-400 text-amber-300' : 'border-transparent text-zinc-500 hover:text-zinc-300'}`}>{isSpanish ? 'Muebles, estaciones e iluminación' : 'Furniture, stations and lighting'} <span className="ml-1 text-zinc-500">{STORAGE_ITEMS.length + FUNCTIONAL_ITEMS.length + STRUCTURE_ITEMS.filter(item => item.category === 'light').length}</span></button>
+          <button onClick={() => { setSection('storage'); setCategoryFilter('all'); }} className={`border-b-2 px-3 pb-2 text-xs font-medium ${section === 'storage' ? 'border-amber-400 text-amber-300' : 'border-transparent text-zinc-500 hover:text-zinc-300'}`}>{isSpanish ? 'Muebles, estaciones, plantas y árboles' : 'Furniture, stations, plants and trees'} <span className="ml-1 text-zinc-500">{STORAGE_ITEMS.length + FUNCTIONAL_ITEMS.length + STRUCTURE_ITEMS.filter(item => item.category === 'light').length}</span></button>
         </div>
 
         <div className="border-b border-zinc-800 p-4">
@@ -96,7 +96,7 @@ export const BlockPaletteModal: React.FC<BlockPaletteModalProps> = ({
               value={query}
               onChange={event => setQuery(event.target.value)}
               placeholder={section === 'storage'
-                ? (isSpanish ? 'Buscar muebles, estaciones o luces…' : 'Search furniture, stations or lights…')
+                ? (isSpanish ? 'Buscar muebles, estaciones, plantas, árboles o luces…' : 'Search furniture, stations, plants, trees or lights…')
                 : (isSpanish ? 'Buscar bloques en español o inglés…' : 'Search blocks in English or Spanish…')}
               className="w-full bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
             />
@@ -118,6 +118,7 @@ export const BlockPaletteModal: React.FC<BlockPaletteModalProps> = ({
               other: isSpanish ? 'Otros' : 'Other',
               station: isSpanish ? 'Estaciones' : 'Stations',
               mechanism: isSpanish ? 'Mecanismos' : 'Mechanisms',
+              nature: isSpanish ? 'Plantas y árboles' : 'Plants and trees',
               door: isSpanish ? 'Puertas' : 'Doors',
               gate: isSpanish ? 'Portones' : 'Gates',
               wall: isSpanish ? 'Paredes' : 'Walls',

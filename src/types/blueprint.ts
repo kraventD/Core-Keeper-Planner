@@ -49,6 +49,10 @@ export interface ClipboardData {
     relY: number;
     colorId: string;
   }>;
+  storagePlacements?: Array<Omit<StorageItemPlacement, 'id' | 'x' | 'y'> & {
+    relX: number;
+    relY: number;
+  }>;
 }
 
 export interface Annotation {

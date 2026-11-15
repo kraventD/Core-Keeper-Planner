@@ -1,0 +1,190 @@
+Wiki placed object sprites downloaded from Core Keeper Wiki and resized to 25% with nearest-neighbor filtering.
+Sprite states were chosen as the neutral/front-facing or inactive view when the wiki provides them.
+Community wiki material is under CC BY-SA 4.0 unless stated otherwise; Core Keeper game art belongs to its owners.
+
+Advanced Automation Table: https://core-keeper.fandom.com/wiki/File:Advanced_Automation_Table_placed_base_sprite.png
+Alchemy Table: https://core-keeper.fandom.com/wiki/File:Alchemy_Table_placed_down.png
+Alien Tech Chest: https://core-keeper.fandom.com/wiki/File:Alien_Tech_Chest_placed_down.png
+Amalgam Basin: https://core-keeper.fandom.com/wiki/File:Amalgam_Basin_placed.png
+Ancient Chest: https://core-keeper.fandom.com/wiki/File:Ancient_Chest_placed_down.png
+Ancient Waypoint: https://core-keeper.fandom.com/wiki/File:Ancient_Waypoint_placed_inactive.png
+Anteverse Portal: https://core-keeper.fandom.com/wiki/File:Anteverse_Portal_placed.gif
+Aquarium: https://core-keeper.fandom.com/wiki/File:Aquarium_placed.png
+Arrow Sign: https://core-keeper.fandom.com/wiki/File:Arrow_Sign_placed_down.png
+Atlantean Worm Chest: https://core-keeper.fandom.com/wiki/File:Atlantean_Worm_Chest_placed_down.png
+Automation Table: https://core-keeper.fandom.com/wiki/File:Automation_Table_placed_down.png
+Basic Workbench: https://core-keeper.fandom.com/wiki/File:Basic_Workbench_placed_down.png
+Beach Terrarium: https://core-keeper.fandom.com/wiki/File:Beach_Terrarium_placed.png
+Bed: https://core-keeper.fandom.com/wiki/File:Bed_placed_down.png
+Big Gold-edged Table: https://core-keeper.fandom.com/wiki/File:Big_Gold-edged_Table_placed.png
+Blue Glass Pedestal: https://core-keeper.fandom.com/wiki/File:Blue_Glass_Pedestal_placed.png
+Boat Workbench: https://core-keeper.fandom.com/wiki/File:Boat_Workbench_placed_down.png
+Campfire: https://core-keeper.fandom.com/wiki/File:Campfire_placed.gif
+Candle: https://core-keeper.fandom.com/wiki/File:Candle_placed_1.gif
+Candle Stack: https://core-keeper.fandom.com/wiki/File:Candle_Stack_placed_1.gif
+Carpenter's Table: https://core-keeper.fandom.com/wiki/File:Carpenter's_Table_placed_down.png
+Cartography Table: https://core-keeper.fandom.com/wiki/File:Cartography_Table_placed.png
+Caveling Bed: https://core-keeper.fandom.com/wiki/File:Caveling_Bed_placed_1.png
+Caveling Chair: https://core-keeper.fandom.com/wiki/File:Caveling_Chair_placed_1.png
+Caveling Stool: https://core-keeper.fandom.com/wiki/File:Caveling_Stool_placed_1.png
+Caveling Table: https://core-keeper.fandom.com/wiki/File:Caveling_Table_placed.png
+Caveling Throne: https://core-keeper.fandom.com/wiki/File:Caveling_Throne_placed.png
+Caveling Toilet: https://core-keeper.fandom.com/wiki/File:Caveling_Toilet_placed.png
+Chest: https://core-keeper.fandom.com/wiki/File:Chest_placed_down.png
+Colossal Cicada Chest: https://core-keeper.fandom.com/wiki/File:Colossal_Cicada_Chest_placed_down.png
+Cooking Pot: https://core-keeper.fandom.com/wiki/File:Cooking_Pot_placed_cooking.gif
+Copper Anvil: https://core-keeper.fandom.com/wiki/File:Copper_Anvil_placed_down.png
+Copper Chest: https://core-keeper.fandom.com/wiki/File:Copper_Chest_placed_down.png
+Copper Workbench: https://core-keeper.fandom.com/wiki/File:Copper_Workbench_placed_down.png
+Core Tech Chest: https://core-keeper.fandom.com/wiki/File:Core_Tech_Chest_placed_down.png
+Cross Circuit: https://core-keeper.fandom.com/wiki/File:Cross_Circuit_placed_configuration_2_unpowered.png
+Crude Drill: https://core-keeper.fandom.com/wiki/File:Crude_Drill_placed_down_inactive.png
+Crydra Chest: https://core-keeper.fandom.com/wiki/File:Crydra_Chest_placed_down.png
+Crystal Aquarium: https://core-keeper.fandom.com/wiki/File:Crystal_Aquarium_placed.png
+Crystal Terrarium: https://core-keeper.fandom.com/wiki/File:Crystal_Terrarium_placed.png
+Cultist Chest: https://core-keeper.fandom.com/wiki/File:Cultist_Chest_placed_down.png
+Deceased Explorer: https://core-keeper.fandom.com/wiki/File:Deceased_Explorer_placed.png
+Decorative Pot: https://core-keeper.fandom.com/wiki/File:Decorative_Pot_placed.png
+Delay Circuit: https://core-keeper.fandom.com/wiki/File:Delay_Circuit_placed_orientation_2_unpowered.png
+Desert Terrarium: https://core-keeper.fandom.com/wiki/File:Desert_Terrarium_placed.png
+Distillery Table: https://core-keeper.fandom.com/wiki/File:Distillery_Table_placed_down.png
+Dresser: https://core-keeper.fandom.com/wiki/File:Dresser_placed_down.png
+Driftwood Stool: https://core-keeper.fandom.com/wiki/File:Driftwood_Stool_placed_1.png
+Driftwood Table: https://core-keeper.fandom.com/wiki/File:Driftwood_Table_placed.png
+Drill: https://core-keeper.fandom.com/wiki/File:Drill_placed_down_inactive.png
+Druidra Chest: https://core-keeper.fandom.com/wiki/File:Druidra_Chest_placed_down.png
+Easter Meadow Table: https://core-keeper.fandom.com/wiki/File:Easter_Meadow_Table_placed.png
+Easter Pedestal: https://core-keeper.fandom.com/wiki/File:Easter_Pedestal_placed.png
+Easter Workbench: https://core-keeper.fandom.com/wiki/File:Easter_Workbench_placed_down.png
+Eerie Chest: https://core-keeper.fandom.com/wiki/File:Eerie_Chest_placed_down.png
+Eerie Dresser: https://core-keeper.fandom.com/wiki/File:Eerie_Dresser_placed_down.png
+Eerie Stool: https://core-keeper.fandom.com/wiki/File:Eerie_Stool_placed_1.png
+Eerie Table: https://core-keeper.fandom.com/wiki/File:Eerie_Table_placed_down.png
+Egg Incubator: https://core-keeper.fandom.com/wiki/File:Egg_Incubator_placed_inactive.png
+Electricity Generator: https://core-keeper.fandom.com/wiki/File:Electricity_Generator_placed.gif
+Electricity Stick: https://core-keeper.fandom.com/wiki/File:Electricity_Stick_placed.png
+Electronics Table: https://core-keeper.fandom.com/wiki/File:Electronics_Table_placed_down.png
+Feeding Tray: https://core-keeper.fandom.com/wiki/File:Feeding_Tray_placed_down.png
+Festive Stool: https://core-keeper.fandom.com/wiki/File:Festive_Stool_placed.png
+Festive Table: https://core-keeper.fandom.com/wiki/File:Festive_Table_placed.png
+Festive Workbench: https://core-keeper.fandom.com/wiki/File:Festive_Workbench_placed_down.png
+Fishing Net Rack: https://core-keeper.fandom.com/wiki/File:Fishing_Net_Rack_placed.png
+Fishing Workbench: https://core-keeper.fandom.com/wiki/File:Fishing_Workbench_placed_down.png
+Floating Titan's Chest: https://core-keeper.fandom.com/wiki/File:Floating_Titan's_Chest_placed_down.png
+Floor Pillow: https://core-keeper.fandom.com/wiki/File:Floor_Pillow_placed.png
+Furnace: https://core-keeper.fandom.com/wiki/File:Furnace_placed_down.png
+Fury Forge: https://core-keeper.fandom.com/wiki/File:Fury_Forge_placed.png
+Galaxite Anvil: https://core-keeper.fandom.com/wiki/File:Galaxite_Anvil_placed_down.png
+Galaxite Chest: https://core-keeper.fandom.com/wiki/File:Galaxite_Chest_placed_down.png
+Galaxite Workbench: https://core-keeper.fandom.com/wiki/File:Galaxite_Workbench_placed_down.png
+Ghorm Chest: https://core-keeper.fandom.com/wiki/File:Ghorm_Chest_placed_down.png
+Gingerbread House Chest: https://core-keeper.fandom.com/wiki/File:Gingerbread_House_Chest_placed_down.png
+Glass Smelter: https://core-keeper.fandom.com/wiki/File:Glass_Smelter_placed_down.png
+Glass Workbench: https://core-keeper.fandom.com/wiki/File:Glass_Workbench_placed_down.png
+Glurch Chest: https://core-keeper.fandom.com/wiki/File:Glurch_Chest_placed_down.png
+Go-Kart Workbench: https://core-keeper.fandom.com/wiki/File:Go-Kart_Workbench_placed_down.png
+Gold-edged Table: https://core-keeper.fandom.com/wiki/File:Gold-edged_Table_placed.png
+Golden Ancient Chest: https://core-keeper.fandom.com/wiki/File:Golden_Ancient_Chest_placed_down.png
+Golden Titan's Chest: https://core-keeper.fandom.com/wiki/File:Golden_Titan's_Chest_placed_down.png
+Grimy Table: https://core-keeper.fandom.com/wiki/File:Grimy_Table_placed.png
+Haunted Hive Mother Chest: https://core-keeper.fandom.com/wiki/File:Haunted_Hive_Mother_Chest_placed_down.png
+Hive Mother Chest: https://core-keeper.fandom.com/wiki/File:Hive_Mother_Chest_placed_down.png
+Igneous' Chest: https://core-keeper.fandom.com/wiki/File:Igneous'_Chest_placed_down.png
+Iron Anvil: https://core-keeper.fandom.com/wiki/File:Iron_Anvil_placed_down.png
+Iron Chest: https://core-keeper.fandom.com/wiki/File:Iron_Chest_placed_down.png
+Iron Workbench: https://core-keeper.fandom.com/wiki/File:Iron_Workbench_placed_down.png
+Ivy's Chest: https://core-keeper.fandom.com/wiki/File:Ivy's_Chest_placed_down.png
+Jewelry Workbench: https://core-keeper.fandom.com/wiki/File:Jewelry_Workbench_placed_down.png
+Key Casting Table: https://core-keeper.fandom.com/wiki/File:Key_Casting_Table_placed_down.png
+King Slime's Chest: https://core-keeper.fandom.com/wiki/File:King_Slime's_Chest_placed_down.png
+Laboratory Table: https://core-keeper.fandom.com/wiki/File:Laboratory_Table_placed_down.png
+Lamp: https://core-keeper.fandom.com/wiki/File:Lamp_placed_inactive.png
+Lamp Post: https://core-keeper.fandom.com/wiki/File:Lamp_Post_placed_base_colors.png
+Larva Hive Chest: https://core-keeper.fandom.com/wiki/File:Larva_Hive_Chest_placed_down.png
+Lever: https://core-keeper.fandom.com/wiki/File:Lever_placed_inactive.png
+Little Helperling: https://core-keeper.fandom.com/wiki/File:Little_Helperling_placed_idle.gif
+Livestock Workbench: https://core-keeper.fandom.com/wiki/File:Livestock_Workbench_placed_down.png
+Locked Copper Chest: https://core-keeper.fandom.com/wiki/File:Locked_Copper_Chest_placed_down.png
+Locked Galaxite Chest: https://core-keeper.fandom.com/wiki/File:Locked_Galaxite_Chest_placed_down.png
+Locked Iron Chest: https://core-keeper.fandom.com/wiki/File:Locked_Iron_Chest_placed_down.png
+Locked Octarine Chest: https://core-keeper.fandom.com/wiki/File:Locked_Octarine_Chest_placed_down.png
+Locked Scarlet Chest: https://core-keeper.fandom.com/wiki/File:Locked_Scarlet_Chest_placed_down.png
+Locked Solarite Chest: https://core-keeper.fandom.com/wiki/File:Locked_Solarite_Chest_placed_down.png
+Logic Circuit: https://core-keeper.fandom.com/wiki/File:Logic_Circuit_placed_orientation_2_unpowered.png
+Loom: https://core-keeper.fandom.com/wiki/File:Loom_placed_down.png
+Malugaz Chest: https://core-keeper.fandom.com/wiki/File:Malugaz_Chest_placed_down.png
+Mannequin: https://core-keeper.fandom.com/wiki/File:Mannequin_placed_down.png
+Metalcrafter's Table: https://core-keeper.fandom.com/wiki/File:Metalcrafter's_Table_placed_left.png
+Mold Covered Chest: https://core-keeper.fandom.com/wiki/File:Mold_Covered_Chest_placed_down.png
+Mold Well: https://core-keeper.fandom.com/wiki/File:Mold_Well_placed.png
+Morpha's Chest: https://core-keeper.fandom.com/wiki/File:Morpha's_Chest_placed_down.png
+Music Workbench: https://core-keeper.fandom.com/wiki/File:Music_Workbench_placed_down.png
+Naptree Nook: https://core-keeper.fandom.com/wiki/File:Naptree_Nook_placed.png
+Octarine Anvil: https://core-keeper.fandom.com/wiki/File:Octarine_Anvil_placed_down.png
+Octarine Chest: https://core-keeper.fandom.com/wiki/File:Octarine_Chest_placed_down.png
+Octarine Workbench: https://core-keeper.fandom.com/wiki/File:Octarine_Workbench_placed_down.png
+Painter's Table: https://core-keeper.fandom.com/wiki/File:Painter's_Table_placed_down.png
+Passage Aquarium: https://core-keeper.fandom.com/wiki/File:Passage_Aquarium_placed.png
+Passage Terrarium: https://core-keeper.fandom.com/wiki/File:Passage_Terrarium_placed.png
+Pedestal: https://core-keeper.fandom.com/wiki/File:Pedestal_placed.png
+Perch Pole: https://core-keeper.fandom.com/wiki/File:Perch_Pole_placed.png
+Pet Bed: https://core-keeper.fandom.com/wiki/File:Pet_Bed_placed.png
+Planter Box: https://core-keeper.fandom.com/wiki/File:Planter_Box_placed_down.png
+Portal: https://core-keeper.fandom.com/wiki/File:Portal_placed.gif
+Pouch Workbench: https://core-keeper.fandom.com/wiki/File:Pouch_Workbench_placed_down.png
+Pressure Plate: https://core-keeper.fandom.com/wiki/File:Pressure_Plate_placed_inactive.png
+Proficient Jewelry Workbench: https://core-keeper.fandom.com/wiki/File:Proficient_Jewelry_Workbench_placed_down.png
+Pyrdra Chest: https://core-keeper.fandom.com/wiki/File:Pyrdra_Chest_placed_down.png
+Railway Forge: https://core-keeper.fandom.com/wiki/File:Railway_Forge_placed_down.png
+Relucite Smithing Table: https://core-keeper.fandom.com/wiki/File:Relucite_Smithing_Table_placed_right_base_sprite.png
+Robot Arm: https://core-keeper.fandom.com/wiki/File:Robot_Arm_placed_idle_down.png
+Salvage and Repair Station: https://core-keeper.fandom.com/wiki/File:Salvage_and_Repair_Station_placed_down.png
+Samhain Workbench: https://core-keeper.fandom.com/wiki/File:Samhain_Workbench_placed_down.png
+Scarlet Anvil: https://core-keeper.fandom.com/wiki/File:Scarlet_Anvil_placed_down.png
+Scarlet Chest: https://core-keeper.fandom.com/wiki/File:Scarlet_Chest_placed_down.png
+Scarlet Workbench: https://core-keeper.fandom.com/wiki/File:Scarlet_Workbench_placed_down.png
+Seashell Chest: https://core-keeper.fandom.com/wiki/File:Seashell_Chest_placed_down.png
+Sign: https://core-keeper.fandom.com/wiki/File:Sign_placed_down.png
+Smelter Kiln: https://core-keeper.fandom.com/wiki/File:Smelter_Kiln_placed.png
+Smoldering Chest: https://core-keeper.fandom.com/wiki/File:Smoldering_Chest_placed_down.png
+Solarite Anvil: https://core-keeper.fandom.com/wiki/File:Solarite_Anvil_placed_down.png
+Solarite Chest: https://core-keeper.fandom.com/wiki/File:Solarite_Chest_placed_down.png
+Solarite Workbench: https://core-keeper.fandom.com/wiki/File:Solarite_Workbench_placed_down.png
+Sprinkler: https://core-keeper.fandom.com/wiki/File:Sprinkler_placed.gif
+Stone Lantern: https://core-keeper.fandom.com/wiki/File:Stone_Lantern_placed.png
+Stone Pedestal: https://core-keeper.fandom.com/wiki/File:Stone_Pedestal_placed.png
+Table Saw: https://core-keeper.fandom.com/wiki/File:Table_Saw_placed_inactive.png
+Temple Pedestal: https://core-keeper.fandom.com/wiki/File:Temple_Pedestal_placed.png
+Temple Throne: https://core-keeper.fandom.com/wiki/File:Temple_Throne_placed_down.png
+Terrarium: https://core-keeper.fandom.com/wiki/File:Terrarium_placed.png
+Tin Anvil: https://core-keeper.fandom.com/wiki/File:Tin_Anvil_placed_down.png
+Tin Workbench: https://core-keeper.fandom.com/wiki/File:Tin_Workbench_placed_down.png
+Titan's Chest: https://core-keeper.fandom.com/wiki/File:Titan's_Chest_placed_down.png
+Torch: https://core-keeper.fandom.com/wiki/File:Torch_placed_standing.gif
+Upgrade Station: https://core-keeper.fandom.com/wiki/File:Upgrade_Station_placed_down.png
+Urschleim's Chest: https://core-keeper.fandom.com/wiki/File:Urschleims_Chest_placed_down.png
+Valentine Crafting Table: https://core-keeper.fandom.com/wiki/File:Valentine_Crafting_Table_placed_down.png
+Valentine's Chest: https://core-keeper.fandom.com/wiki/File:Valentine's_Chest_placed_down.png
+Wash Basin: https://core-keeper.fandom.com/wiki/File:Wash_Basin_placed.png
+Water Well: https://core-keeper.fandom.com/wiki/File:Water_Well_placed.png
+Wilderness Aquarium: https://core-keeper.fandom.com/wiki/File:Wilderness_Aquarium_placed.png
+Wilderness Terrarium: https://core-keeper.fandom.com/wiki/File:Wilderness_Terrarium_placed.png
+Wood Stool: https://core-keeper.fandom.com/wiki/File:Wood_Stool_placed.png
+Wood Table: https://core-keeper.fandom.com/wiki/File:Wood_Table_placed.png
+Woof Cabin: https://core-keeper.fandom.com/wiki/File:Woof_Cabin_placed.png
+
+Catalog objects with no separate Wiki placed sprite found; they retain the existing game/catalog sprite (footprint audited separately):
+- Chinese Lantern (chinese-lantern)
+- Chinese Wall Lantern (chinese-wall-lantern)
+- Conveyor Belt (conveyor-belt)
+- Decorative Torch (decorative-torch)
+- Desert King Chest (desert-king-chest)
+- Desert Prince Chest (desert-prince-chest)
+- Desert Queen Chest (desert-queen-chest)
+- Easter Meadow Stool (easter-meadow-stool)
+- Electrical Wire (electrical-wire)
+- Materializer (materializer)
+- Pulse Circuit (pulse-circuit)
+- Rocky Aquarium (rocky-aquarium)
+- Soul Lantern (soul-lantern)
+- Sunken Aquarium (sunken-aquarium)

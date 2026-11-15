@@ -5,6 +5,7 @@ content remains the intellectual property of its respective owners.
 Campfire: https://corekeeper.atma.gg/en/Campfire
 Rail: https://corekeeper.atma.gg/en/Rail
 Crystal Lamp: https://corekeeper.atma.gg/en/Crystal_Lamp
+Crystal Lamp placed sprite: https://core-keeper.fandom.com/wiki/File:Crystal_Lamp_placed.png
 Easter Meadow Stool: https://corekeeper.atma.gg/en/Easter_Meadow_Stool
 Pressure Plate: https://corekeeper.atma.gg/en/Pressure_Plate
 Electrical Wire: https://corekeeper.atma.gg/en/Electrical_Wire

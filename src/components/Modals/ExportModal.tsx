@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BlueprintProject } from '../../types/blueprint';
+import { BlueprintProject, Language } from '../../types/blueprint';
 import { exportBlueprintToPng, ExportOptions } from '../../utils/exportPng';
 import { Translations } from '../../i18n/translations';
 import { X, Download, Check, Image as ImageIcon } from 'lucide-react';
@@ -8,6 +8,7 @@ interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: BlueprintProject;
+  language: Language;
   t: Translations;
   onSuccess: (msg: string) => void;
 }
@@ -16,6 +17,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
   isOpen,
   onClose,
   project,
+  language,
   t,
   onSuccess,
 }) => {
@@ -39,6 +41,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         background,
         includeLegend,
         fileName: fileName.trim() || 'blueprint',
+        language,
       };
 
       await exportBlueprintToPng(project, opts);

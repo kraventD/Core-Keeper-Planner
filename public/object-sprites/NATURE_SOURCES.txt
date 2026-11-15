@@ -1,0 +1,102 @@
+Core Keeper placed nature sprites. Image files are taken from the Core Keeper Wiki and resized to 25% using nearest-neighbor filtering; transparency and pixel art are preserved.
+The Wiki identifies its community content as CC BY-NC-SA 4.0; Core Keeper game assets remain property of their respective owners.
+
+Wiki category references:
+https://core-keeper.fandom.com/wiki/Trees
+https://core-keeper.fandom.com/wiki/Natural_decorations
+https://core-keeper.fandom.com/wiki/Potted_plants
+https://core-keeper.fandom.com/wiki/Plants
+https://core-keeper.fandom.com/wiki/Pillars
+
+Meadow Tree: https://core-keeper.fandom.com/wiki/File:Meadow_Tree_placed_1.png
+White Cherry Tree: https://core-keeper.fandom.com/wiki/File:White_Cherry_Tree_placed_1.png
+Pink Cherry Tree: https://core-keeper.fandom.com/wiki/File:Pink_Cherry_Tree_placed_1.png
+Decorated Winter Tree: https://core-keeper.fandom.com/wiki/File:Decorated_Winter_Tree_2_placed.png
+Lush Tree: https://core-keeper.fandom.com/wiki/File:Lush_Tree_placed_1.png
+Paradise Tree: https://core-keeper.fandom.com/wiki/File:Paradise_Tree_placed.png
+Mold Tree: https://core-keeper.fandom.com/wiki/File:Mold_Tree_placed_1.png
+Kelp Tree: https://core-keeper.fandom.com/wiki/File:Kelp_Tree_placed_1.png
+Plume Tree: https://core-keeper.fandom.com/wiki/File:Plume_Tree_placed_1.png
+Gilded Aloe: https://core-keeper.fandom.com/wiki/File:Gilded_Aloe_placed_1.png
+Large Gilded Aloe: https://core-keeper.fandom.com/wiki/File:Large_Gilded_Aloe_placed_1.png
+Lucent Oak: https://core-keeper.fandom.com/wiki/File:Lucent_Oak_placed_1.png
+Sulfur Tree: https://core-keeper.fandom.com/wiki/File:Sulfur_Tree_placed_1.png
+Small Purple Feather Tree: https://core-keeper.fandom.com/wiki/File:Small_Purple_Feather_Tree_placed_1.png
+Purple Feather Tree: https://core-keeper.fandom.com/wiki/File:Purple_Feather_Tree_placed_1.png
+Small Cyan Feather Tree: https://core-keeper.fandom.com/wiki/File:Small_Cyan_Feather_Tree_placed_1.png
+Cyan Feather Tree: https://core-keeper.fandom.com/wiki/File:Cyan_Feather_Tree_placed_1.png
+Dull Tree: https://core-keeper.fandom.com/wiki/File:Dull_Tree_placed_base_variant_1.png
+Small Pine Tree: https://core-keeper.fandom.com/wiki/File:Small_Pine_Tree_placed.png
+Tall Pine Tree: https://core-keeper.fandom.com/wiki/File:Tall_Pine_Tree_placed.png
+Evergreen Shrub: https://core-keeper.fandom.com/wiki/File:Evergreen_Shrub_placed_variant_1.png
+Meadow Bush: https://core-keeper.fandom.com/wiki/File:Meadow_Bush_placed_1.png
+Tall Meadow Grass: https://core-keeper.fandom.com/wiki/File:Tall_Meadow_Grass_placed_1.png
+Bush: https://core-keeper.fandom.com/wiki/File:Bush_placed_1.png
+Tall Grass: https://core-keeper.fandom.com/wiki/File:Tall_Grass_placed_1.png
+Land Algae: https://core-keeper.fandom.com/wiki/File:Land_Algae_placed_1.png
+Tall Land Algae: https://core-keeper.fandom.com/wiki/File:Tall_Land_Algae_placed_1.png
+Desert Shrub: https://core-keeper.fandom.com/wiki/File:Desert_Shrub_placed_1.png
+Water Reed: https://core-keeper.fandom.com/wiki/File:Water_Reed_placed_1.png
+Crystal Grass: https://core-keeper.fandom.com/wiki/File:Crystal_Grass_placed_1.png
+Tall Crystal Grass: https://core-keeper.fandom.com/wiki/File:Tall_Crystal_Grass_placed_1.png
+Barnacle Grass: https://core-keeper.fandom.com/wiki/File:Barnacle_Grass_placed_1.png
+Tall Barnacle Grass: https://core-keeper.fandom.com/wiki/File:Tall_Barnacle_Grass_placed_1.png
+Fern: https://core-keeper.fandom.com/wiki/File:Fern_placed.png
+Azeos Lily: https://core-keeper.fandom.com/wiki/File:Azeos_Lily_placed_1.png
+Glow Tulip: https://core-keeper.fandom.com/wiki/File:Glow_Tulip_placed_stage_3.png
+Golden Glow Tulip: https://core-keeper.fandom.com/wiki/File:Golden_Glow_Tulip_placed_stage_3.png
+Sun Kelp: https://core-keeper.fandom.com/wiki/File:Sun_Kelp_placed_1.png
+Flower Vessel: https://core-keeper.fandom.com/wiki/File:Flower_Vessel_placed_1.png
+Desert Flower Vessel: https://core-keeper.fandom.com/wiki/File:Desert_Flower_Vessel_placed_1.png
+Large Desert Flower Vessel: https://core-keeper.fandom.com/wiki/File:Large_Desert_Flower_Vessel_placed_1.png
+Oasis Flower Vessel: https://core-keeper.fandom.com/wiki/File:Oasis_Flower_Vessel_placed_1.png
+Large Oasis Flower Vessel: https://core-keeper.fandom.com/wiki/File:Large_Oasis_Flower_Vessel_placed_1.png
+Easter Egg Flowerpot: https://core-keeper.fandom.com/wiki/File:Easter_Egg_Flowerpot_placed_1.png
+Potted Meadow Tree: https://core-keeper.fandom.com/wiki/File:Potted_Meadow_Tree_placed.png
+Potted Tree with Red Envelopes: https://core-keeper.fandom.com/wiki/File:Potted_Tree_with_Red_Envelopes_placed.png
+Potted Bloom Tree: https://core-keeper.fandom.com/wiki/File:Potted_Bloom_Tree_placed.png
+Potted Lush Tree: https://core-keeper.fandom.com/wiki/File:Potted_Lush_Tree_placed.png
+Potted Abyss Tree: https://core-keeper.fandom.com/wiki/File:Potted_Abyss_Tree_placed.png
+Potted Moonbell Tree: https://core-keeper.fandom.com/wiki/File:Potted_Moonbell_Tree_placed.png
+Potted Cherry Tree: https://core-keeper.fandom.com/wiki/File:Potted_Cherry_Tree_placed.png
+Potted Mold Pompom: https://core-keeper.fandom.com/wiki/File:Potted_Mold_Pompom_placed.png
+Potted Land Algae: https://core-keeper.fandom.com/wiki/File:Potted_Land_Algae_placed.png
+Potted Plume Tree: https://core-keeper.fandom.com/wiki/File:Potted_Plume_Tree_placed.png
+Potted Magma Tulip: https://core-keeper.fandom.com/wiki/File:Potted_Magma_Tulip_placed.png
+Potted Lucent Oak: https://core-keeper.fandom.com/wiki/File:Potted_Lucent_Oak_placed.png
+Potted Alien Flower: https://core-keeper.fandom.com/wiki/File:Potted_Alien_Flower_placed.png
+Potted Lucent Oak catalog icon: https://core-keeper.fandom.com/wiki/File:Potted_Lucent_Oak.png
+Potted Alien Flower catalog icon: https://core-keeper.fandom.com/wiki/File:Potted_Alien_Flower.png
+
+Decorative pillars (placed sprites):
+Wooden Pillar: https://core-keeper.fandom.com/wiki/File:Wooden_Pillar_placed.png
+Broken Stone Pillar: https://core-keeper.fandom.com/wiki/File:Broken_Stone_Pillar_placed_1.png
+Mold Pillar: https://core-keeper.fandom.com/wiki/File:Mold_Pillar_placed_1.png
+Caveling Pillar: https://core-keeper.fandom.com/wiki/File:Caveling_Pillar_placed.png
+Temple Pillar: https://core-keeper.fandom.com/wiki/File:Temple_Pillar_placed.png
+Grimy Stone Pillar: https://core-keeper.fandom.com/wiki/File:Grimy_Stone_Pillar_placed_1.png
+Easter Pillar: https://core-keeper.fandom.com/wiki/File:Easter_Pillar_placed_1.png
+
+Farm crops use the Wiki's mature, stage 4 placed sprites (static first frame for GIFs):
+Bomb Pepper: https://core-keeper.fandom.com/wiki/File:Bomb_Pepper_placed_stage_4.gif
+Golden Bomb Pepper: https://core-keeper.fandom.com/wiki/File:Golden_Bomb_Pepper_placed_stage_4.gif
+Glow Tulip: https://core-keeper.fandom.com/wiki/File:Glow_Tulip_placed_stage_4.gif
+Golden Glow Tulip: https://core-keeper.fandom.com/wiki/File:Golden_Glow_Tulip_placed_stage_4.gif
+Heart Berry: https://core-keeper.fandom.com/wiki/File:Heart_Berry_placed_stage_4.gif
+Golden Heart Berry: https://core-keeper.fandom.com/wiki/File:Golden_Heart_Berry_placed_stage_4.gif
+Carrock: https://core-keeper.fandom.com/wiki/File:Carrock_placed_stage_4.gif
+Golden Carrock: https://core-keeper.fandom.com/wiki/File:Golden_Carrock_placed_stage_4.gif
+Bloat Oat: https://core-keeper.fandom.com/wiki/File:Bloat_Oat_placed_stage_4.gif
+Golden Bloat Oat: https://core-keeper.fandom.com/wiki/File:Golden_Bloat_Oat_placed_stage_4.gif
+Puffungi: https://core-keeper.fandom.com/wiki/File:Puffungi_placed_stage_4.gif
+Golden Puffungi: https://core-keeper.fandom.com/wiki/File:Golden_Puffungi_placed_stage_4.gif
+Pewpaya: https://core-keeper.fandom.com/wiki/File:Pewpaya_placed_stage_4.gif
+Golden Pewpaya: https://core-keeper.fandom.com/wiki/File:Golden_Pewpaya_placed_stage_4.gif
+Pinegrapple: https://core-keeper.fandom.com/wiki/File:Pinegrapple_placed_stage_4.gif
+Golden Pinegrapple: https://core-keeper.fandom.com/wiki/File:Golden_Pinegrapple_placed_stage_4.gif
+Lunacorn: https://core-keeper.fandom.com/wiki/File:Lunacorn_placed_stage_4.gif
+Golden Lunacorn: https://core-keeper.fandom.com/wiki/File:Golden_Lunacorn_placed_stage_4.gif
+Sunrice: https://core-keeper.fandom.com/wiki/File:Sunrice_placed_stage_4.gif
+Golden Sunrice: https://core-keeper.fandom.com/wiki/File:Golden_Sunrice_placed_stage_4.gif
+Grumpkin: https://core-keeper.fandom.com/wiki/File:Grumpkin_placed_stage_4.gif
+Golden Grumpkin: https://core-keeper.fandom.com/wiki/File:Golden_Grumpkin_placed_stage_4.gif

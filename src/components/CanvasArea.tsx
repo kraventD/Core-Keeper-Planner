@@ -66,6 +66,20 @@ const placementAtCell = (placements: StorageItemPlacement[], x: number, y: numbe
     .sort((a, b) => storageLayerOrder(b) - storageLayerOrder(a))
     .at(0);
 
+const expandSelectionBoxToIncludePlacements = (box: SelectionBox, placements: StorageItemPlacement[]): SelectionBox => {
+  const expanded = { ...box };
+  for (const item of placements) {
+    const intersects = item.x <= box.maxX && item.x + item.width - 1 >= box.minX &&
+      item.y <= box.maxY && item.y + item.height - 1 >= box.minY;
+    if (!intersects) continue;
+    expanded.minX = Math.min(expanded.minX, item.x);
+    expanded.minY = Math.min(expanded.minY, item.y);
+    expanded.maxX = Math.max(expanded.maxX, item.x + item.width - 1);
+    expanded.maxY = Math.max(expanded.maxY, item.y + item.height - 1);
+  }
+  return expanded;
+};
+
 // Helper to build a themed crosshair cursor SVG
 const makeCrosshairCursor = (strokeColor: string, glowColor: string): string =>
   `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 2v6m0 8v6M2 12h6m8 0h6' stroke='${strokeColor}' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M12 2v6m0 8v6M2 12h6m8 0h6' stroke='${glowColor}' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='12' r='2' fill='${strokeColor}'/%3E%3Ccircle cx='12' cy='12' r='1.2' fill='${glowColor}'/%3E%3C/svg%3E") 12 12, crosshair`;
@@ -105,6 +119,7 @@ interface CanvasAreaProps {
   gridTheme?: 'light' | 'dark';
   selectionBox: SelectionBox | null;
   onSetSelectionBox: (box: SelectionBox | null) => void;
+  onMoveSelection?: (box: SelectionBox, deltaX: number, deltaY: number) => boolean;
   onUpdateCells: (newCells: Record<string, string>, description: string) => void;
   selectedStorageItem?: StorageItemDefinition | null;
   gameSprites?: Record<string, GameSpriteEntry>;
@@ -143,6 +158,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   gridTheme = 'light',
   selectionBox,
   onSetSelectionBox,
+  onMoveSelection,
   onUpdateCells,
   selectedStorageItem = null,
   gameSprites = {},
@@ -249,6 +265,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const drawStorageSprite = (context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number) => {
     const bounds = getSpriteContentBounds(image);
     context.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, x, y, width, height);
+  };
+
+  const drawNativeStorageSprite = (context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number, cellSize: number, rotation = 0) => {
+    const bounds = getSpriteContentBounds(image);
+    const scale = cellSize / 16;
+    const spriteWidth = bounds.width * scale;
+    const spriteHeight = bounds.height * scale;
+    if (rotation === 90) {
+      context.translate(x + width / 2, y + height / 2);
+      context.rotate(Math.PI / 2);
+      context.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
+    } else {
+      context.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, x + (width - spriteWidth) / 2, y + height - spriteHeight, spriteWidth, spriteHeight);
+    }
   };
 
   // Track cells changed during pointer up for animation
@@ -746,7 +776,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         project.width,
         project.height
       );
-      onSetSelectionBox(box);
+      const expandedBox = expandSelectionBoxToIncludePlacements(box, project.storagePlacements ?? []);
+      onSetSelectionBox(expandedBox);
     } else if (activeTool === 'select' && dragStartCell) {
       const box = normalizeBox(
         dragStartCell.x,
@@ -762,14 +793,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       const dy = dragCurrentCell.y - dragStartCell.y;
       if (dx !== 0 || dy !== 0) {
         const moved = moveCells(project.cells, selectionBox, dx, dy, project.width, project.height);
-        markRecentChanges(moved);
-        onUpdateCells(moved, 'Mover selección');
-        onSetSelectionBox({
-          minX: Math.max(0, Math.min(project.width - 1, selectionBox.minX + dx)),
-          minY: Math.max(0, Math.min(project.height - 1, selectionBox.minY + dy)),
-          maxX: Math.max(0, Math.min(project.width - 1, selectionBox.maxX + dx)),
-          maxY: Math.max(0, Math.min(project.height - 1, selectionBox.maxY + dy)),
-        });
+        const moveSucceeded = onMoveSelection
+          ? onMoveSelection(selectionBox, dx, dy)
+          : (onUpdateCells(moved, 'Mover selección'), true);
+        if (moveSucceeded) {
+          markRecentChanges(moved);
+          onSetSelectionBox({
+            minX: Math.max(0, Math.min(project.width - 1, selectionBox.minX + dx)),
+            minY: Math.max(0, Math.min(project.height - 1, selectionBox.minY + dy)),
+            maxX: Math.max(0, Math.min(project.width - 1, selectionBox.maxX + dx)),
+            maxY: Math.max(0, Math.min(project.height - 1, selectionBox.maxY + dy)),
+          });
+        }
       }
     }
 
@@ -1043,17 +1078,27 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const placement = preview ? { ...storedPlacement, x: preview.x, y: preview.y } : storedPlacement;
         const item = STORAGE_ITEM_BY_ID.get(placement.itemId);
         if (!item) continue;
-        if (placement.x + placement.width < minVisibleX || placement.x > maxVisibleX || placement.y + placement.height < minVisibleY || placement.y > maxVisibleY) continue;
+        const movingSelection = activeTool === 'move' && selectionBox && dragStartCell && dragCurrentCell &&
+          placement.x >= selectionBox.minX && placement.y >= selectionBox.minY &&
+          placement.x + placement.width - 1 <= selectionBox.maxX && placement.y + placement.height - 1 <= selectionBox.maxY;
+        const movePreviewDx = movingSelection ? dragCurrentCell.x - dragStartCell.x : 0;
+        const movePreviewDy = movingSelection ? dragCurrentCell.y - dragStartCell.y : 0;
+        const drawX = placement.x + movePreviewDx;
+        const drawY = placement.y + movePreviewDy;
+        if (drawX + placement.width < minVisibleX || drawX > maxVisibleX || drawY + placement.height < minVisibleY || drawY > maxVisibleY) continue;
         const gameSprite = item.spriteId ? gameSprites[item.spriteId] : undefined;
-        const image = getSpriteImage(gameSprite?.atlas ?? item.imageUrl);
-        const itemX = bpX + placement.x * currentCellSize;
-        const itemY = bpY + placement.y * currentCellSize;
+        const image = getSpriteImage(item.placementImageUrl ?? gameSprite?.atlas ?? item.imageUrl);
+        const itemX = bpX + drawX * currentCellSize;
+        const itemY = bpY + drawY * currentCellSize;
         const itemW = placement.width * currentCellSize;
         const itemH = placement.height * currentCellSize;
         if (image && item.category !== 'bridge' && item.category !== 'fence') {
           ctx.save();
           ctx.imageSmoothingEnabled = false;
-          if (gameSprite) {
+          if (movePreviewDx !== 0 || movePreviewDy !== 0) ctx.globalAlpha = 0.6;
+          if (item.renderAtNativeScale && (item.placementImageUrl || !gameSprite)) {
+            drawNativeStorageSprite(ctx, image, itemX, itemY, itemW, itemH, currentCellSize, placement.rotation ?? 0);
+          } else if (gameSprite) {
             const sourceY = gameSprite.rect.origin === 'bottom-left'
               ? image.naturalHeight - gameSprite.rect.y - gameSprite.rect.height
               : gameSprite.rect.y;
@@ -1408,14 +1453,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             hoverCell.y < item.y + item.height && hoverCell.y + itemHeight > item.y,
           );
           const previewSprite = selectedStorageItem.spriteId ? gameSprites[selectedStorageItem.spriteId] : undefined;
-          const image = getSpriteImage(previewSprite?.atlas ?? selectedStorageItem.imageUrl);
+          const image = getSpriteImage(selectedStorageItem.placementImageUrl ?? previewSprite?.atlas ?? selectedStorageItem.imageUrl);
           ctx.fillStyle = fits && !blocked ? 'rgba(245, 158, 11, 0.24)' : 'rgba(239, 68, 68, 0.28)';
           ctx.fillRect(x, y, w, h);
           if (image && fits) {
             ctx.save();
             ctx.globalAlpha = 0.72;
             ctx.imageSmoothingEnabled = false;
-            if (previewSprite) {
+            if (selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite)) {
+              drawNativeStorageSprite(ctx, image, x, y, w, h, currentCellSize);
+            } else if (previewSprite) {
               const sourceY = previewSprite.rect.origin === 'bottom-left'
                 ? image.naturalHeight - previewSprite.rect.y - previewSprite.rect.height
                 : previewSprite.rect.y;
