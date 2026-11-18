@@ -1,8 +1,9 @@
-import { BlueprintProject, Language, PaletteColor, StorageItemPlacement } from '../types/blueprint';
+import { BlueprintProject, Language, PaletteColor, StorageItemPlacement, StorageItemRotation } from '../types/blueprint';
 import { coordKey } from './gridLogic';
 import { getCanonicalCellColorId, getDoorCellOrientation } from './doorCells';
 import { STORAGE_ITEM_BY_ID, StorageItemDefinition } from './storageCatalog';
 import { GameSpriteEntry, loadGameSpriteCatalog } from './gameSpriteCatalog';
+import { FLOOR_ITEM_BY_ID } from './floorCatalog';
 
 export interface ExportOptions {
   cellSize: number; // e.g. 16, 24, 32, 48
@@ -28,15 +29,16 @@ interface ImageBounds {
   height: number;
 }
 
-const TILE_CATEGORIES = new Set(['wall', 'floor', 'bridge', 'fence', 'rail', 'door', 'gate']);
+const TILE_CATEGORIES = new Set(['wall', 'floor', 'bridge', 'fence', 'rail', 'gate']);
 const LAYER_ORDER: Record<NonNullable<StorageItemPlacement['layer']>, number> = {
   bridge: 0,
   floor: 1,
   rail: 2,
   fence: 3,
   wall: 4,
-  object: 5,
-  light: 6,
+  wall_decoration: 5,
+  object: 6,
+  light: 7,
 };
 
 const getLayerOrder = (placement: StorageItemPlacement) => LAYER_ORDER[placement.layer ?? 'object'];
@@ -102,14 +104,14 @@ function drawNativeSprite(
   width: number,
   height: number,
   cellSize: number,
-  rotation: 0 | 90,
+  rotation: StorageItemRotation,
 ) {
   const scale = cellSize / 16;
   const spriteWidth = bounds.width * scale;
   const spriteHeight = bounds.height * scale;
-  if (rotation === 90) {
+  if (rotation !== 0) {
     ctx.translate(x + width / 2, y + height / 2);
-    ctx.rotate(Math.PI / 2);
+    ctx.rotate(rotation * Math.PI / 180);
     ctx.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
   } else {
     ctx.drawImage(
@@ -143,10 +145,12 @@ function drawPlacedItem(ctx: CanvasRenderingContext2D, entry: ResolvedPlacement,
     drawNativeSprite(ctx, image, getImageBounds(image), x, y, width, height, cellSize, placement.rotation ?? 0);
   } else {
     const source = getSpriteSource(image, sprite);
-    if (placement.rotation === 90) {
+    const rotation = placement.rotation ?? 0;
+    if (rotation !== 0) {
       ctx.translate(x + width / 2, y + height / 2);
-      ctx.rotate(Math.PI / 2);
-      ctx.drawImage(image, source.x, source.y, source.width, source.height, -height / 2, -width / 2, height, width);
+      ctx.rotate(rotation * Math.PI / 180);
+      const quarterTurn = rotation === 90 || rotation === 270;
+      ctx.drawImage(image, source.x, source.y, source.width, source.height, quarterTurn ? -height / 2 : -width / 2, quarterTurn ? -width / 2 : -height / 2, quarterTurn ? height : width, quarterTurn ? width : height);
     } else {
       ctx.drawImage(image, source.x, source.y, source.width, source.height, x, y, width, height);
     }
@@ -190,12 +194,19 @@ export async function exportBlueprintToPng(
     const imageSource = item.placementImageUrl ?? sprite?.atlas ?? item.imageUrl;
     return { placement, item, sprite, imageSource };
   });
-  const imageSources = [...new Set(resolvedPlacements.map(entry => entry.imageSource).filter(Boolean))];
+  const usedFloorTypes = new Map<string, number>();
+  for (const itemId of Object.values(project.floorTiles ?? {})) usedFloorTypes.set(itemId, (usedFloorTypes.get(itemId) ?? 0) + 1);
+  const usedFloors = [...usedFloorTypes.entries()].flatMap(([id, count]) => {
+    const item = FLOOR_ITEM_BY_ID.get(id);
+    return item ? [{ item, count }] : [];
+  });
+  const imageSources = [...new Set([...resolvedPlacements.map(entry => entry.imageSource), ...usedFloors.map(entry => entry.item.imageUrl)].filter(Boolean))];
   const imageEntries = await Promise.all(imageSources.map(async source => [source, await loadImage(source)] as const));
   const images = new Map<string, HTMLImageElement | null>(imageEntries);
   for (const entry of resolvedPlacements) {
     entry.image = images.get(entry.imageSource) ?? null;
   }
+  const floorImages = new Map(usedFloors.map(({ item }) => [item.id, images.get(item.imageUrl) ?? null]));
 
   const colorMap = new Map<string, string>();
   for (const color of palette) colorMap.set(color.id, color.hex);
@@ -225,13 +236,16 @@ export async function exportBlueprintToPng(
     ? Math.ceil(activeColorsUsed.length / Math.max(1, Math.floor(Math.max(gridPixelWidth, colorItemWidth) / colorItemWidth)))
     : 0;
   const colorColumns = colorRows > 0 ? Math.max(1, Math.ceil(activeColorsUsed.length / colorRows)) : 0;
+  const floorItemCount = includeLegend ? usedFloors.length : 0;
   const objectItemCount = usedObjectTypes.size;
-  const objectColumns = objectItemCount > 0 ? Math.max(1, Math.floor(Math.max(gridPixelWidth, objectItemWidth) / objectItemWidth)) : 0;
+  const objectColumns = objectItemCount + floorItemCount > 0 ? Math.max(1, Math.floor(Math.max(gridPixelWidth, objectItemWidth) / objectItemWidth)) : 0;
   const objectRows = objectColumns > 0 ? Math.ceil(objectItemCount / objectColumns) : 0;
+  const floorRows = objectColumns > 0 ? Math.ceil(floorItemCount / objectColumns) : 0;
   const legendContentWidth = Math.max(gridPixelWidth, colorColumns * colorItemWidth, objectColumns * objectItemWidth);
   let legendHeight = 0;
   if (colorRows > 0) legendHeight += 36 + colorRows * 28;
-  if (objectRows > 0) legendHeight += (colorRows > 0 ? 16 : 0) + 36 + objectRows * 38;
+  if (floorRows > 0) legendHeight += (legendHeight > 0 ? 16 : 0) + 36 + floorRows * 38;
+  if (objectRows > 0) legendHeight += (legendHeight > 0 ? 16 : 0) + 36 + objectRows * 38;
 
   // Reserve margins for native-scale sprites that rise above or extend beyond the blueprint grid.
   let overflowLeft = 0;
@@ -246,17 +260,19 @@ export async function exportBlueprintToPng(
     const spriteHeight = bounds.height * cellSize / 16;
     const footprintWidth = placement.width * cellSize;
     const footprintHeight = placement.height * cellSize;
-    const rotated = placement.rotation === 90;
-    const drawWidth = rotated ? spriteHeight : spriteWidth;
-    const drawHeight = rotated ? spriteWidth : spriteHeight;
+    const rotation = placement.rotation ?? 0;
+    const quarterTurn = rotation === 90 || rotation === 270;
+    const centerAligned = rotation !== 0;
+    const drawWidth = quarterTurn ? spriteHeight : spriteWidth;
+    const drawHeight = quarterTurn ? spriteWidth : spriteHeight;
     const extraX = Math.max(0, (drawWidth - footprintWidth) / 2);
-    const extraY = rotated
+    const extraY = centerAligned
       ? Math.max(0, (drawHeight - footprintHeight) / 2)
       : Math.max(0, drawHeight - footprintHeight);
     overflowLeft = Math.max(overflowLeft, placement.x * cellSize < extraX ? extraX - placement.x * cellSize : 0);
     overflowRight = Math.max(overflowRight, (placement.x + placement.width) * cellSize + extraX - gridPixelWidth);
     overflowTop = Math.max(overflowTop, placement.y * cellSize < extraY ? extraY - placement.y * cellSize : 0);
-    overflowBottom = Math.max(overflowBottom, (placement.y + placement.height) * cellSize + (rotated ? extraY : 0) - gridPixelHeight);
+    overflowBottom = Math.max(overflowBottom, (placement.y + placement.height) * cellSize + (centerAligned ? extraY : 0) - gridPixelHeight);
   }
 
   const startX = padding + overflowLeft;
@@ -307,6 +323,16 @@ export async function exportBlueprintToPng(
   if (background !== 'transparent') {
     ctx.fillStyle = background === 'light' ? '#ffffff' : '#18191f';
     ctx.fillRect(startX, startY, gridPixelWidth, gridPixelHeight);
+  }
+
+  for (const [key, itemId] of Object.entries(project.floorTiles ?? {})) {
+    const [x, y] = key.split(',').map(Number);
+    const image = floorImages.get(itemId);
+    if (!image || x < 0 || y < 0 || x >= width || y >= height) continue;
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(image, startX + x * cellSize, startY + y * cellSize, cellSize, cellSize);
+    ctx.restore();
   }
 
   for (const [key, colorId] of Object.entries(cells)) {
@@ -409,8 +435,33 @@ export async function exportBlueprintToPng(
       sectionY += 36 + colorRows * 28;
     }
 
+    if (floorRows > 0) {
+      if (sectionY > gridEndY + 28) sectionY += 16;
+      drawHeading(language === 'es' ? 'LEYENDA DE SUELOS' : 'FLOOR LEGEND');
+      usedFloors.forEach(({ item, count }, index) => {
+        const col = index % objectColumns;
+        const row = Math.floor(index / objectColumns);
+        const itemX = startX + col * objectItemWidth;
+        const itemY = sectionY + 24 + row * 38;
+        const thumbSize = 28;
+        const image = floorImages.get(item.id);
+        ctx.fillStyle = background === 'light' ? 'rgba(15, 23, 42, 0.05)' : 'rgba(255,255,255,0.06)';
+        ctx.fillRect(itemX, itemY, thumbSize, thumbSize);
+        ctx.strokeStyle = 'rgba(127, 127, 127, 0.45)';
+        ctx.strokeRect(itemX, itemY, thumbSize, thumbSize);
+        if (image) { ctx.imageSmoothingEnabled = false; ctx.drawImage(image, itemX, itemY, thumbSize, thumbSize); }
+        ctx.fillStyle = textMain;
+        ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText(language === 'es' ? item.nameEs : item.nameEn, itemX + 36, itemY + 12, objectItemWidth - 44);
+        ctx.fillStyle = textSub;
+        ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillText(`1×1 ${language === 'es' ? 'tiles' : 'tiles'} · ${count} ${language === 'es' ? 'colocados' : 'placed'}`, itemX + 36, itemY + 25, objectItemWidth - 44);
+      });
+      sectionY += 36 + floorRows * 38;
+    }
+
     if (objectRows > 0) {
-      if (colorRows > 0) sectionY += 16;
+      if (sectionY > gridEndY + 28) sectionY += 16;
       drawHeading(language === 'es' ? 'LEYENDA DE OBJETOS' : 'OBJECT LEGEND');
       const entries = [...usedObjectTypes.values()];
       entries.forEach(({ entry, count }, index) => {

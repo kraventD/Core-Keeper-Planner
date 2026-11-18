@@ -6,3 +6,46 @@ The unobtainable Ancient Fountain is intentionally excluded from the app catalog
 Additional workbench, station, and furniture sprites were copied from the local
 AssetRipper export supplied by the project owner. Only the individual PNGs used
 by the catalog are included here; the full export stays outside the project.
+
+Additional catalog icons downloaded locally from the Core Keeper Wiki asset mirror:
+https://corekeeper.wiki/assets/icons/items/ReluciteChest.png
+https://corekeeper.wiki/assets/icons/items/LockedReluciteChest.png
+https://corekeeper.wiki/assets/icons/items/MysteriousIdol.png
+https://corekeeper.wiki/assets/icons/items/CritterCatcher.png
+https://corekeeper.wiki/assets/icons/items/FishingNet.png
+https://corekeeper.wiki/assets/icons/items/MagicMirror.png
+https://corekeeper.wiki/assets/icons/items/TrainingDummy.png
+https://corekeeper.wiki/assets/icons/items/Banner.png
+https://corekeeper.wiki/assets/icons/items/Tapestry.png
+https://corekeeper.wiki/assets/icons/items/Painting.png
+https://corekeeper.wiki/assets/icons/items/MusicSheetStand.png
+https://corekeeper.wiki/assets/icons/items/SnowballPyramid.png
+https://corekeeper.wiki/assets/icons/items/LuckyCat.png
+https://corekeeper.wiki/assets/icons/items/PinkRoseBouquet.png
+https://corekeeper.wiki/assets/icons/items/WhiteRoseBouquet.png
+https://corekeeper.wiki/assets/icons/items/GoldenRoseBouquet.png
+https://corekeeper.wiki/assets/icons/items/EasterGarland.png
+https://corekeeper.wiki/assets/icons/items/WallLightBulb.png
+https://corekeeper.wiki/assets/icons/items/EasterEggLamp.png
+
+Additional placeable and decoration item icons matched by exact item name against
+the Core Keeper Wikidom placeables listing. Glowbug icons were matched against
+the critter listing. The images are stored locally under public/storage-items/.
+Placeables: https://core-keeper.run-digital.com/en/items/category/placeable/
+Critters: https://core-keeper.run-digital.com/en/items/category/critter/
+
+Large Sun Crystal placed sprite, requested by the project owner:
+https://static.wikia.nocookie.net/core-keeper/images/0/07/Large_Sun_Crystal_placed_1.png/revision/latest?cb=20240602013111
+
+Door catalog images (Wood, Stone, Electrical, Scarlet, Coral, Galaxite, Gleam Wood,
+Obsidian, and Locked Obsidian), downloaded from the Core Keeper Wiki file pages:
+Community content: CC BY-NC-SA 4.0.
+https://corekeeper.atma.gg/en/File:Wood_Door.png
+https://corekeeper.atma.gg/en/File:Stone_Door.png
+https://corekeeper.atma.gg/en/File:Electrical_Door.png
+https://corekeeper.atma.gg/en/File:Scarlet_Door.png
+https://corekeeper.atma.gg/en/File:Coral_Door.png
+https://corekeeper.atma.gg/en/File:Galaxite_Door.png
+https://corekeeper.atma.gg/en/File:Gleam_Wood_Door.png
+https://corekeeper.atma.gg/en/File:Obsidian_Door.png
+https://corekeeper.atma.gg/en/File:Locked_Obsidian_Door.png

@@ -14,16 +14,9 @@ export interface BlockCatalogEntry {
   groundEstimated?: boolean;
 }
 
-export const DOOR_COLOR: PaletteColor = {
-  id: 'door',
-  name: 'Door / Puerta',
-  hex: '#000000',
-  isDefault: true,
-};
-
 // Wiki HEX values are used where published. For missing values, the planner
 // keeps a representative color based on the block's sprite and marks it estimated.
-const STRUCTURE_COLOR_CATEGORIES = new Set(['wall', 'floor', 'bridge', 'fence', 'rail']);
+const STRUCTURE_COLOR_CATEGORIES = new Set(['wall', 'bridge', 'fence', 'rail']);
 const STRUCTURE_COLOR_BLOCKS: BlockCatalogEntry[] = STRUCTURE_ITEMS
   .filter(item => STRUCTURE_COLOR_CATEGORIES.has(item.category) && item.color)
   .map(item => ({
@@ -82,20 +75,11 @@ export const BLOCK_PALETTE: PaletteColor[] = BLOCK_CATALOG.flatMap(block => ([
     isDefault: true,
     estimated: block.wallEstimated,
   }] : []),
-  ...(block.ground ? [{
-    id: `block-${block.id}-ground`,
-    name: `${block.nameEn} (Ground)`,
-    nameEn: `${block.nameEn} (Ground)`,
-    nameEs: `${block.nameEs} (Suelo)`,
-    hex: block.ground,
-    isDefault: true,
-    estimated: block.groundEstimated,
-  }] : []),
 ]));
 
-export const DEFAULT_ACTIVE_COLOR = BLOCK_PALETTE.find(color => color.id === 'block-wood-wall') ?? DOOR_COLOR;
+export const DEFAULT_ACTIVE_COLOR = BLOCK_PALETTE.find(color => color.id === 'block-wood-wall') ?? BLOCK_PALETTE[0];
 
-export const GAME_PALETTE: PaletteColor[] = [DOOR_COLOR, ...BLOCK_PALETTE];
+export const GAME_PALETTE: PaletteColor[] = BLOCK_PALETTE;
 
 export const BLOCK_COLOR_BY_ID = new Map(BLOCK_PALETTE.map(color => [color.id, color]));
 

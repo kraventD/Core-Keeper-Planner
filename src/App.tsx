@@ -12,8 +12,10 @@ import {
   CircleOrigin,
   SelectionBox,
   StorageItemPlacement,
+  StorageItemRotation,
   ToolType,
   MirrorMode,
+  PlannerLayerId,
 } from './types/blueprint';
 import { DEFAULT_PALETTE } from './utils/palette';
 import { getDoorPlacementColorId, normalizeDoorCells } from './utils/doorCells';
@@ -39,6 +41,7 @@ import {
   saveAutosave,
   saveProjectToJson,
 } from './utils/projectStorage';
+import { loadRecoveryAutosave } from './utils/projectStorage';
 import { translations } from './i18n/translations';
 import { Header } from './components/Header';
 import { ToolBar } from './components/ToolBar';
@@ -49,12 +52,15 @@ import { ResizeModal } from './components/Modals/ResizeModal';
 import { ExportModal } from './components/Modals/ExportModal';
 import { ExportCodeModal } from './components/Modals/ExportCodeModal';
 import { ImportCodeModal } from './components/Modals/ImportCodeModal';
+import { RecoveryModal } from './components/Modals/RecoveryModal';
 import { ShortcutsModal } from './components/Modals/ShortcutsModal';
 import { BlockPaletteModal } from './components/Modals/BlockPaletteModal';
 import { DEFAULT_ACTIVE_COLOR, paletteWithBlockColors } from './utils/blockCatalog';
 import { StorageItemDefinition } from './utils/storageCatalog';
 import { migrateStructurePlacementsToColors, STORAGE_ITEM_BY_ID } from './utils/storageCatalog';
 import { GameSpriteEntry, loadGameSpriteCatalog } from './utils/gameSpriteCatalog';
+import { FLOOR_ITEM_BY_ID } from './utils/floorCatalog';
+import { DEFAULT_PLANNER_LAYER_STATES, getStorageItemLayerId, getStoragePlacementLayerId, isPlannerLayerEditable } from './utils/plannerLayers';
 
 const INITIAL_PROJECT: BlueprintProject = {
   id: 'proj_default',
@@ -62,12 +68,35 @@ const INITIAL_PROJECT: BlueprintProject = {
   width: 60,
   height: 50,
   cells: {},
+  floorTiles: {},
   storagePlacements: [],
   palette: DEFAULT_PALETTE,
   annotations: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };
+
+function transformFloorSelection(
+  floors: Record<string, string>,
+  box: SelectionBox,
+  axis: 'horizontal' | 'vertical',
+  gridWidth: number,
+  gridHeight: number,
+  duplicate: boolean,
+): Record<string, string> {
+  const updated = { ...floors };
+  const picked = Object.entries(floors).flatMap(([key, itemId]) => {
+    const [x, y] = key.split(',').map(Number);
+    return x >= box.minX && x <= box.maxX && y >= box.minY && y <= box.maxY ? [{ x, y, itemId }] : [];
+  });
+  if (!duplicate) for (const tile of picked) delete updated[`${tile.x},${tile.y}`];
+  for (const tile of picked) {
+    const x = axis === 'horizontal' ? gridWidth - 1 - tile.x : tile.x;
+    const y = axis === 'vertical' ? gridHeight - 1 - tile.y : tile.y;
+    if (x >= 0 && y >= 0 && x < gridWidth && y < gridHeight) updated[`${x},${y}`] = tile.itemId;
+  }
+  return updated;
+}
 
 export default function App() {
   // 1. Language state
@@ -135,8 +164,10 @@ export default function App() {
   const [showLightRanges, setShowLightRanges] = useState<boolean>(true);
   const [gridLineWidth, setGridLineWidth] = useState<number>(1.5);
   const [highContrastGrid, setHighContrastGrid] = useState<boolean>(true);
-  const [gridTheme, setGridTheme] = useState<'light' | 'dark'>('light');
+  const [gridTheme, setGridTheme] = useState<'light' | 'dark'>('dark');
   const [currentZoom, setCurrentZoom] = useState<number>(1.0);
+  const [plannerLayerStates, setPlannerLayerStates] = useState(DEFAULT_PLANNER_LAYER_STATES);
+
 
   // 6. History Undo / Redo
   const [history, setHistory] = useState<HistoryStep[]>(() => [
@@ -146,6 +177,7 @@ export default function App() {
       width: project.width,
       height: project.height,
       storagePlacements: project.storagePlacements ?? [],
+      floorTiles: project.floorTiles ?? {},
     },
   ]);
   const [historyIndex, setHistoryIndex] = useState<number>(0);
@@ -155,7 +187,7 @@ export default function App() {
 
   // Push new history state
   const pushHistory = useCallback(
-    (newCells: Record<string, string>, desc: string, width = project.width, height = project.height, storagePlacements = project.storagePlacements ?? []) => {
+    (newCells: Record<string, string>, desc: string, width = project.width, height = project.height, storagePlacements = project.storagePlacements ?? [], floorTiles = project.floorTiles ?? {}) => {
       setHistory(prev => {
         const sliced = prev.slice(0, historyIndex + 1);
         const newStep: HistoryStep = {
@@ -164,6 +196,7 @@ export default function App() {
           width,
           height,
           storagePlacements,
+          floorTiles,
         };
         const maxSteps = 50;
         const updated = [...sliced, newStep];
@@ -171,7 +204,7 @@ export default function App() {
       });
       setHistoryIndex(prev => Math.min(prev + 1, 49));
     },
-    [historyIndex, project.width, project.height, project.storagePlacements]
+    [historyIndex, project.width, project.height, project.storagePlacements, project.floorTiles]
   );
 
   const handleUndo = useCallback(() => {
@@ -180,16 +213,23 @@ export default function App() {
     const step = history[targetIndex];
     if (step) {
       setHistoryIndex(targetIndex);
-      setProject(prev => ({
-        ...prev,
-        cells: { ...step.cells },
-        width: step.width,
-        height: step.height,
-        storagePlacements: step.storagePlacements ?? [],
-        updatedAt: new Date().toISOString(),
-      }));
+      setProject(prev => {
+        const isEditable = (placement: StorageItemPlacement) => isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId)));
+        const historyPlacements = step.storagePlacements ?? [];
+        const updated = {
+          ...prev,
+          cells: isPlannerLayerEditable(plannerLayerStates, 'walls') ? { ...step.cells } : prev.cells,
+          width: step.width,
+          height: step.height,
+          storagePlacements: [...historyPlacements.filter(isEditable), ...(prev.storagePlacements ?? []).filter(item => !isEditable(item))],
+          floorTiles: isPlannerLayerEditable(plannerLayerStates, 'floors') ? (step.floorTiles ?? {}) : (prev.floorTiles ?? {}),
+          updatedAt: new Date().toISOString(),
+        };
+        saveAutosave(updated);
+        return updated;
+      });
     }
-  }, [canUndo, historyIndex, history]);
+  }, [canUndo, historyIndex, history, plannerLayerStates]);
 
   const handleRedo = useCallback(() => {
     if (!canRedo) return;
@@ -197,38 +237,55 @@ export default function App() {
     const step = history[targetIndex];
     if (step) {
       setHistoryIndex(targetIndex);
-      setProject(prev => ({
-        ...prev,
-        cells: { ...step.cells },
-        width: step.width,
-        height: step.height,
-        storagePlacements: step.storagePlacements ?? [],
-        updatedAt: new Date().toISOString(),
-      }));
-    }
-  }, [canRedo, historyIndex, history]);
-
-  // Update Cells with history recording and autosave
-  const handleUpdateCells = useCallback(
-    (newCells: Record<string, string>, description: string, storagePlacements = project.storagePlacements ?? []) => {
       setProject(prev => {
+        const isEditable = (placement: StorageItemPlacement) => isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId)));
+        const historyPlacements = step.storagePlacements ?? [];
         const updated = {
           ...prev,
-          cells: newCells,
-          storagePlacements,
+          cells: isPlannerLayerEditable(plannerLayerStates, 'walls') ? { ...step.cells } : prev.cells,
+          width: step.width,
+          height: step.height,
+          storagePlacements: [...historyPlacements.filter(isEditable), ...(prev.storagePlacements ?? []).filter(item => !isEditable(item))],
+          floorTiles: isPlannerLayerEditable(plannerLayerStates, 'floors') ? (step.floorTiles ?? {}) : (prev.floorTiles ?? {}),
           updatedAt: new Date().toISOString(),
         };
         saveAutosave(updated);
         return updated;
       });
-      pushHistory(newCells, description, project.width, project.height, storagePlacements);
+    }
+  }, [canRedo, historyIndex, history, plannerLayerStates]);
+
+  // Update Cells with history recording and autosave
+  const handleUpdateCells = useCallback(
+    (newCells: Record<string, string>, description: string, storagePlacements = project.storagePlacements ?? [], floorTiles = project.floorTiles ?? {}) => {
+      const safeCells = isPlannerLayerEditable(plannerLayerStates, 'walls') ? newCells : project.cells;
+      const safeFloorTiles = isPlannerLayerEditable(plannerLayerStates, 'floors') ? floorTiles : (project.floorTiles ?? {});
+      const existingPlacements = project.storagePlacements ?? [];
+      const editableLayers = new Set<PlannerLayerId>(['floors', 'walls', 'objects', 'wallDecorations'].filter(layer =>
+        isPlannerLayerEditable(plannerLayerStates, layer as PlannerLayerId)) as PlannerLayerId[]);
+      const editableIncoming = storagePlacements.filter(item => editableLayers.has(getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))));
+      const preservedLocked = existingPlacements.filter(item => !editableLayers.has(getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))));
+      const safePlacements = [...editableIncoming, ...preservedLocked];
+      setProject(prev => {
+        const updated = {
+          ...prev,
+          cells: safeCells,
+          storagePlacements: safePlacements,
+          floorTiles: safeFloorTiles,
+          updatedAt: new Date().toISOString(),
+        };
+        saveAutosave(updated);
+        return updated;
+      });
+      pushHistory(safeCells, description, project.width, project.height, safePlacements, safeFloorTiles);
     },
-    [project.height, project.storagePlacements, project.width, pushHistory]
+    [plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, project.floorTiles, pushHistory]
   );
 
   // Autosave when project changes
   useEffect(() => {
-    saveAutosave(project);
+    setAutosaveAvailable(saveAutosave(project));
+    setRecoveryProject(loadRecoveryAutosave());
   }, [project]);
 
   // 7. Modals state
@@ -238,10 +295,31 @@ export default function App() {
   const [isExportCodeOpen, setIsExportCodeOpen] = useState(false);
   const [isImportCodeOpen, setIsImportCodeOpen] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
-  const [isBlockPaletteOpen, setIsBlockPaletteOpen] = useState(false);
+  const [isBlockPaletteOpen, setIsBlockPaletteOpen] = useState(true);
+  const [isInspectorOpen, setIsInspectorOpen] = useState(true);
   const [selectedStorageItemId, setSelectedStorageItemId] = useState<string | null>(null);
+  const [selectedFloorItemId, setSelectedFloorItemId] = useState<string | null>(null);
   const [selectedStoragePlacementId, setSelectedStoragePlacementId] = useState<string | null>(null);
   const [gameSprites, setGameSprites] = useState<Record<string, GameSpriteEntry>>({});
+  const [recoveryProject, setRecoveryProject] = useState<BlueprintProject | null>(() => loadRecoveryAutosave());
+  const [isRecoveryOpen, setIsRecoveryOpen] = useState(false);
+  const [autosaveAvailable, setAutosaveAvailable] = useState(true);
+
+  const togglePlannerLayerVisibility = useCallback((layer: PlannerLayerId) => {
+    setPlannerLayerStates(prev => ({ ...prev, [layer]: { ...prev[layer], visible: !prev[layer].visible } }));
+    if (selectedStoragePlacementId) {
+      const selected = (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId);
+      if (selected && getStoragePlacementLayerId(selected, STORAGE_ITEM_BY_ID.get(selected.itemId)) === layer) setSelectedStoragePlacementId(null);
+    }
+  }, [project.storagePlacements, selectedStoragePlacementId]);
+
+  const togglePlannerLayerLock = useCallback((layer: PlannerLayerId) => {
+    setPlannerLayerStates(prev => ({ ...prev, [layer]: { ...prev[layer], locked: !prev[layer].locked } }));
+    if (selectedStoragePlacementId) {
+      const selected = (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId);
+      if (selected && getStoragePlacementLayerId(selected, STORAGE_ITEM_BY_ID.get(selected.itemId)) === layer) setSelectedStoragePlacementId(null);
+    }
+  }, [project.storagePlacements, selectedStoragePlacementId]);
 
   useEffect(() => {
     loadGameSpriteCatalog().then(setGameSprites).catch(() => setGameSprites({}));
@@ -254,6 +332,26 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   }, []);
 
+  const handleRecoverAutosave = useCallback(() => {
+    if (!recoveryProject) return;
+    setProject(recoveryProject);
+    setHistory([{
+      description: language === 'es' ? 'Respaldo recuperado' : 'Recovered backup',
+      cells: { ...recoveryProject.cells },
+      width: recoveryProject.width,
+      height: recoveryProject.height,
+      storagePlacements: recoveryProject.storagePlacements ?? [],
+      floorTiles: recoveryProject.floorTiles ?? {},
+    }]);
+    setHistoryIndex(0);
+    setSelectionBox(null);
+    setSelectedStoragePlacementId(null);
+    setSelectedStorageItemId(null);
+    setSelectedFloorItemId(null);
+    setIsRecoveryOpen(false);
+    showToast(language === 'es' ? 'Se recuperó el respaldo automático.' : 'The autosave backup was recovered.');
+  }, [language, recoveryProject, showToast]);
+
   const handleSetSelectionBox = useCallback((box: SelectionBox | null) => {
     setSelectionBox(box);
     if (box) setSelectedStoragePlacementId(null);
@@ -264,7 +362,7 @@ export default function App() {
     const selected = placements.filter(item =>
       item.x >= box.minX && item.y >= box.minY &&
       item.x + item.width - 1 <= box.maxX && item.y + item.height - 1 <= box.maxY,
-    );
+    ).filter(item => isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))));
     const selectedIds = new Set(selected.map(item => item.id));
     const movedPlacements = selected.map(item => ({ ...item, x: item.x + deltaX, y: item.y + deltaY }));
     const outside = movedPlacements.some(item => item.x < 0 || item.y < 0 || item.x + item.width > project.width || item.y + item.height > project.height);
@@ -285,17 +383,20 @@ export default function App() {
       return false;
     }
 
-    const movedCells = moveCells(project.cells, box, deltaX, deltaY, project.width, project.height);
+    const movedCells = isPlannerLayerEditable(plannerLayerStates, 'walls')
+      ? moveCells(project.cells, box, deltaX, deltaY, project.width, project.height) : project.cells;
+    const movedFloorTiles = isPlannerLayerEditable(plannerLayerStates, 'floors')
+      ? moveCells(project.floorTiles ?? {}, box, deltaX, deltaY, project.width, project.height) : (project.floorTiles ?? {});
     const movedById = new Map(movedPlacements.map(item => [item.id, item]));
     const nextPlacements = placements.map(item => movedById.get(item.id) ?? item);
     setProject(prev => {
-      const updated = { ...prev, cells: movedCells, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
+      const updated = { ...prev, cells: movedCells, floorTiles: movedFloorTiles, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
       saveAutosave(updated);
       return updated;
     });
-    pushHistory(movedCells, 'Mover selección', project.width, project.height, nextPlacements);
+    pushHistory(movedCells, 'Mover selección', project.width, project.height, nextPlacements, movedFloorTiles);
     return true;
-  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+  }, [language, plannerLayerStates, project.cells, project.floorTiles, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
 
   // 8. Selection Operations
   const getSelectionClipboard = useCallback((): ClipboardData | null => {
@@ -315,7 +416,14 @@ export default function App() {
       return null;
     }
 
-    const clipboardData = copySelection(project.cells, box);
+    const clipboardData = copySelection(isPlannerLayerEditable(plannerLayerStates, 'walls') ? project.cells : {}, box);
+    clipboardData.floorTiles = isPlannerLayerEditable(plannerLayerStates, 'floors') ? Object.entries(project.floorTiles ?? {}).flatMap(([key, itemId]) => {
+      const [x, y] = key.split(',').map(Number);
+      return x >= box!.minX && x <= box!.maxX && y >= box!.minY && y <= box!.maxY
+        ? [{ relX: x - box!.minX, relY: y - box!.minY, itemId }]
+        : [];
+    }) : [];
+    placementsToCopy = placementsToCopy.filter(item => isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))));
     if (!selectionBox) clipboardData.cells = [];
     clipboardData.storagePlacements = placementsToCopy.map(({ id: _id, x, y, ...item }) => ({
       ...item,
@@ -323,7 +431,7 @@ export default function App() {
       relY: y - box!.minY,
     }));
     return clipboardData;
-  }, [project.cells, project.storagePlacements, selectedStoragePlacementId, selectionBox]);
+  }, [plannerLayerStates, project.cells, project.floorTiles, project.storagePlacements, selectedStoragePlacementId, selectionBox]);
 
   const handleCopySelection = useCallback(() => {
     const data = getSelectionClipboard();
@@ -344,10 +452,15 @@ export default function App() {
       ).map(placement => placement.id)
       : selectedStoragePlacementId ? [selectedStoragePlacementId] : []);
     const remainingPlacements = (project.storagePlacements ?? []).filter(item => !selectedIds.has(item.id));
-    handleUpdateCells(deleted, 'Cortar selección', remainingPlacements);
+    const deletedFloors = { ...(project.floorTiles ?? {}) };
+    if (selectionBox) for (const key of Object.keys(deletedFloors)) {
+      const [x, y] = key.split(',').map(Number);
+      if (x >= selectionBox.minX && x <= selectionBox.maxX && y >= selectionBox.minY && y <= selectionBox.maxY) delete deletedFloors[key];
+    }
+    handleUpdateCells(deleted, 'Cortar selección', remainingPlacements, deletedFloors);
     setSelectedStoragePlacementId(null);
     showToast(t.alerts.cut);
-  }, [getSelectionClipboard, selectionBox, project.cells, project.storagePlacements, selectedStoragePlacementId, handleUpdateCells, showToast, t.alerts.cut]);
+  }, [getSelectionClipboard, selectionBox, project.cells, project.floorTiles, project.storagePlacements, selectedStoragePlacementId, handleUpdateCells, showToast, t.alerts.cut]);
 
   const handlePasteSelection = useCallback(() => {
     if (!clipboard) {
@@ -380,7 +493,17 @@ export default function App() {
       return;
     }
     const pasted = pasteSelection(project.cells, clipboard, destX, destY, project.width, project.height);
-    handleUpdateCells(pasted, 'Pegar portapapeles', [...currentPlacements, ...pastedPlacements]);
+    const pastedFloors = { ...(project.floorTiles ?? {}) };
+    for (const [key] of Object.entries(pastedFloors)) {
+      const [x, y] = key.split(',').map(Number);
+      if (x >= destX && x < destX + clipboard.width && y >= destY && y < destY + clipboard.height) delete pastedFloors[key];
+    }
+    for (const tile of clipboard.floorTiles ?? []) {
+      const x = destX + tile.relX;
+      const y = destY + tile.relY;
+      if (x >= 0 && y >= 0 && x < project.width && y < project.height) pastedFloors[`${x},${y}`] = tile.itemId;
+    }
+    handleUpdateCells(pasted, 'Pegar portapapeles', [...currentPlacements, ...pastedPlacements], pastedFloors);
     handleSetSelectionBox({
       minX: destX,
       minY: destY,
@@ -388,7 +511,7 @@ export default function App() {
       maxY: Math.min(project.height - 1, destY + clipboard.height - 1),
     });
     showToast(t.alerts.pasted);
-  }, [clipboard, selectionBox, project.cells, project.storagePlacements, project.width, project.height, handleUpdateCells, handleSetSelectionBox, showToast, t.alerts, language]);
+  }, [clipboard, selectionBox, project.cells, project.floorTiles, project.storagePlacements, project.width, project.height, handleUpdateCells, handleSetSelectionBox, showToast, t.alerts, language]);
 
   const handleDeleteSelection = useCallback(() => {
     if (!selectionBox) return;
@@ -397,14 +520,25 @@ export default function App() {
       !(item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
         item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY),
     );
-    handleUpdateCells(deleted, 'Eliminar selección', remainingPlacements);
-  }, [selectionBox, project.cells, project.storagePlacements, handleUpdateCells]);
+    const remainingFloors = { ...(project.floorTiles ?? {}) };
+    for (const key of Object.keys(remainingFloors)) {
+      const [x, y] = key.split(',').map(Number);
+      if (x >= selectionBox.minX && x <= selectionBox.maxX && y >= selectionBox.minY && y <= selectionBox.maxY) delete remainingFloors[key];
+    }
+    handleUpdateCells(deleted, 'Eliminar selección', remainingPlacements, remainingFloors);
+  }, [selectionBox, project.cells, project.floorTiles, project.storagePlacements, handleUpdateCells]);
 
   const handleFillSelection = useCallback(() => {
     if (!selectionBox) return;
-    const filled = fillSelection(project.cells, selectionBox, getDoorPlacementColorId(activeColor.id, doorOrientation), project.width, project.height);
-    handleUpdateCells(filled, 'Rellenar selección');
-  }, [selectionBox, project.cells, activeColor.id, doorOrientation, project.width, project.height, handleUpdateCells]);
+    if (selectedFloorItemId) {
+      const filledFloors = { ...(project.floorTiles ?? {}) };
+      for (let y = selectionBox.minY; y <= selectionBox.maxY; y++) for (let x = selectionBox.minX; x <= selectionBox.maxX; x++) filledFloors[`${x},${y}`] = selectedFloorItemId;
+      handleUpdateCells(project.cells, 'Rellenar suelo', undefined, filledFloors);
+    } else {
+      const filled = fillSelection(project.cells, selectionBox, getDoorPlacementColorId(activeColor.id, doorOrientation), project.width, project.height);
+      handleUpdateCells(filled, 'Rellenar selección');
+    }
+  }, [selectionBox, project.cells, project.floorTiles, selectedFloorItemId, activeColor.id, doorOrientation, project.width, project.height, handleUpdateCells]);
 
   const handleClearSelection = useCallback(() => {
     setSelectionBox(null);
@@ -420,9 +554,12 @@ export default function App() {
         project.width,
         project.height
       );
+      const updatedFloorTiles = transformFloorSelection(project.floorTiles ?? {}, selectionBox, axis, project.width, project.height, true);
       handleUpdateCells(
         updatedCells,
-        `Duplicar espejo (${axis === 'horizontal' ? 'H' : 'V'})`
+        `Duplicar espejo (${axis === 'horizontal' ? 'H' : 'V'})`,
+        undefined,
+        updatedFloorTiles,
       );
       setSelectionBox(mirroredBox);
       showToast(
@@ -434,6 +571,7 @@ export default function App() {
     [
       selectionBox,
       project.cells,
+      project.floorTiles,
       project.width,
       project.height,
       handleUpdateCells,
@@ -451,9 +589,12 @@ export default function App() {
         selectionBox,
         direction
       );
+      const flippedFloorTiles = transformFloorSelection(project.floorTiles ?? {}, selectionBox, direction, project.width, project.height, false);
       handleUpdateCells(
         flippedCells,
-        `Voltear selección (${direction === 'horizontal' ? 'H' : 'V'})`
+        `Voltear selección (${direction === 'horizontal' ? 'H' : 'V'})`,
+        undefined,
+        flippedFloorTiles,
       );
       showToast(
         direction === 'horizontal'
@@ -464,6 +605,7 @@ export default function App() {
     [
       selectionBox,
       project.cells,
+      project.floorTiles,
       handleUpdateCells,
       showToast,
       t.mirror.flippedH,
@@ -593,6 +735,7 @@ export default function App() {
   // 9. Resize & Clear Blueprint
   const handleApplyResize = (newWidth: number, newHeight: number) => {
     const { updatedCells } = resizeGridCells(project.cells, newWidth, newHeight);
+    const { updatedCells: resizedFloorTiles } = resizeGridCells(project.floorTiles ?? {}, newWidth, newHeight);
     const storagePlacements = (project.storagePlacements ?? []).filter(item =>
       item.x + item.width <= newWidth && item.y + item.height <= newHeight,
     );
@@ -601,10 +744,11 @@ export default function App() {
       width: newWidth,
       height: newHeight,
       cells: updatedCells,
+      floorTiles: resizedFloorTiles,
       storagePlacements,
       updatedAt: new Date().toISOString(),
     }));
-    pushHistory(updatedCells, `Redimensionar a ${newWidth}×${newHeight}`, newWidth, newHeight, storagePlacements);
+    pushHistory(updatedCells, `Redimensionar a ${newWidth}×${newHeight}`, newWidth, newHeight, storagePlacements, resizedFloorTiles);
     if (selectionBox) {
       if (selectionBox.minX >= newWidth || selectionBox.minY >= newHeight) {
         setSelectionBox(null);
@@ -620,19 +764,20 @@ export default function App() {
   };
 
   const handleClearBlueprint = () => {
-    setProject(prev => ({ ...prev, cells: {}, storagePlacements: [], updatedAt: new Date().toISOString() }));
-    pushHistory({}, 'Limpiar plano', project.width, project.height, []);
+    setProject(prev => ({ ...prev, cells: {}, floorTiles: {}, storagePlacements: [], updatedAt: new Date().toISOString() }));
+    pushHistory({}, 'Limpiar plano', project.width, project.height, [], {});
     setSelectionBox(null);
   };
 
   // 10. New & Load Project
-  const handleConfirmNewProject = (name: string, width: number, height: number) => {
+  const handleConfirmNewProject = (name: string, width: number, height: number, theme: 'light' | 'dark') => {
     const fresh: BlueprintProject = {
       id: `proj_${Date.now()}`,
       name,
       width,
       height,
       cells: {},
+      floorTiles: {},
       storagePlacements: [],
       palette: project.palette,
       annotations: [],
@@ -640,6 +785,7 @@ export default function App() {
       updatedAt: new Date().toISOString(),
     };
     setProject(fresh);
+    setGridTheme(theme);
     setSelectionBox(null);
     setHistory([
       {
@@ -648,6 +794,7 @@ export default function App() {
         width,
         height,
         storagePlacements: [],
+        floorTiles: {},
       },
     ]);
     setHistoryIndex(0);
@@ -666,6 +813,7 @@ export default function App() {
           width: loaded.width,
           height: loaded.height,
           storagePlacements: loaded.storagePlacements ?? [],
+          floorTiles: loaded.floorTiles ?? {},
         },
       ]);
       setHistoryIndex(0);
@@ -694,12 +842,14 @@ export default function App() {
     const migratedStructures = migrateStructurePlacementsToColors(
       normalizeDoorCells(projectData.cells ?? {}),
       projectData.storagePlacements ?? [],
+      projectData.floorTiles ?? {},
     );
     setProject(prev => ({
       ...prev,
       width: projectData.width ?? prev.width,
       height: projectData.height ?? prev.height,
       cells: projectData.cells || projectData.storagePlacements ? migratedStructures.cells : prev.cells,
+      floorTiles: projectData.cells || projectData.storagePlacements || projectData.floorTiles ? migratedStructures.floorTiles : prev.floorTiles ?? {},
       storagePlacements: projectData.storagePlacements ? migratedStructures.storagePlacements : prev.storagePlacements ?? [],
       palette: paletteWithBlockColors(projectData.palette ?? prev.palette),
       annotations: projectData.annotations ?? prev.annotations,
@@ -710,6 +860,8 @@ export default function App() {
   };
 
   const handlePlaceStorageItem = useCallback((x: number, y: number, item: StorageItemDefinition) => {
+    const itemLayer = getStorageItemLayerId(item, item.layer);
+    if (!isPlannerLayerEditable(plannerLayerStates, itemLayer)) return;
     const currentPlacements = project.storagePlacements ?? [];
     if (x + item.width > project.width || y + item.height > project.height) {
       showToast(language === 'es' ? 'El objeto queda fuera del plano.' : 'The item would extend beyond the blueprint.');
@@ -743,9 +895,11 @@ export default function App() {
       return updated;
     });
     pushHistory(project.cells, `Colocar ${language === 'es' ? item.nameEs : item.nameEn} (${item.width}×${item.height})`, project.width, project.height, nextPlacements);
-  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+  }, [language, plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
 
   const handleRemoveStorageItem = useCallback((placementId: string) => {
+    const target = (project.storagePlacements ?? []).find(item => item.id === placementId);
+    if (!target || !isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(target, STORAGE_ITEM_BY_ID.get(target.itemId)))) return;
     const nextPlacements = (project.storagePlacements ?? []).filter(item => item.id !== placementId);
     setProject(prev => {
       const updated = { ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
@@ -754,12 +908,13 @@ export default function App() {
     });
     pushHistory(project.cells, 'Eliminar objeto de almacenamiento', project.width, project.height, nextPlacements);
     setSelectedStoragePlacementId(current => current === placementId ? null : current);
-  }, [project.cells, project.storagePlacements, project.width, project.height, pushHistory]);
+  }, [plannerLayerStates, project.cells, project.storagePlacements, project.width, project.height, pushHistory]);
 
   const handleMoveStorageItem = useCallback((placementId: string, x: number, y: number) => {
     const placements = project.storagePlacements ?? [];
     const moving = placements.find(item => item.id === placementId);
     if (!moving || (moving.x === x && moving.y === y)) return;
+    if (!isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(moving, STORAGE_ITEM_BY_ID.get(moving.itemId)))) return;
     const overlaps = placements.some(item => item.id !== placementId && (item.layer ?? 'object') === (moving.layer ?? 'object') &&
       x < item.x + item.width && x + moving.width > item.x &&
       y < item.y + item.height && y + moving.height > item.y);
@@ -770,14 +925,21 @@ export default function App() {
     const nextPlacements = placements.map(item => item.id === placementId ? { ...item, x, y } : item);
     setProject(prev => ({ ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() }));
     pushHistory(project.cells, 'Mover objeto', project.width, project.height, nextPlacements);
-  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+  }, [language, plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
 
-  const handleRotateStorageItem = useCallback((placementId: string) => {
+  const handleRotateStorageItem = useCallback((placementId: string, rotation: StorageItemRotation) => {
     const placements = project.storagePlacements ?? [];
     const current = placements.find(item => item.id === placementId);
     if (!current) return;
-    const width = current.height;
-    const height = current.width;
+    if (!isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(current, STORAGE_ITEM_BY_ID.get(current.itemId)))) return;
+    if ((current.rotation ?? 0) === rotation) return;
+    const definition = STORAGE_ITEM_BY_ID.get(current.itemId);
+    const wasQuarterTurn = current.rotation === 90 || current.rotation === 270;
+    const baseWidth = definition?.width ?? (wasQuarterTurn ? current.height : current.width);
+    const baseHeight = definition?.height ?? (wasQuarterTurn ? current.width : current.height);
+    const needsSwap = rotation === 90 || rotation === 270;
+    const width = needsSwap ? baseHeight : baseWidth;
+    const height = needsSwap ? baseWidth : baseHeight;
     const overlaps = placements.some(item => item.id !== placementId && (item.layer ?? 'object') === (current.layer ?? 'object') &&
       current.x < item.x + item.width && current.x + width > item.x &&
       current.y < item.y + item.height && current.y + height > item.y);
@@ -789,17 +951,27 @@ export default function App() {
       ...item,
       width,
       height,
-      rotation: ((item.rotation ?? 0) === 0 ? 90 : 0) as 0 | 90,
+      rotation,
     } : item);
     setProject(prev => ({ ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() }));
-    pushHistory(project.cells, 'Girar objeto', project.width, project.height, nextPlacements);
-  }, [language, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+    pushHistory(project.cells, language === 'es' ? `Girar objeto a ${rotation}°` : `Rotate item to ${rotation}°`, project.width, project.height, nextPlacements);
+  }, [language, plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+
+  const handleRotateSelectedStorageItem = useCallback((direction: -1 | 1) => {
+    if (!selectedStoragePlacementId) return;
+    const selected = (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId);
+    if (!selected) return;
+    const rotation = (((selected.rotation ?? 0) + direction * 90 + 360) % 360) as StorageItemRotation;
+    handleRotateStorageItem(selected.id, rotation);
+  }, [handleRotateStorageItem, project.storagePlacements, selectedStoragePlacementId]);
 
   const handleChangeLightRadius = useCallback((placementId: string, lightRadius: number) => {
+    const current = (project.storagePlacements ?? []).find(item => item.id === placementId);
+    if (!current || !isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(current, STORAGE_ITEM_BY_ID.get(current.itemId)))) return;
     const nextPlacements = (project.storagePlacements ?? []).map(item => item.id === placementId ? { ...item, lightRadius } : item);
     setProject(prev => ({ ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() }));
     pushHistory(project.cells, 'Ajustar alcance de luz', project.width, project.height, nextPlacements);
-  }, [project.cells, project.height, project.storagePlacements, project.width, pushHistory]);
+  }, [plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, pushHistory]);
 
   // 12. Global Keyboard Shortcuts
   useEffect(() => {
@@ -861,6 +1033,12 @@ export default function App() {
         return;
       }
 
+      if (selectedStoragePlacementId && (e.key === '[' || e.key === ']')) {
+        e.preventDefault();
+        handleRotateSelectedStorageItem(e.key === ']' ? 1 : -1);
+        return;
+      }
+
       // Tool hotkeys
       const k = e.key.toLowerCase();
       if (k === 'v') setActiveTool('select');
@@ -894,6 +1072,7 @@ export default function App() {
     handlePasteSelection,
     handleDeleteSelection,
     handleClearSelection,
+    handleRotateSelectedStorageItem,
     selectionBox,
     selectedStoragePlacementId,
     handleRemoveStorageItem,
@@ -910,7 +1089,7 @@ export default function App() {
   const selectedPlacedStorageItem = selectedStoragePlacement ? STORAGE_ITEM_BY_ID.get(selectedStoragePlacement.itemId) ?? null : null;
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#101115] text-zinc-100 overflow-hidden font-sans">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#080f1c] font-sans text-zinc-100">
       {/* Top Bar Header */}
       <Header
         projectName={project.name}
@@ -918,6 +1097,9 @@ export default function App() {
         onNewProject={() => setIsNewProjectOpen(true)}
         onOpenProjectJson={handleOpenProjectJson}
         onSaveProjectJson={handleSaveProjectJson}
+        onRecoverAutosave={() => setIsRecoveryOpen(true)}
+        hasRecoveryAutosave={recoveryProject !== null}
+        autosaveAvailable={autosaveAvailable}
         onExportImage={() => setIsExportOpen(true)}
         onExportCode={handleExportCode}
         onImportCode={handleImportCode}
@@ -936,6 +1118,8 @@ export default function App() {
       <div className="flex-1 flex overflow-hidden relative">
         <ToolBar
           activeTool={activeTool}
+          catalogOpen={isBlockPaletteOpen}
+          onToggleCatalog={() => setIsBlockPaletteOpen(value => !value)}
           onSelectTool={setActiveTool}
           rectangleMode={rectangleMode}
           onChangeRectangleMode={setRectangleMode}
@@ -959,10 +1143,43 @@ export default function App() {
           t={t}
         />
 
+        <BlockPaletteModal
+          isOpen={isBlockPaletteOpen}
+          docked
+          onClose={() => setIsBlockPaletteOpen(false)}
+          onSelectColor={color => {
+            setSelectedFloorItemId(null);
+            setSelectedStorageItemId(null);
+            setActiveColor(color);
+          }}
+          activeColor={activeColor}
+          language={language}
+          selectedStorageItemId={selectedStorageItemId}
+          selectedFloorItemId={selectedFloorItemId}
+          onSelectFloorItem={item => {
+            if (item.layer === 'object') {
+              setSelectedFloorItemId(null);
+              setSelectedStorageItemId(item.id);
+              setActiveTool('place_storage');
+            } else {
+              setSelectedFloorItemId(item.id);
+              setSelectedStorageItemId(null);
+              setActiveTool('pencil');
+            }
+          }}
+          gameSprites={gameSprites}
+          onSelectStorageItem={item => {
+            setSelectedFloorItemId(null);
+            setSelectedStorageItemId(item.id);
+            setActiveTool('place_storage');
+          }}
+        />
+
         <main className="flex-1 flex overflow-hidden relative">
           <CanvasArea
             project={project}
             activeTool={activeTool}
+            onSelectTool={setActiveTool}
             activeColor={activeColor}
             rectangleMode={rectangleMode}
             circleMode={circleMode}
@@ -971,22 +1188,28 @@ export default function App() {
             mirrorMode={mirrorMode}
             brushSize={brushSize}
             showGrid={showGrid}
+            onToggleGrid={() => setShowGrid(v => !v)}
             showMajorGrid={showMajorGrid}
             showCoordinates={showCoordinates}
             showLightRanges={showLightRanges}
             gridLineWidth={gridLineWidth}
             highContrastGrid={highContrastGrid}
             gridTheme={gridTheme}
+            onToggleGridTheme={() => setGridTheme(theme => theme === 'dark' ? 'light' : 'dark')}
+            plannerLayerStates={plannerLayerStates}
+            language={language}
             selectionBox={selectionBox}
             onSetSelectionBox={handleSetSelectionBox}
             onMoveSelection={handleMoveSelection}
             onUpdateCells={handleUpdateCells}
+            selectedFloorItem={selectedFloorItemId ? FLOOR_ITEM_BY_ID.get(selectedFloorItemId) ?? null : null}
             selectedStorageItem={selectedStorageItem}
             gameSprites={gameSprites}
             onPlaceStorageItem={handlePlaceStorageItem}
             onRemoveStorageItem={handleRemoveStorageItem}
             selectedStoragePlacementId={selectedStoragePlacementId}
             onSelectStoragePlacement={setSelectedStoragePlacementId}
+            onRotateStoragePlacement={rotation => selectedStoragePlacementId && handleRotateStorageItem(selectedStoragePlacementId, rotation)}
             onMoveStorageItem={handleMoveStorageItem}
             onZoomChange={setCurrentZoom}
             annotations={project.annotations}
@@ -1002,6 +1225,8 @@ export default function App() {
 
         <PropertiesPanel
           gridWidth={project.width}
+          isInspectorOpen={isInspectorOpen}
+          onToggleInspector={() => setIsInspectorOpen(value => !value)}
           gridHeight={project.height}
           zoom={currentZoom}
           showGrid={showGrid}
@@ -1014,16 +1239,14 @@ export default function App() {
           onChangeGridLineWidth={setGridLineWidth}
           highContrastGrid={highContrastGrid}
           onToggleHighContrastGrid={() => setHighContrastGrid(v => !v)}
-          gridTheme={gridTheme}
-          onChangeGridTheme={setGridTheme}
-          activeColor={activeColor}
-          onOpenBlockPalette={() => setIsBlockPaletteOpen(true)}
-          selectedStorageItem={selectedStorageItem}
+          plannerLayerStates={plannerLayerStates}
+          onToggleLayerVisibility={togglePlannerLayerVisibility}
+          onToggleLayerLock={togglePlannerLayerLock}
           gameSprites={gameSprites}
           selectedStoragePlacement={selectedStoragePlacement}
           selectedPlacedStorageItem={selectedPlacedStorageItem}
           onDeleteStoragePlacement={() => selectedStoragePlacementId && handleRemoveStorageItem(selectedStoragePlacementId)}
-          onRotateStoragePlacement={() => selectedStoragePlacementId && handleRotateStorageItem(selectedStoragePlacementId)}
+          onRotateStoragePlacement={rotation => selectedStoragePlacementId && handleRotateStorageItem(selectedStoragePlacementId, rotation)}
           onChangeLightRadius={radius => selectedStoragePlacementId && handleChangeLightRadius(selectedStoragePlacementId, radius)}
           selectionBox={selectionBox}
           hasClipboard={clipboard !== null}
@@ -1058,8 +1281,16 @@ export default function App() {
         isOpen={isNewProjectOpen}
         onClose={() => setIsNewProjectOpen(false)}
         onConfirm={handleConfirmNewProject}
+        currentGridTheme={gridTheme}
         currentHasContent={Object.keys(project.cells).length > 0}
         t={t}
+      />
+
+      <RecoveryModal
+        project={isRecoveryOpen ? recoveryProject : null}
+        language={language}
+        onClose={() => setIsRecoveryOpen(false)}
+        onRecover={handleRecoverAutosave}
       />
 
       <ResizeModal
@@ -1103,20 +1334,6 @@ export default function App() {
         t={t}
       />
 
-      <BlockPaletteModal
-        isOpen={isBlockPaletteOpen}
-        onClose={() => setIsBlockPaletteOpen(false)}
-        onSelectColor={setActiveColor}
-        activeColor={activeColor}
-        language={language}
-        selectedStorageItemId={selectedStorageItemId}
-        gameSprites={gameSprites}
-        onSelectStorageItem={item => {
-          setSelectedStorageItemId(item.id);
-          setActiveTool('place_storage');
-          setIsBlockPaletteOpen(false);
-        }}
-      />
     </div>
   );
 }

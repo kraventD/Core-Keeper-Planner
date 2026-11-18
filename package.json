@@ -1,11 +1,12 @@
 {
   "name": "core-keeper-planner",
   "private": true,
-  "version": "0.1.8",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
+    "build:standalone": "vite build --outDir .release-build/site && node scripts/package-standalone.mjs .release-build/site",
     "preview": "vite preview",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "tsc --noEmit",

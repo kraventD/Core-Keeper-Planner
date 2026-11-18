@@ -1,13 +1,14 @@
 import React from 'react';
-import { PaletteColor, SelectionBox, Language, StorageItemPlacement } from '../types/blueprint';
+import { SelectionBox, Language, StorageItemPlacement, StorageItemRotation, PlannerLayerId, PlannerLayerStates } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
 import { StorageItemDefinition } from '../utils/storageCatalog';
 import { GameSpriteEntry } from '../utils/gameSpriteCatalog';
 import { GameSpriteThumbnail } from './GameSpriteThumbnail';
-import { getPaletteColorLabel } from '../utils/palette';
 import {
-  Palette,
   Eye,
+  EyeOff,
+  Lock,
+  Unlock,
   Sliders,
   Copy,
   Scissors,
@@ -18,11 +19,15 @@ import {
   FlipVertical,
   Split,
   Trash2,
-  RotateCw,
+  ChevronLeft,
+  ChevronRight,
+  SlidersHorizontal,
 } from 'lucide-react';
 
 interface PropertiesPanelProps {
   gridWidth: number;
+  isInspectorOpen: boolean;
+  onToggleInspector: () => void;
   gridHeight: number;
   zoom: number;
   showGrid: boolean;
@@ -35,17 +40,15 @@ interface PropertiesPanelProps {
   onChangeGridLineWidth: (width: number) => void;
   highContrastGrid: boolean;
   onToggleHighContrastGrid: () => void;
-  gridTheme: 'light' | 'dark';
-  onChangeGridTheme: (theme: 'light' | 'dark') => void;
-  activeColor: PaletteColor;
-  selectedStorageItem?: StorageItemDefinition | null;
+  plannerLayerStates: PlannerLayerStates;
+  onToggleLayerVisibility: (layer: PlannerLayerId) => void;
+  onToggleLayerLock: (layer: PlannerLayerId) => void;
   gameSprites?: Record<string, GameSpriteEntry>;
   selectedStoragePlacement?: StorageItemPlacement | null;
   selectedPlacedStorageItem?: StorageItemDefinition | null;
   onDeleteStoragePlacement?: () => void;
-  onRotateStoragePlacement?: () => void;
+  onRotateStoragePlacement?: (rotation: StorageItemRotation) => void;
   onChangeLightRadius?: (radius: number) => void;
-  onOpenBlockPalette: () => void;
   selectionBox: SelectionBox | null;
   hasClipboard: boolean;
   onCopySelection: () => void;
@@ -67,6 +70,8 @@ interface PropertiesPanelProps {
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   gridWidth,
+  isInspectorOpen,
+  onToggleInspector,
   gridHeight,
   zoom,
   showGrid,
@@ -79,17 +84,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onChangeGridLineWidth,
   highContrastGrid,
   onToggleHighContrastGrid,
-  gridTheme,
-  onChangeGridTheme,
-  activeColor,
-  selectedStorageItem,
+  plannerLayerStates,
+  onToggleLayerVisibility,
+  onToggleLayerLock,
   gameSprites = {},
   selectedStoragePlacement,
   selectedPlacedStorageItem,
   onDeleteStoragePlacement,
   onRotateStoragePlacement,
   onChangeLightRadius,
-  onOpenBlockPalette,
   selectionBox,
   hasClipboard,
   onCopySelection,
@@ -115,12 +118,22 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
   const totalOccupiedCells = Object.values(cellColorCounts).reduce((a, b) => a + b, 0);
 
+  if (!isInspectorOpen) {
+    return <aside className="z-20 flex w-10 shrink-0 flex-col items-center border-l border-[#24334b] bg-[#0b1423] py-2">
+      <button type="button" onClick={onToggleInspector} title={language === 'es' ? 'Mostrar inspector' : 'Show inspector'} className="rounded-lg p-2 text-zinc-400 hover:bg-[#15233a] hover:text-cyan-200"><ChevronLeft className="h-4 w-4" /></button>
+    </aside>;
+  }
+
   return (
     <aside
-      className="w-72 bg-[#14151a] border-l border-zinc-800/90 flex flex-col justify-between overflow-y-auto select-none shrink-0 z-20"
+      className="z-20 flex w-[276px] shrink-0 flex-col border-l border-[#24334b] bg-[#0b1423] select-none xl:w-[304px]"
       aria-label={t.propertiesPanelAria}
     >
-      <div className="p-3.5 space-y-4 text-zinc-200">
+      <div className="flex items-center justify-between border-b border-[#24334b] px-3 py-2.5">
+        <span className="flex items-center gap-2 text-xs font-semibold tracking-wide text-zinc-200"><SlidersHorizontal className="h-3.5 w-3.5 text-cyan-300" />{language === 'es' ? 'Inspector' : 'Inspector'}</span>
+        <button type="button" onClick={onToggleInspector} title={language === 'es' ? 'Ocultar inspector' : 'Hide inspector'} className="rounded-md p-1.5 text-zinc-400 hover:bg-[#15233a] hover:text-cyan-200"><ChevronRight className="h-4 w-4" /></button>
+      </div>
+      <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto p-3 text-zinc-200">
         {/* Section 1: Dimensions & View Options */}
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -136,7 +149,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 bg-[#18191f] p-2.5 rounded-lg border border-zinc-800 text-xs">
+          <div className="grid grid-cols-2 gap-2 rounded-xl border border-[#24334b] bg-[#101a2b] p-2.5 text-xs">
             <div>
               <span className="text-zinc-500 block text-[10px]">{t.width}</span>
               <span className="font-mono font-semibold text-zinc-100">{gridWidth} {t.cells}</span>
@@ -153,11 +166,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         </div>
 
         {/* View Toggles */}
-        <div className="space-y-1.5 bg-[#18191f] p-2.5 rounded-lg border border-zinc-800 text-xs">
-          <div className="text-[10px] uppercase font-semibold text-zinc-500 mb-1 flex items-center gap-1">
+        <details className="rounded-xl border border-[#24334b] bg-[#0e192a] text-xs">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-2.5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-300 [&::-webkit-details-marker]:hidden">
             <Eye className="w-3 h-3 text-sky-400" />
             {t.viewOptions}
-          </div>
+            <ChevronRight className="h-3.5 w-3.5 text-zinc-500 transition group-open:rotate-90" />
+          </summary>
+          <div className="space-y-1.5 px-2.5 pb-2.5">
 
           <label className="flex items-center justify-between cursor-pointer py-0.5">
             <span className="text-zinc-300 text-[11px]">{t.showGrid}</span>
@@ -220,57 +235,53 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </div>
           </div>
 
-          {/* Grid Background Theme: White vs Dark */}
-          <div className="pt-2 border-t border-zinc-800/60">
-            <span className="text-[10px] text-zinc-400 block mb-1 font-medium">{t.gridBackground}</span>
-            <div className="grid grid-cols-2 gap-1.5">
-              <button
-                type="button"
-                onClick={() => onChangeGridTheme('light')}
-                className={`py-1.5 px-2 rounded text-center text-[11px] font-medium flex items-center justify-center gap-1.5 transition ${
-                  gridTheme === 'light'
-                    ? 'bg-amber-500 text-zinc-950 font-bold shadow-sm'
-                    : 'bg-[#121316] text-zinc-300 hover:text-white border border-zinc-800'
-                }`}
-              >
-                <span className="w-2.5 h-2.5 rounded-full bg-white border border-zinc-400 shadow-sm inline-block" />
-                <span className="truncate">{t.gridBgLight}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => onChangeGridTheme('dark')}
-                className={`py-1.5 px-2 rounded text-center text-[11px] font-medium flex items-center justify-center gap-1.5 transition ${
-                  gridTheme === 'dark'
-                    ? 'bg-amber-500 text-zinc-950 font-bold shadow-sm'
-                    : 'bg-[#121316] text-zinc-400 hover:text-zinc-200 border border-zinc-800'
-                }`}
-              >
-                <span className="w-2.5 h-2.5 rounded-full bg-zinc-800 border border-zinc-600 inline-block" />
-                <span className="truncate">{t.gridBgDark}</span>
-              </button>
-            </div>
           </div>
-        </div>
+        </details>
+
+        <details open className="group rounded-xl border border-[#24334b] bg-[#0e192a] text-xs">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-2.5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-300 [&::-webkit-details-marker]:hidden">
+            <Layers className="w-3 h-3 text-cyan-400" />
+            {language === 'es' ? 'Capas' : 'Layers'}
+            <ChevronRight className="ml-auto h-3.5 w-3.5 text-zinc-500 transition group-open:rotate-90" />
+          </summary>
+          <div className="space-y-1.5 px-2.5 pb-2.5">
+          {([
+            ['floors', language === 'es' ? 'Suelos' : 'Floors'],
+            ['walls', language === 'es' ? 'Paredes y bloques' : 'Walls & blocks'],
+            ['objects', language === 'es' ? 'Objetos' : 'Objects'],
+            ['wallDecorations', language === 'es' ? 'Decoraciones de pared' : 'Wall decorations'],
+          ] as [PlannerLayerId, string][]).map(([layer, label]) => (
+            <div key={layer} className="flex items-center justify-between gap-2 py-0.5">
+              <span className={`text-[11px] ${plannerLayerStates[layer].visible ? 'text-zinc-300' : 'text-zinc-500'}`}>{label}</span>
+              <div className="flex items-center gap-1">
+                <button type="button" onClick={() => onToggleLayerVisibility(layer)}
+                  className="p-1 rounded hover:bg-zinc-700 text-zinc-400 hover:text-zinc-100"
+                  title={plannerLayerStates[layer].visible ? (language === 'es' ? 'Ocultar capa' : 'Hide layer') : (language === 'es' ? 'Mostrar capa' : 'Show layer')}
+                  aria-label={`${plannerLayerStates[layer].visible ? (language === 'es' ? 'Ocultar' : 'Hide') : (language === 'es' ? 'Mostrar' : 'Show')} ${label}`}>
+                  {plannerLayerStates[layer].visible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                </button>
+                <button type="button" onClick={() => onToggleLayerLock(layer)}
+                  className={`p-1 rounded hover:bg-zinc-700 ${plannerLayerStates[layer].locked ? 'text-amber-400' : 'text-zinc-500 hover:text-zinc-100'}`}
+                  title={plannerLayerStates[layer].locked ? (language === 'es' ? 'Desbloquear capa' : 'Unlock layer') : (language === 'es' ? 'Bloquear capa' : 'Lock layer')}
+                  aria-label={`${plannerLayerStates[layer].locked ? (language === 'es' ? 'Desbloquear' : 'Unlock') : (language === 'es' ? 'Bloquear' : 'Lock')} ${label}`}>
+                  {plannerLayerStates[layer].locked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+            </div>
+          ))}
+          </div>
+        </details>
 
         {/* Section 2: Selection Info & Operations */}
-        <div className="bg-[#18191f] p-2.5 rounded-lg border border-zinc-800 text-xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-cyan-400" />
-              {t.selection}
-            </span>
-            {selectionBox && (
-              <button
-                onClick={onClearSelection}
-                className="text-[10px] text-zinc-400 hover:text-zinc-200"
-              >
-                {t.clearSelection}
-              </button>
-            )}
-          </div>
+        <details open={Boolean(selectionBox || selectedStoragePlacement)} className="group rounded-xl border border-[#24334b] bg-[#0e192a] text-xs">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-2.5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-300 [&::-webkit-details-marker]:hidden">
+            <Layers className="h-3.5 w-3.5 text-cyan-300" />{t.selection}
+            {selectionBox && <button type="button" onClick={event => { event.preventDefault(); event.stopPropagation(); onClearSelection(); }} className="ml-auto text-[10px] font-normal normal-case text-zinc-500 hover:text-zinc-200">{t.clearSelection}</button>}
+            <ChevronRight className="ml-auto h-3.5 w-3.5 text-zinc-500 transition group-open:rotate-90" />
+          </summary>
 
           {selectionBox ? (
-            <div className="space-y-2">
+            <div className="space-y-2 px-2.5 pb-2.5">
               <div className="grid grid-cols-2 gap-1.5 p-2 bg-[#121316] rounded border border-zinc-800/80 font-mono text-[11px]">
                 <div>
                   <span className="text-zinc-500 text-[10px] block">{t.origin}:</span>
@@ -411,7 +422,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               </div>
             </div>
           ) : (
-            <div className="text-[11px] text-zinc-500 italic py-1">
+            <div className="px-2.5 pb-2.5 text-[11px] italic text-zinc-500">
               {t.noSelection}
             </div>
           )}
@@ -426,46 +437,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <span>{t.paste} portapapeles</span>
             </button>
           )}
-        </div>
+        </details>
 
-        {/* Section 3: Color Palette */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-              <Palette className="w-3.5 h-3.5 text-amber-400" />
-              {language === 'es' ? 'Catálogo de construcción' : 'Construction catalog'}
-            </span>
-          </div>
-          <div className="rounded-lg border border-zinc-800 bg-[#18191f] p-2.5">
-            <div className="mb-2 flex items-center gap-2">
-              <span className="h-5 w-5 rounded border border-white/10" style={{ backgroundColor: activeColor.id === 'door' ? 'transparent' : activeColor.hex }}>
-                {activeColor.id === 'door' && <span className="mt-2 block h-1 w-full bg-zinc-300" />}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-xs font-medium">{getPaletteColorLabel(activeColor, t, language)}</div>
-                <div className="font-mono text-[10px] text-zinc-500">{activeColor.id === 'door' ? (language === 'es' ? 'Marcador de puerta' : 'Door marker') : activeColor.hex}</div>
-              </div>
+        {/* Details for an object selected on the blueprint */}
+        {selectedStoragePlacement && selectedPlacedStorageItem && (
+          <div className="rounded-xl border border-[#24334b] bg-[#0e192a] p-2.5">
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-cyan-200">
+              <Layers className="h-3.5 w-3.5" />{language === 'es' ? 'Seleccionado en el plano' : 'Selected on blueprint'}
             </div>
-            {selectedStorageItem && (
-              <div className="mb-2 flex items-center gap-2 rounded-md border border-zinc-800 bg-[#111216] p-2">
-                {selectedStorageItem.spriteId && gameSprites[selectedStorageItem.spriteId]
-                  ? <GameSpriteThumbnail compact sprite={gameSprites[selectedStorageItem.spriteId]} label={language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn} fallbackColor={selectedStorageItem.color} />
-                  : selectedStorageItem.imageUrl
-                    ? <img src={selectedStorageItem.imageUrl} alt={language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn} className="h-8 w-8 object-contain [image-rendering:pixelated]" onError={event => {
-                        event.currentTarget.style.display = 'none';
-                        const fallback = event.currentTarget.parentElement?.querySelector('[data-selected-item-fallback]') as HTMLElement | null;
-                        if (fallback) fallback.style.display = 'flex';
-                      }} />
-                    : <span className="flex h-8 w-8 items-center justify-center rounded border border-white/10 bg-zinc-800 text-xs font-bold text-amber-300" style={{ backgroundColor: selectedStorageItem.color ?? '#27272a' }}>{selectedStorageItem.nameEn.slice(0, 1)}</span>}
-                {selectedStorageItem.imageUrl && <span data-selected-item-fallback className="hidden h-8 w-8 items-center justify-center rounded border border-white/10 text-xs font-bold text-amber-100" style={{ backgroundColor: selectedStorageItem.color ?? '#27272a' }}>{selectedStorageItem.nameEn.slice(0, 1)}</span>}
-                <div className="min-w-0">
-                  <div className="truncate text-[11px] font-medium">{language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn}</div>
-                  <div className="font-mono text-[10px] text-amber-300">{selectedStorageItem.width}×{selectedStorageItem.height} {language === 'es' ? 'casillas' : 'tiles'}</div>
-                </div>
-              </div>
-            )}
-            {selectedStoragePlacement && selectedPlacedStorageItem && (
-              <div className="mb-2 rounded-md border border-cyan-500/40 bg-cyan-500/5 p-2">
+            <div className="mb-2 rounded-md border border-cyan-500/40 bg-cyan-500/5 p-2">
                 <div className="mb-2 flex items-center gap-2">
                   {selectedPlacedStorageItem.spriteId && gameSprites[selectedPlacedStorageItem.spriteId]
                     ? <GameSpriteThumbnail compact sprite={gameSprites[selectedPlacedStorageItem.spriteId]} label={language === 'es' ? selectedPlacedStorageItem.nameEs : selectedPlacedStorageItem.nameEn} fallbackColor={selectedPlacedStorageItem.color} />
@@ -474,13 +454,34 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       : <span className="flex h-8 w-8 items-center justify-center rounded border border-white/10 bg-zinc-800 text-xs font-bold text-cyan-300" style={{ backgroundColor: selectedPlacedStorageItem.color ?? '#27272a' }}>{selectedPlacedStorageItem.nameEn.slice(0, 1)}</span>}
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[11px] font-medium">{language === 'es' ? selectedPlacedStorageItem.nameEs : selectedPlacedStorageItem.nameEn}</div>
-                    <div className="font-mono text-[10px] text-cyan-300">{selectedStoragePlacement.width}×{selectedStoragePlacement.height} {language === 'es' ? 'casillas · arrastrar para mover' : 'tiles · drag to move'}</div>
+                    <div className="font-mono text-[10px] text-cyan-300">{selectedStoragePlacement.width}×{selectedStoragePlacement.height} {language === 'es' ? 'casillas · clic para mover' : 'tiles · click to move'}</div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  <button onClick={onRotateStoragePlacement} className="flex items-center justify-center gap-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1.5 text-[10px] text-zinc-200 hover:border-cyan-500/50 hover:text-cyan-200">
-                    <RotateCw className="h-3 w-3" /> {language === 'es' ? 'Girar 90°' : 'Rotate 90°'}
-                  </button>
+                <div>
+                  <div className="mb-1 text-[10px] text-zinc-400">{t.objectRotation.title}</div>
+                  <div className="grid grid-cols-4 gap-1 rounded border border-zinc-800 bg-[#111216] p-1">
+                    {([
+                      { rotation: 0, arrow: '↑' },
+                      { rotation: 90, arrow: '→' },
+                      { rotation: 180, arrow: '↓' },
+                      { rotation: 270, arrow: '←' },
+                    ] as const).map(option => (
+                      <button
+                        key={option.rotation}
+                        type="button"
+                        onClick={() => onRotateStoragePlacement?.(option.rotation)}
+                        aria-label={t.objectRotation.direction(option.rotation)}
+                        aria-pressed={(selectedStoragePlacement.rotation ?? 0) === option.rotation}
+                        title={`${t.objectRotation.direction(option.rotation)} · ${option.rotation}°`}
+                        className={`rounded py-1 text-sm font-semibold transition ${(selectedStoragePlacement.rotation ?? 0) === option.rotation ? 'bg-cyan-500 text-zinc-950' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'}`}
+                      >
+                        {option.arrow}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-1 text-[9px] text-zinc-500">{t.objectRotation.shortcutsHint}</div>
+                </div>
+                <div className="mt-1 grid grid-cols-1 gap-1.5">
                   <button onClick={onDeleteStoragePlacement} className="flex items-center justify-center gap-1 rounded border border-red-900/70 bg-red-950/30 px-2 py-1.5 text-[10px] text-red-300 hover:bg-red-900/40">
                     <Trash2 className="h-3 w-3" /> {language === 'es' ? 'Eliminar' : 'Delete'}
                   </button>
@@ -496,26 +497,16 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <p className="mt-1 text-[9px] leading-relaxed text-zinc-500">{language === 'es' ? 'Guía visual: el juego usa iluminación direccional y no tiene un radio exacto fijo.' : 'Visual guide: the game uses directional lighting and has no exact fixed radius.'}</p>
                   </div>
                 )}
-              </div>
-            )}
-            <button onClick={onOpenBlockPalette} className="w-full rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-2 text-xs font-medium text-amber-200 transition hover:bg-amber-500/20">
-              {language === 'es' ? 'Buscar piezas de construcción' : 'Browse construction pieces'}
-            </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Section 4: Live Blueprint Legend & Statistics */}
-        <div className="pt-2 border-t border-zinc-800/80">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
-              {t.legend}
-            </span>
-            <span className="text-[10px] font-mono text-zinc-500">
-              {totalOccupiedCells} / {gridWidth * gridHeight}
-            </span>
-          </div>
-
-          <div className="p-2.5 bg-[#18191f] rounded-lg border border-zinc-800 text-xs space-y-1.5">
+        <details className="group rounded-xl border border-[#24334b] bg-[#0e192a] text-xs">
+          <summary className="flex cursor-pointer list-none items-center gap-2 px-2.5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-300 [&::-webkit-details-marker]:hidden">
+            {t.legend}<span className="ml-auto font-mono text-[10px] font-normal text-zinc-500">{totalOccupiedCells} / {gridWidth * gridHeight}</span><ChevronRight className="h-3.5 w-3.5 text-zinc-500 transition group-open:rotate-90" />
+          </summary>
+          <div className="space-y-1.5 px-2.5 pb-2.5">
             <div className="flex items-center justify-between text-zinc-400 text-[11px]">
               <span>{t.totalOccupied}:</span>
               <span className="font-mono text-zinc-200 font-semibold">
@@ -529,7 +520,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               </span>
             </div>
           </div>
-        </div>
+        </details>
       </div>
     </aside>
   );

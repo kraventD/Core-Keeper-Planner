@@ -11,12 +11,18 @@ import {
   SelectionBox,
   ToolType,
   DoorOrientation,
+  StorageItemRotation,
+  PlannerLayerStates,
+  Language,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
 import { STORAGE_ITEM_BY_ID, StorageItemDefinition } from '../utils/storageCatalog';
 import { StorageItemPlacement } from '../types/blueprint';
 import { GameSpriteEntry } from '../utils/gameSpriteCatalog';
 import { getDoorCellOrientation, getDoorPlacementColorId } from '../utils/doorCells';
+import { FLOOR_ITEM_BY_ID } from '../utils/floorCatalog';
+import { getPaletteColorLabel } from '../utils/palette';
+import { DEFAULT_PLANNER_LAYER_STATES, getStorageItemLayerId, getStoragePlacementLayerId, isPlannerLayerEditable } from '../utils/plannerLayers';
 import {
   coordKey,
   getBresenhamLine,
@@ -40,6 +46,15 @@ import {
   Maximize2,
   Crosshair,
   RotateCcw,
+  Grid2X2,
+  Pencil,
+  Slash,
+  Square,
+  Circle,
+  PaintBucket,
+  PackageOpen,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 interface SpriteContentBounds {
@@ -49,14 +64,24 @@ interface SpriteContentBounds {
   height: number;
 }
 
+const CONTEXT_TOOL_ICONS: Array<{ tool: ToolType; icon: React.ComponentType<{ className?: string }> }> = [
+  { tool: 'pencil', icon: Pencil },
+  { tool: 'line', icon: Slash },
+  { tool: 'rectangle', icon: Square },
+  { tool: 'circle', icon: Circle },
+  { tool: 'fill', icon: PaintBucket },
+  { tool: 'place_storage', icon: PackageOpen },
+];
+
 const STORAGE_LAYER_ORDER: Record<NonNullable<StorageItemPlacement['layer']>, number> = {
   bridge: 0,
   floor: 1,
   rail: 2,
   fence: 3,
   wall: 4,
-  object: 5,
-  light: 6,
+  wall_decoration: 5,
+  object: 6,
+  light: 7,
 };
 
 const storageLayerOrder = (placement: StorageItemPlacement) => STORAGE_LAYER_ORDER[placement.layer ?? 'object'];
@@ -65,6 +90,21 @@ const placementAtCell = (placements: StorageItemPlacement[], x: number, y: numbe
     .filter(item => x >= item.x && x < item.x + item.width && y >= item.y && y < item.y + item.height)
     .sort((a, b) => storageLayerOrder(b) - storageLayerOrder(a))
     .at(0);
+
+const getMirroredShapeCells = (
+  cells: CellCoord[],
+  width: number,
+  height: number,
+  mirrorMode: MirrorMode,
+): CellCoord[] => {
+  const mirroredCells = new Map<string, CellCoord>();
+  for (const cell of cells) {
+    for (const mirroredCell of getMirroredCoords(cell.x, cell.y, width, height, mirrorMode)) {
+      mirroredCells.set(coordKey(mirroredCell.x, mirroredCell.y), mirroredCell);
+    }
+  }
+  return [...mirroredCells.values()];
+};
 
 const expandSelectionBoxToIncludePlacements = (box: SelectionBox, placements: StorageItemPlacement[]): SelectionBox => {
   const expanded = { ...box };
@@ -103,6 +143,7 @@ const makeGrabbingCursor = (strokeColor: string): string =>
 interface CanvasAreaProps {
   project: BlueprintProject;
   activeTool: ToolType;
+  onSelectTool: (tool: ToolType) => void;
   activeColor: PaletteColor;
   rectangleMode: RectangleMode;
   circleMode?: ShapeMode;
@@ -111,22 +152,28 @@ interface CanvasAreaProps {
   mirrorMode?: MirrorMode;
   brushSize: number;
   showGrid: boolean;
+  onToggleGrid: () => void;
   showMajorGrid: boolean;
   showCoordinates: boolean;
   showLightRanges?: boolean;
   gridLineWidth?: number;
   highContrastGrid?: boolean;
   gridTheme?: 'light' | 'dark';
+  onToggleGridTheme: () => void;
+  plannerLayerStates: PlannerLayerStates;
+  language: Language;
   selectionBox: SelectionBox | null;
   onSetSelectionBox: (box: SelectionBox | null) => void;
   onMoveSelection?: (box: SelectionBox, deltaX: number, deltaY: number) => boolean;
-  onUpdateCells: (newCells: Record<string, string>, description: string) => void;
+  onUpdateCells: (newCells: Record<string, string>, description: string, storagePlacements?: StorageItemPlacement[], floorTiles?: Record<string, string>) => void;
+  selectedFloorItem?: StorageItemDefinition | null;
   selectedStorageItem?: StorageItemDefinition | null;
   gameSprites?: Record<string, GameSpriteEntry>;
   onPlaceStorageItem?: (x: number, y: number, item: StorageItemDefinition) => void;
   onRemoveStorageItem?: (placementId: string) => void;
   selectedStoragePlacementId?: string | null;
   onSelectStoragePlacement?: (id: string | null) => void;
+  onRotateStoragePlacement?: (rotation: StorageItemRotation) => void;
   onMoveStorageItem?: (id: string, x: number, y: number) => void;
   onZoomChange?: (zoom: number) => void;
   annotations: Annotation[];
@@ -142,6 +189,7 @@ interface CanvasAreaProps {
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
   project,
   activeTool,
+  onSelectTool,
   activeColor,
   rectangleMode,
   circleMode = 'outline',
@@ -150,22 +198,28 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   mirrorMode = 'none',
   brushSize,
   showGrid,
+  onToggleGrid,
   showMajorGrid,
   showCoordinates,
   showLightRanges = true,
   gridLineWidth = 1.5,
   highContrastGrid = true,
   gridTheme = 'light',
+  onToggleGridTheme,
+  plannerLayerStates = DEFAULT_PLANNER_LAYER_STATES,
+  language,
   selectionBox,
   onSetSelectionBox,
   onMoveSelection,
   onUpdateCells,
+  selectedFloorItem = null,
   selectedStorageItem = null,
   gameSprites = {},
   onPlaceStorageItem,
   onRemoveStorageItem,
   selectedStoragePlacementId = null,
   onSelectStoragePlacement,
+  onRotateStoragePlacement,
   onMoveStorageItem,
   onZoomChange,
   annotations = [],
@@ -182,6 +236,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   // View transform state
   const [zoom, setZoom] = useState<number>(1.0);
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
+  const observedContainerSizeRef = useRef<{ width: number; height: number } | null>(null);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 60, y: 60 });
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -272,10 +329,23 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const scale = cellSize / 16;
     const spriteWidth = bounds.width * scale;
     const spriteHeight = bounds.height * scale;
-    if (rotation === 90) {
+    if (rotation !== 0) {
+      const quarterTurn = rotation === 90 || rotation === 270;
+      const baseWidth = quarterTurn ? height : width;
+      const baseHeight = quarterTurn ? width : height;
       context.translate(x + width / 2, y + height / 2);
-      context.rotate(Math.PI / 2);
-      context.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
+      context.rotate(rotation * Math.PI / 180);
+      context.drawImage(
+        image,
+        bounds.x,
+        bounds.y,
+        bounds.width,
+        bounds.height,
+        -baseWidth / 2 + (baseWidth - spriteWidth) / 2,
+        -baseHeight / 2 + baseHeight - spriteHeight,
+        spriteWidth,
+        spriteHeight,
+      );
     } else {
       context.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, x + (width - spriteWidth) / 2, y + height - spriteHeight, spriteWidth, spriteHeight);
     }
@@ -493,8 +563,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
 
     if (activeTool === 'eraser' && cell && onRemoveStorageItem) {
-      const placement = placementAtCell(project.storagePlacements ?? [], cell.x, cell.y);
+      const visiblePlacements = (project.storagePlacements ?? []).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
+      const placement = placementAtCell(visiblePlacements, cell.x, cell.y);
       if (placement) {
+        if (plannerLayerStates[getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId))].locked) {
+          setIsPointerDown(false);
+          return;
+        }
         onRemoveStorageItem(placement.id);
         if (placement.id === selectedStoragePlacementId) onSelectStoragePlacement?.(null);
         setIsPointerDown(false);
@@ -503,10 +578,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
 
     if (activeTool === 'select' && cell) {
-      const placement = placementAtCell(project.storagePlacements ?? [], cell.x, cell.y);
+      const visiblePlacements = (project.storagePlacements ?? []).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
+      const placement = placementAtCell(visiblePlacements, cell.x, cell.y);
       if (placement) {
         onSelectStoragePlacement?.(placement.id);
         onSetSelectionBox(null);
+        if (plannerLayerStates[getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId))].locked) {
+          setIsPointerDown(false);
+          return;
+        }
         storageDragRef.current = { id: placement.id, offsetX: cell.x - placement.x, offsetY: cell.y - placement.y };
         setStorageDragPreview({ x: placement.x, y: placement.y });
         setDragStartCell(null);
@@ -592,8 +672,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       if (activeTool === 'pencil' || activeTool === 'eraser') {
         // Apply immediate initial stroke
-        const workingCells = { ...project.cells };
-        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
+        const workingCells = selectedFloorItem ? { ...(project.floorTiles ?? {}) } : { ...project.cells };
+        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? selectedFloorItem?.id ?? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
         strokeBufferRef.current = workingCells;
       }
     } else {
@@ -671,7 +751,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       if (activeTool === 'pencil' || activeTool === 'eraser') {
         const workingCells = { ...strokeBufferRef.current };
-        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
+        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? selectedFloorItem?.id ?? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
         strokeBufferRef.current = workingCells;
       }
     }
@@ -712,25 +792,26 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     if (activeTool === 'pencil' || activeTool === 'eraser') {
       markRecentChanges(strokeBufferRef.current);
-      onUpdateCells(strokeBufferRef.current, activeTool === 'pencil' ? 'Lápiz' : 'Borrador');
+      if (selectedFloorItem) onUpdateCells(project.cells, activeTool === 'pencil' ? 'Pintar suelo' : 'Borrar suelo', undefined, strokeBufferRef.current);
+      else onUpdateCells(strokeBufferRef.current, activeTool === 'pencil' ? 'Lápiz' : 'Borrador');
       strokeBufferRef.current = {};
     } else if (activeTool === 'line' && dragStartCell && dragCurrentCell) {
-      const lineCells = getBresenhamLine(
+      const lineCells = getMirroredShapeCells(getBresenhamLine(
         dragStartCell.x,
         dragStartCell.y,
         dragCurrentCell.x,
         dragCurrentCell.y,
         project.width,
         project.height
-      );
-      const updated = { ...project.cells };
+      ), project.width, project.height, mirrorMode);
+      const updated = selectedFloorItem ? { ...(project.floorTiles ?? {}) } : { ...project.cells };
       for (const c of lineCells) {
-        updated[coordKey(c.x, c.y)] = getDoorPlacementColorId(activeColor.id, doorOrientation);
+        updated[coordKey(c.x, c.y)] = selectedFloorItem ? selectedFloorItem.id : getDoorPlacementColorId(activeColor.id, doorOrientation);
       }
       markRecentChanges(updated);
-      onUpdateCells(updated, 'Línea');
+      if (selectedFloorItem) onUpdateCells(project.cells, 'Línea de suelo', undefined, updated); else onUpdateCells(updated, 'Línea');
     } else if (activeTool === 'rectangle' && dragStartCell && dragCurrentCell) {
-      const rectCells = getRectangleCells(
+      const rectCells = getMirroredShapeCells(getRectangleCells(
         dragStartCell.x,
         dragStartCell.y,
         dragCurrentCell.x,
@@ -738,13 +819,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         rectangleMode,
         project.width,
         project.height
-      );
-      const updated = { ...project.cells };
+      ), project.width, project.height, mirrorMode);
+      const updated = selectedFloorItem ? { ...(project.floorTiles ?? {}) } : { ...project.cells };
       for (const c of rectCells) {
-        updated[coordKey(c.x, c.y)] = getDoorPlacementColorId(activeColor.id, doorOrientation);
+        updated[coordKey(c.x, c.y)] = selectedFloorItem ? selectedFloorItem.id : getDoorPlacementColorId(activeColor.id, doorOrientation);
       }
       markRecentChanges(updated);
-      onUpdateCells(updated, rectangleMode === 'outline' ? 'Muros de habitación' : 'Rectángulo lleno');
+      if (selectedFloorItem) onUpdateCells(project.cells, rectangleMode === 'outline' ? 'Contorno de suelo' : 'Rectángulo de suelo', undefined, updated);
+      else onUpdateCells(updated, rectangleMode === 'outline' ? 'Muros de habitación' : 'Rectángulo lleno');
     } else if (activeTool === 'circle' && dragStartCell && dragCurrentCell) {
       const circleRes = getCircleCells(
         dragStartCell.x,
@@ -756,12 +838,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         project.width,
         project.height
       );
-      const updated = { ...project.cells };
-      for (const c of circleRes.cells) {
-        updated[coordKey(c.x, c.y)] = getDoorPlacementColorId(activeColor.id, doorOrientation);
+      const mirroredCircleCells = getMirroredShapeCells(circleRes.cells, project.width, project.height, mirrorMode);
+      const updated = selectedFloorItem ? { ...(project.floorTiles ?? {}) } : { ...project.cells };
+      for (const c of mirroredCircleCells) {
+        updated[coordKey(c.x, c.y)] = selectedFloorItem ? selectedFloorItem.id : getDoorPlacementColorId(activeColor.id, doorOrientation);
       }
       markRecentChanges(updated);
-      onUpdateCells(
+      if (selectedFloorItem) onUpdateCells(project.cells, circleMode === 'outline' ? 'Contorno circular de suelo' : 'Círculo de suelo', undefined, updated);
+      else onUpdateCells(
         updated,
         circleMode === 'outline'
           ? `Muros circulares (${circleRes.diameter}×${circleRes.diameter})`
@@ -776,7 +860,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         project.width,
         project.height
       );
-      const expandedBox = expandSelectionBoxToIncludePlacements(box, project.storagePlacements ?? []);
+      const visiblePlacements = (project.storagePlacements ?? []).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
+      const expandedBox = expandSelectionBoxToIncludePlacements(box, visiblePlacements);
       onSetSelectionBox(expandedBox);
     } else if (activeTool === 'select' && dragStartCell) {
       const box = normalizeBox(
@@ -818,16 +903,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    let animId: number;
+    let animId: number | null = null;
 
     const render = () => {
       const dpr = window.devicePixelRatio || 1;
       const width = container.clientWidth;
       const height = container.clientHeight;
 
-      if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
+      const pixelWidth = Math.round(width * dpr);
+      const pixelHeight = Math.round(height * dpr);
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
       }
 
       const ctx = canvas.getContext('2d');
@@ -853,7 +940,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       const bpH = project.height * currentCellSize;
 
       // 2. Blueprint mat background (Pure white or dark charcoal)
-      ctx.fillStyle = gridTheme === 'light' ? '#ffffff' : '#14151a';
+      ctx.fillStyle = gridTheme === 'light' ? '#ffffff' : '#111d30';
       ctx.fillRect(bpX, bpY, bpW, bpH);
 
       // Viewport culling boundaries (only iterate over visible cells)
@@ -862,8 +949,28 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       const minVisibleY = Math.max(0, Math.floor(-bpY / currentCellSize));
       const maxVisibleY = Math.min(project.height - 1, Math.ceil((height - bpY) / currentCellSize));
 
+      // Floor tiles are rendered as their own layer beneath the color/building layer.
+      const activeRenderFloors = !plannerLayerStates.floors.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && selectedFloorItem
+        ? strokeBufferRef.current
+        : (project.floorTiles ?? {});
+      for (const [key, itemId] of Object.entries(activeRenderFloors)) {
+        const [xStr, yStr] = key.split(',');
+        const cx = Number(xStr);
+        const cy = Number(yStr);
+        if (cx < minVisibleX || cx > maxVisibleX || cy < minVisibleY || cy > maxVisibleY) continue;
+        const floor = FLOOR_ITEM_BY_ID.get(itemId);
+        if (!floor) continue;
+        const image = getSpriteImage(floor.placementImageUrl ?? floor.imageUrl);
+        if (image) {
+          ctx.save();
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(image, bpX + cx * currentCellSize, bpY + cy * currentCellSize, currentCellSize, currentCellSize);
+          ctx.restore();
+        }
+      }
+
       // 3. Render cells (combine project cells + live stroke buffer)
-      const activeRenderCells = isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser')
+      const activeRenderCells = !plannerLayerStates.walls.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && !selectedFloorItem
         ? strokeBufferRef.current
         : project.cells;
 
@@ -1027,7 +1134,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       if (showLightRanges) {
         const lightPlacements = (project.storagePlacements ?? []).filter(item =>
           item.lightRadius !== undefined || !!STORAGE_ITEM_BY_ID.get(item.itemId)?.defaultLightRadius,
-        );
+        ).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
         if (lightPlacements.length) {
           ctx.save();
           ctx.beginPath();
@@ -1072,7 +1179,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       }
 
       // Storage items render across their full footprint, one tile per grid cell.
-      const orderedPlacements = [...(project.storagePlacements ?? [])].sort((a, b) => storageLayerOrder(a) - storageLayerOrder(b));
+      const orderedPlacements = [...(project.storagePlacements ?? [])]
+        .filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible)
+        .sort((a, b) => storageLayerOrder(a) - storageLayerOrder(b));
       for (const storedPlacement of orderedPlacements as StorageItemPlacement[]) {
         const preview = storageDragPreview && storageDragRef.current?.id === storedPlacement.id ? storageDragPreview : null;
         const placement = preview ? { ...storedPlacement, x: preview.x, y: preview.y } : storedPlacement;
@@ -1102,17 +1211,31 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             const sourceY = gameSprite.rect.origin === 'bottom-left'
               ? image.naturalHeight - gameSprite.rect.y - gameSprite.rect.height
               : gameSprite.rect.y;
-            if ((placement.rotation ?? 0) === 90) {
+            if ((placement.rotation ?? 0) !== 0) {
+              const rotation = placement.rotation ?? 0;
+              const quarterTurn = rotation === 90 || rotation === 270;
               ctx.translate(itemX + itemW / 2, itemY + itemH / 2);
-              ctx.rotate(Math.PI / 2);
-              ctx.drawImage(image, gameSprite.rect.x, sourceY, gameSprite.rect.width, gameSprite.rect.height, -itemH / 2, -itemW / 2, itemH, itemW);
+              ctx.rotate(rotation * Math.PI / 180);
+              ctx.drawImage(
+                image,
+                gameSprite.rect.x,
+                sourceY,
+                gameSprite.rect.width,
+                gameSprite.rect.height,
+                quarterTurn ? -itemH / 2 : -itemW / 2,
+                quarterTurn ? -itemW / 2 : -itemH / 2,
+                quarterTurn ? itemH : itemW,
+                quarterTurn ? itemW : itemH,
+              );
             } else {
               ctx.drawImage(image, gameSprite.rect.x, sourceY, gameSprite.rect.width, gameSprite.rect.height, itemX, itemY, itemW, itemH);
             }
-          } else if ((placement.rotation ?? 0) === 90) {
+          } else if ((placement.rotation ?? 0) !== 0) {
+            const rotation = placement.rotation ?? 0;
+            const quarterTurn = rotation === 90 || rotation === 270;
             ctx.translate(itemX + itemW / 2, itemY + itemH / 2);
-            ctx.rotate(Math.PI / 2);
-            drawStorageSprite(ctx, image, -itemH / 2, -itemW / 2, itemH, itemW);
+            ctx.rotate(rotation * Math.PI / 180);
+            drawStorageSprite(ctx, image, quarterTurn ? -itemH / 2 : -itemW / 2, quarterTurn ? -itemW / 2 : -itemH / 2, quarterTurn ? itemH : itemW, quarterTurn ? itemW : itemH);
           } else {
             drawStorageSprite(ctx, image, itemX, itemY, itemW, itemH);
           }
@@ -1140,7 +1263,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       }
 
       // 4.5 Symmetry Axis Indicators for Real-time Mirror Mode
-      if (mirrorMode !== 'none') {
+      if (mirrorSupported && mirrorMode !== 'none') {
         ctx.save();
         if (mirrorMode === 'horizontal' || mirrorMode === 'quad') {
           const midX = Math.round(bpX + (project.width / 2) * currentCellSize) + 0.5;
@@ -1178,28 +1301,38 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       // 5. Tool Interaction Previews
       if (isPointerDown && dragStartCell && dragCurrentCell) {
+        const drawShapePreviewCell = (cell: CellCoord) => {
+          const px = bpX + cell.x * currentCellSize;
+          const py = bpY + cell.y * currentCellSize;
+          const floorImage = selectedFloorItem ? getSpriteImage(selectedFloorItem.placementImageUrl ?? selectedFloorItem.imageUrl) : null;
+          if (floorImage) {
+            ctx.save();
+            ctx.globalAlpha = 0.72;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(floorImage, px, py, currentCellSize, currentCellSize);
+            ctx.restore();
+          } else {
+            ctx.fillStyle = activeColor.hex;
+            ctx.fillRect(px, py, currentCellSize, currentCellSize);
+          }
+          if (showGrid && currentCellSize >= 3) {
+            ctx.strokeStyle = gridTheme === 'light' ? 'rgba(0, 0, 0, 0.90)' : 'rgba(0, 0, 0, 0.70)';
+            ctx.lineWidth = Math.max(1, gridLineWidth);
+            ctx.strokeRect(px, py, currentCellSize, currentCellSize);
+          }
+        };
         if (activeTool === 'line') {
-          const previewLine = getBresenhamLine(
+          const previewLine = getMirroredShapeCells(getBresenhamLine(
             dragStartCell.x,
             dragStartCell.y,
             dragCurrentCell.x,
             dragCurrentCell.y,
             project.width,
             project.height
-          );
-          ctx.fillStyle = activeColor.hex;
-          for (const c of previewLine) {
-            const px = bpX + c.x * currentCellSize;
-            const py = bpY + c.y * currentCellSize;
-            ctx.fillRect(px, py, currentCellSize, currentCellSize);
-            if (showGrid && currentCellSize >= 3) {
-              ctx.strokeStyle = gridTheme === 'light' ? 'rgba(0, 0, 0, 0.90)' : 'rgba(0, 0, 0, 0.70)';
-              ctx.lineWidth = Math.max(1, gridLineWidth);
-              ctx.strokeRect(px, py, currentCellSize, currentCellSize);
-            }
-          }
+          ), project.width, project.height, mirrorMode);
+          for (const c of previewLine) drawShapePreviewCell(c);
         } else if (activeTool === 'rectangle') {
-          const previewRect = getRectangleCells(
+          const previewRect = getMirroredShapeCells(getRectangleCells(
             dragStartCell.x,
             dragStartCell.y,
             dragCurrentCell.x,
@@ -1207,18 +1340,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             rectangleMode,
             project.width,
             project.height
-          );
-          ctx.fillStyle = activeColor.hex;
-          for (const c of previewRect) {
-            const px = bpX + c.x * currentCellSize;
-            const py = bpY + c.y * currentCellSize;
-            ctx.fillRect(px, py, currentCellSize, currentCellSize);
-            if (showGrid && currentCellSize >= 3) {
-              ctx.strokeStyle = gridTheme === 'light' ? 'rgba(0, 0, 0, 0.90)' : 'rgba(0, 0, 0, 0.70)';
-              ctx.lineWidth = Math.max(1, gridLineWidth);
-              ctx.strokeRect(px, py, currentCellSize, currentCellSize);
-            }
-          }
+          ), project.width, project.height, mirrorMode);
+          for (const c of previewRect) drawShapePreviewCell(c);
 
           // Dimension badge pill
           const box = normalizeBox(
@@ -1253,17 +1376,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             project.width,
             project.height
           );
-          ctx.fillStyle = activeColor.hex;
-          for (const c of previewCircle.cells) {
-            const px = bpX + c.x * currentCellSize;
-            const py = bpY + c.y * currentCellSize;
-            ctx.fillRect(px, py, currentCellSize, currentCellSize);
-            if (showGrid && currentCellSize >= 3) {
-              ctx.strokeStyle = gridTheme === 'light' ? 'rgba(0, 0, 0, 0.90)' : 'rgba(0, 0, 0, 0.70)';
-              ctx.lineWidth = Math.max(1, gridLineWidth);
-              ctx.strokeRect(px, py, currentCellSize, currentCellSize);
-            }
-          }
+          for (const c of getMirroredShapeCells(previewCircle.cells, project.width, project.height, mirrorMode)) drawShapePreviewCell(c);
 
           // Dimension badge pill for circle (diameter & radius)
           const badgeText = `⊚ ${previewCircle.diameter} × ${previewCircle.diameter} | ${t.toolOptions.radiusLabel}: ${previewCircle.radius}`;
@@ -1371,8 +1484,34 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           }
         }
 
+        if ((activeTool === 'pencil' || activeTool === 'eraser') && brushSize > 1) {
+          const offset = Math.floor(brushSize / 2);
+          const brushCells = new Map<string, CellCoord>();
+          for (let dy = 0; dy < brushSize; dy++) {
+            for (let dx = 0; dx < brushSize; dx++) {
+              const x = hoverCell.x + dx - offset;
+              const y = hoverCell.y + dy - offset;
+              for (const cell of getMirroredCoords(x, y, project.width, project.height, mirrorMode)) {
+                brushCells.set(coordKey(cell.x, cell.y), cell);
+              }
+            }
+          }
+          ctx.save();
+          ctx.fillStyle = activeTool === 'eraser' ? 'rgba(248, 113, 113, 0.18)' : 'rgba(245, 158, 11, 0.16)';
+          ctx.strokeStyle = activeTool === 'eraser' ? '#f87171' : '#fbbf24';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3, 2]);
+          for (const cell of brushCells.values()) {
+            const cellX = bpX + cell.x * currentCellSize;
+            const cellY = bpY + cell.y * currentCellSize;
+            ctx.fillRect(cellX, cellY, currentCellSize, currentCellSize);
+            ctx.strokeRect(cellX + 0.75, cellY + 0.75, Math.max(0, currentCellSize - 1.5), Math.max(0, currentCellSize - 1.5));
+          }
+          ctx.restore();
+        }
+
         // Mirror Ghost Hover indicators
-        if (mirrorMode !== 'none') {
+        if (mirrorSupported && mirrorMode !== 'none') {
           const mirroredGhosts = getMirroredCoords(hoverCell.x, hoverCell.y, project.width, project.height, mirrorMode);
           for (const m of mirroredGhosts) {
             if (m.x !== hoverCell.x || m.y !== hoverCell.y) {
@@ -1448,13 +1587,37 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           const w = itemWidth * currentCellSize;
           const h = itemHeight * currentCellSize;
           const fits = hoverCell.x + itemWidth <= project.width && hoverCell.y + itemHeight <= project.height;
+          const previewSprite = selectedStorageItem.spriteId ? gameSprites[selectedStorageItem.spriteId] : undefined;
+          const image = getSpriteImage(selectedStorageItem.placementImageUrl ?? previewSprite?.atlas ?? selectedStorageItem.imageUrl);
+          const nativeSprite = image && selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite);
+          const spriteBounds = nativeSprite && image ? getSpriteContentBounds(image) : null;
+          const visualHeightTiles = spriteBounds ? spriteBounds.height / 16 : itemHeight;
+          const visualWidthTiles = spriteBounds ? spriteBounds.width / 16 : itemWidth;
+          const visualLeft = hoverCell.x + (itemWidth - visualWidthTiles) / 2;
+          const visualTop = hoverCell.y + itemHeight - visualHeightTiles;
+          const visualFits = visualLeft >= 0 && visualTop >= 0 && visualLeft + visualWidthTiles <= project.width && visualTop + visualHeightTiles <= project.height;
           const blocked = (project.storagePlacements ?? []).some(item => (item.layer ?? 'object') === (selectedStorageItem.layer ?? 'object') &&
             hoverCell.x < item.x + item.width && hoverCell.x + itemWidth > item.x &&
             hoverCell.y < item.y + item.height && hoverCell.y + itemHeight > item.y,
           );
-          const previewSprite = selectedStorageItem.spriteId ? gameSprites[selectedStorageItem.spriteId] : undefined;
-          const image = getSpriteImage(selectedStorageItem.placementImageUrl ?? previewSprite?.atlas ?? selectedStorageItem.imageUrl);
-          ctx.fillStyle = fits && !blocked ? 'rgba(245, 158, 11, 0.24)' : 'rgba(239, 68, 68, 0.28)';
+          const wallBacked = selectedStorageItem.category !== 'wall_decoration' || Array.from({ length: itemWidth * itemHeight }, (_, index) => {
+            const tileX = hoverCell.x + (index % itemWidth);
+            const tileY = hoverCell.y + Math.floor(index / itemWidth);
+            return Boolean(project.cells[`${tileX},${tileY}`]) || (project.storagePlacements ?? []).some(placement => {
+              const wallItem = STORAGE_ITEM_BY_ID.get(placement.itemId);
+              return (wallItem?.category === 'wall' || placement.layer === 'wall') &&
+                tileX >= placement.x && tileX < placement.x + placement.width && tileY >= placement.y && tileY < placement.y + placement.height;
+            });
+          }).every(Boolean);
+          const warnings: string[] = [];
+          if (!fits || !visualFits) warnings.push(language === 'es' ? 'Fuera del plano' : 'Outside blueprint');
+          if (blocked) warnings.push(language === 'es' ? 'Espacio ocupado en esta capa' : 'Occupied in this layer');
+          if (!wallBacked) warnings.push(language === 'es' ? 'Necesita pared detrás' : 'Needs a wall behind');
+          const selectedLayerId = getStorageItemLayerId(selectedStorageItem, selectedStorageItem.layer);
+          if (!plannerLayerStates[selectedLayerId].visible) warnings.push(language === 'es' ? 'La capa está oculta' : 'Layer is hidden');
+          else if (!isPlannerLayerEditable(plannerLayerStates, selectedLayerId)) warnings.push(language === 'es' ? 'La capa está bloqueada' : 'Layer is locked');
+          const valid = warnings.length === 0;
+          ctx.fillStyle = valid ? 'rgba(245, 158, 11, 0.24)' : 'rgba(239, 68, 68, 0.28)';
           ctx.fillRect(x, y, w, h);
           if (image && fits) {
             ctx.save();
@@ -1472,17 +1635,39 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             }
             ctx.restore();
           }
-          ctx.strokeStyle = fits && !blocked ? '#f59e0b' : '#ef4444';
+          ctx.strokeStyle = valid ? '#f59e0b' : '#ef4444';
           ctx.lineWidth = 2;
           ctx.setLineDash([5, 4]);
           ctx.strokeRect(x, y, w, h);
           ctx.setLineDash([]);
           ctx.font = 'bold 11px monospace';
-          const badge = `${itemWidth}×${itemHeight} tiles`;
+          const badge = `${language === 'es' ? 'Huella' : 'Footprint'} ${itemWidth}×${itemHeight} · ${language === 'es' ? 'Altura' : 'Height'} ${visualHeightTiles.toFixed(1)} t`;
           ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
           ctx.fillRect(x, y - 20, ctx.measureText(badge).width + 12, 18);
-          ctx.fillStyle = '#fbbf24';
+          ctx.fillStyle = valid ? '#fbbf24' : '#fca5a5';
           ctx.fillText(badge, x + 6, y - 7);
+          if (visualHeightTiles > itemHeight + 0.05 || visualWidthTiles > itemWidth + 0.05) {
+            const visualW = visualWidthTiles * currentCellSize;
+            const visualH = visualHeightTiles * currentCellSize;
+            ctx.strokeStyle = '#22d3ee';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 3]);
+            ctx.strokeRect(x + (w - visualW) / 2, y + h - visualH, visualW, visualH);
+            ctx.setLineDash([]);
+          }
+          warnings.forEach((warning, index) => {
+            ctx.font = 'bold 10px sans-serif';
+            const label = `⚠ ${warning}`;
+            const warningWidth = ctx.measureText(label).width + 12;
+            const warningY = y + h + 4 + index * 18;
+            ctx.fillStyle = 'rgba(69, 10, 10, 0.94)';
+            ctx.fillRect(x, warningY, warningWidth, 16);
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, warningY, warningWidth, 16);
+            ctx.fillStyle = '#fecaca';
+            ctx.fillText(label, x + 6, warningY + 11);
+          });
         }
       }
 
@@ -1526,11 +1711,42 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       ctx.restore();
     };
 
+    const scheduleRender = () => {
+      if (animId !== null) cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(() => {
+        animId = null;
+        render();
+      });
+    };
+
+    observedContainerSizeRef.current = { width: container.clientWidth, height: container.clientHeight };
+    const handleContainerResize = () => {
+      scheduleRender();
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      const previousSize = observedContainerSizeRef.current;
+      observedContainerSizeRef.current = { width, height };
+      if (!previousSize || (previousSize.width === width && previousSize.height === height)) return;
+
+      const cellSize = BASE_CELL_SIZE * zoomRef.current;
+      setPan({
+        x: Math.round((width - project.width * cellSize) / 2),
+        y: Math.round((height - project.height * cellSize) / 2),
+      });
+    };
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(handleContainerResize)
+      : null;
+    resizeObserver?.observe(container);
+    window.addEventListener('resize', handleContainerResize);
+
     render();
-    animId = requestAnimationFrame(render);
 
     return () => {
-      cancelAnimationFrame(animId);
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', handleContainerResize);
+      if (animId !== null) cancelAnimationFrame(animId);
     };
   }, [
     project,
@@ -1545,6 +1761,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     gridLineWidth,
     highContrastGrid,
     gridTheme,
+    plannerLayerStates,
     activeTool,
     activeColor,
     rectangleMode,
@@ -1588,12 +1805,88 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         ? eraserCursor
         : crosshair;
 
+  const placementForRotationControls = activeTool === 'select' && !storageDragPreview
+    ? (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId) ?? null
+    : null;
+  const mirrorSupported = ['pencil', 'eraser', 'line', 'rectangle', 'circle'].includes(activeTool);
+  const materialDrawingTools: ToolType[] = ['pencil', 'line', 'rectangle', 'circle'];
+  const activeObjectItem = activeTool === 'place_storage' ? selectedStorageItem : null;
+  const activeFloorTile = materialDrawingTools.includes(activeTool) ? selectedFloorItem : null;
+  const usesActiveColor = (materialDrawingTools.includes(activeTool) && !activeFloorTile) || activeTool === 'fill';
+  const hasActiveTarget = Boolean(activeObjectItem || activeFloorTile || usesActiveColor);
+  const showTargetCard = hasActiveTarget || activeTool === 'place_storage';
+  const applicableTools: ToolType[] = activeObjectItem
+    ? ['place_storage']
+    : activeFloorTile
+      ? ['pencil', 'line', 'rectangle', 'circle']
+      : usesActiveColor
+        ? ['pencil', 'line', 'rectangle', 'circle', 'fill']
+        : [];
+  const activeTargetName = activeObjectItem
+    ? (language === 'es' ? activeObjectItem.nameEs : activeObjectItem.nameEn)
+    : activeFloorTile
+      ? (language === 'es' ? activeFloorTile.nameEs : activeFloorTile.nameEn)
+      : usesActiveColor
+        ? getPaletteColorLabel(activeColor, t, language)
+        : (language === 'es' ? 'Selecciona un objeto en el catálogo' : 'Select an object from the catalog');
+  const activeTargetKind = activeObjectItem
+    ? (language === 'es' ? 'Objeto listo para colocar' : 'Object ready to place')
+    : activeFloorTile
+      ? (language === 'es' ? 'Suelo activo' : 'Active floor')
+      : usesActiveColor
+        ? (language === 'es' ? 'Color activo' : 'Active color')
+        : (language === 'es' ? 'Colocar objeto' : 'Place object');
+  const rotationToolbarWidth = 184;
+  const canvasWidth = containerRef.current?.clientWidth ?? 800;
+  const rotationToolbarLeft = placementForRotationControls
+    ? Math.max(8, Math.min(
+      canvasWidth - rotationToolbarWidth - 8,
+      pan.x + (placementForRotationControls.x + placementForRotationControls.width / 2) * currentCellSize - rotationToolbarWidth / 2,
+    ))
+    : 0;
+  const rotationToolbarTop = placementForRotationControls
+    ? Math.max(8, pan.y + placementForRotationControls.y * currentCellSize - 48)
+    : 0;
+
   return (
     <div
       ref={containerRef}
       style={{ cursor: activeCursor }}
-      className="relative flex-1 h-full w-full overflow-hidden bg-[#101115] select-none"
+      className="relative flex-1 h-full w-full overflow-hidden bg-[#080f1c] select-none"
     >
+      {placementForRotationControls && (
+        <div
+          className="absolute z-30 rounded-lg border border-cyan-500/50 bg-[#15171d]/95 px-2 py-1.5 shadow-xl backdrop-blur-sm"
+          style={{ left: rotationToolbarLeft, top: rotationToolbarTop, width: rotationToolbarWidth }}
+          onPointerDown={event => event.stopPropagation()}
+          role="group"
+          aria-label={t.objectRotation.title}
+        >
+          <div className="mb-1 text-center text-[9px] font-semibold uppercase tracking-wide text-cyan-200">
+            {t.objectRotation.title}
+          </div>
+          <div className="grid grid-cols-4 gap-1">
+            {([
+              { rotation: 0, arrow: '↑' },
+              { rotation: 90, arrow: '→' },
+              { rotation: 180, arrow: '↓' },
+              { rotation: 270, arrow: '←' },
+            ] as const).map(option => (
+              <button
+                key={option.rotation}
+                type="button"
+                onClick={() => onRotateStoragePlacement?.(option.rotation)}
+                aria-label={t.objectRotation.direction(option.rotation)}
+                aria-pressed={(placementForRotationControls.rotation ?? 0) === option.rotation}
+                title={`${t.objectRotation.direction(option.rotation)} · ${option.rotation}°`}
+                className={`rounded py-0.5 text-base font-semibold leading-5 transition ${(placementForRotationControls.rotation ?? 0) === option.rotation ? 'bg-cyan-500 text-zinc-950' : 'text-zinc-200 hover:bg-zinc-700 hover:text-white'}`}
+              >
+                {option.arrow}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <canvas
         ref={canvasRef}
         style={{ cursor: activeCursor }}
@@ -1610,8 +1903,53 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         className="w-full h-full block touch-none"
       />
 
+      {/* Active material and contextual tools, beside canvas navigation */}
+      <div className="pointer-events-none absolute left-3 right-3 top-3 z-20 flex items-start justify-between gap-2">
+        {showTargetCard && <div className="pointer-events-auto flex min-w-0 max-w-[calc(100%-250px)] flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-[#2b3d58] bg-[#0d1728]/95 px-3 py-2 shadow-xl backdrop-blur-md text-zinc-300">
+          <div className="flex min-w-0 items-center gap-2">
+            <span
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 shadow-inner"
+              style={{ backgroundColor: activeObjectItem ? '#17243a' : activeFloorTile ? (activeFloorTile.color ?? '#526679') : usesActiveColor ? activeColor.hex : '#17243a' }}
+              aria-hidden="true"
+            >
+              {activeObjectItem || activeTool === 'place_storage' ? <PackageOpen className="h-4 w-4 text-cyan-200" /> : activeFloorTile ? <Grid2X2 className="h-4 w-4 text-white/90" /> : null}
+            </span>
+            <div className="min-w-0">
+              <div className="text-[9px] font-semibold uppercase tracking-wide text-cyan-200">{activeTargetKind}</div>
+              <div className="max-w-48 truncate text-xs font-medium text-zinc-100" title={activeTargetName}>{activeTargetName}</div>
+              <div className="text-[9px] font-mono text-zinc-500">
+                {activeObjectItem || activeFloorTile
+                  ? `${(activeObjectItem ?? activeFloorTile)!.width}×${(activeObjectItem ?? activeFloorTile)!.height} ${language === 'es' ? 'casillas' : 'tiles'}`
+                  : usesActiveColor ? activeColor.hex : ''}
+              </div>
+            </div>
+          </div>
+          {applicableTools.length > 0 && <div className="flex items-center gap-2 border-l border-[#2b3d58] pl-3">
+            <span className="shrink-0 text-[9px] text-zinc-500">{language === 'es' ? 'Se usa con' : 'Use with'}</span>
+            <div className="flex items-center gap-1">
+              {CONTEXT_TOOL_ICONS.filter(({ tool }) => applicableTools.includes(tool)).map(({ tool, icon: Icon }) => {
+                const toolName = t.tools[tool];
+                const isActive = activeTool === tool;
+                return (
+                  <button
+                    key={tool}
+                    type="button"
+                    onClick={() => onSelectTool(tool)}
+                    title={toolName}
+                    aria-label={`${language === 'es' ? 'Activar' : 'Activate'} ${toolName}`}
+                    aria-pressed={isActive}
+                    className={`flex h-7 w-7 items-center justify-center rounded-md border transition ${isActive ? 'border-amber-400/60 bg-amber-400/15 text-amber-200' : 'border-transparent text-zinc-400 hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-cyan-100'}`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>}
+        </div>}
+
       {/* Floating Canvas Navigation HUD Controls */}
-      <div className="absolute top-4 right-4 flex items-center gap-1 bg-[#18191f]/90 backdrop-blur-md border border-zinc-800 p-1 rounded-lg shadow-xl text-zinc-300">
+      <div className="pointer-events-auto flex shrink-0 items-center gap-1 rounded-xl border border-[#2b3d58] bg-[#0d1728]/95 p-1 shadow-xl backdrop-blur-md text-zinc-300">
         <button
           type="button"
           onClick={() => handleZoom(1 / 1.2)}
@@ -1634,6 +1972,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           className="p-1.5 rounded hover:bg-zinc-800 hover:text-zinc-100 transition"
         >
           <ZoomIn className="w-4 h-4" />
+        </button>
+
+        <div className="w-[1px] h-4 bg-zinc-800 mx-1" />
+
+        <button
+          type="button"
+          onClick={onToggleGridTheme}
+          title={`${t.gridBackground}: ${gridTheme === 'dark' ? t.gridBgLight : t.gridBgDark}`}
+          aria-label={`${t.gridBackground}: ${gridTheme === 'dark' ? t.gridBgLight : t.gridBgDark}`}
+          aria-pressed={gridTheme === 'light'}
+          className={`p-1.5 rounded transition ${gridTheme === 'light' ? 'bg-amber-400/15 text-amber-200 hover:bg-amber-400/25' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'}`}
+        >
+          {gridTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
         <div className="w-[1px] h-4 bg-zinc-800 mx-1" />
@@ -1668,9 +2019,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           <Maximize2 className="w-4 h-4" />
         </button>
       </div>
+      </div>
 
       {/* Floating Status & Coordinate Badge */}
-      <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-[#18191f]/90 backdrop-blur-md border border-zinc-800 px-3 py-1.5 rounded-lg shadow-lg text-xs font-mono text-zinc-300">
+      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 rounded-xl border border-[#2b3d58] bg-[#0d1728]/95 px-3 py-2 shadow-lg backdrop-blur-md text-xs font-mono text-zinc-300">
+        <div className="flex min-w-0 items-center gap-2">
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
           <span className="text-zinc-400 uppercase text-[10px] tracking-wider">
@@ -1694,6 +2047,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         <span className="text-zinc-500 text-[11px] hidden sm:inline">
           {project.width} × {project.height}
         </span>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={onToggleGrid}
+            aria-pressed={showGrid}
+            title={t.showGrid}
+            className={`flex items-center gap-1.5 rounded-md px-2 py-1 text-[10px] transition ${showGrid ? 'bg-amber-400/10 text-amber-200' : 'text-zinc-400 hover:bg-[#17243a] hover:text-zinc-200'}`}
+          >
+            <Grid2X2 className="h-3.5 w-3.5" />
+            <span>{t.showGrid}</span>
+          </button>
+          <span className="border-l border-[#2b3d58] pl-2 text-[10px] uppercase tracking-wide text-cyan-200">{language === 'es' ? 'Plano' : 'Blueprint'}</span>
+        </div>
       </div>
     </div>
   );

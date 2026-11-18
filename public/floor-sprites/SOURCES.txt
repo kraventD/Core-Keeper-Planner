@@ -1,0 +1,15 @@
+Core Keeper Planner floor sprite catalog
+
+The PNGs in this folder are 16×16 inventory icon images for Core Keeper floor,
+rug, floor-tile, and ground-block items. They are used as tile textures in the
+planner. The item names and icon files were cross-referenced against the Core
+Keeper wiki and retrieved from the public item-icon directory at
+https://corekeeper.wiki/assets/icons/items/ (for example, WoodFloor.png).
+
+Wiki reference pages:
+https://corekeeper.atma.gg/en/Category:Floor
+https://corekeeper.atma.gg/en/Environment
+https://corekeeper.atma.gg/en/Rug
+
+Core Keeper is the property of Pugstorm and its respective rights holders.
+These local files are included for development and testing in this planner.

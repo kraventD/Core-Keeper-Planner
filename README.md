@@ -1,219 +1,244 @@
-# Core Keeper Planner / Planificador de Planos Core Keeper
+<div align="center">
 
-English | [Español](#español)
+  <img src="assets/readme/banner-en.png" alt="Core Keeper Planner — base design and blueprint editor, version 1.0" width="100%">
 
----
+  **Build your underground home before you place the first block.**
 
-## English
+  <img src="assets/readme/stats-en.png" alt="Version 1.0 · 466 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
 
-Design room and base blueprints for **Core Keeper** on a 1:1 grid. No installation, no internet, no registration.
+  **🇬🇧 English** · [🇪🇸 Español](README.es.md)
 
-### What is it?
+  [Features](#features) · [Catalog](#catalog) · [Editor](#editor) · [Sharing](#sharing) · [Shortcuts](#shortcuts) · [Credits](#credits)
 
-**Core Keeper Planner** is a blueprint editor for the game Core Keeper. It lets you draw rooms, corridors, storage, and structures on a grid, exactly as they appear in the game.
+</div>
 
-Ideal for planning your base before building it in the game, sharing designs with the community, or saving templates to reuse.
+## <img src="assets/readme/app-logo.svg" width="32" alt=""> What is Core Keeper Planner?
 
-### What's new in v0.1.8
+<img src="assets/readme/crystal-island.png" align="right" width="155" alt="Pixel art of a glowing crystal cluster">
 
-- **Plants, trees, and crops:** a dedicated nature section adds placeable plants and trees, with crop stages and tile dimensions so larger sprites keep their correct footprint and height.
-- **Objects edit with selections:** rectangular selection and move now include placed objects; copy, cut, paste, and delete work with selected objects as well as colored cells.
-- **More accurate object rendering:** sprites are drawn using their actual height and tile footprint, including pillars and Crystal Lamp.
-- **Complete PNG exports:** exports now include placed objects and, when the legend is enabled, an object legend alongside the color legend. The legend lists localized names, tile footprints, and counts.
-- **Reliable offline downloads:** the release ZIP contains an autonomous `index.html` that opens directly after extraction, and the standalone HTML can be opened without extracting a ZIP. Both include the required app code and game assets and work offline.
-- **Building on v0.1.6:** the release keeps the simplified color-based construction palette, grouped object catalog, per-door orientation, selected-material drawing tools, and corrected and expanded object sprites introduced earlier.
+**Core Keeper Planner** is an unofficial visual planning tool for designing bases in [Core Keeper](https://core-keeper.fandom.com/wiki/Core_Keeper_Wiki). Sketch rooms, organize crafting stations, plan farms, place furniture and decorate your underground home on a tile-by-tile grid.
 
-### The road to v1.0.0
+Combine a flexible editor, an extensive catalog and shareable blueprints to turn ideas into buildable layouts before you start collecting materials in the game.
 
-Core Keeper Planner is approaching **v1.0.0**. The next milestone is to keep checking item sizes and in-game appearance, polish editing and export, and address community feedback before calling the planner stable.
+<p align="center">
+  <a href="assets/readme/editor-dark.png"><img src="assets/readme/editor-dark.png" alt="Main planner interface in dark mode" width="100%"></a>
+  <em>The editor — a tile-by-tile view of your next base.</em>
+</p>
 
-#### v0.1.6 catalog screenshots
+## <img src="assets/readme/icon-tools.png" width="28" alt=""> Features <a name="features"></a>
 
-![Furniture and object catalog](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-muebles.png)
-![Table catalog](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-mesas.png)
-![Stations catalog](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-estaciones.png)
-![Lighting catalog](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-iluminacion.png)
-![Wall color catalog](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-paredes.png)
-![Ground and block colors](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-suelos-bloques.png)
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="assets/readme/icon-catalog.png" width="36" alt=""><br>
+      <strong>466 catalog entries</strong><br>
+      Browse building materials, floors, furniture, stations and nature. Search in either language and save favorites.
+    </td>
+    <td width="50%" valign="top">
+      <img src="assets/readme/icon-tools.png" width="36" alt=""><br>
+      <strong>Precise drawing tools</strong><br>
+      Draw, erase, fill, mirror, select and move layouts with tile-level precision.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <img src="assets/readme/icon-layers.png" width="36" alt=""><br>
+      <strong>Independent layers</strong><br>
+      Organize floors, walls, objects and wall decorations without overwriting other layers.
+    </td>
+    <td valign="top">
+      <img src="assets/readme/icon-map.png" width="36" alt=""><br>
+      <strong>Customizable canvas</strong><br>
+      Build on grids from 10 × 10 to 300 × 300 tiles, with zoom controls and optional 16 × 16 chunk guides.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <img src="assets/readme/icon-export.png" width="36" alt=""><br>
+      <strong>Save and share</strong><br>
+      Recover local backups, save project files, exchange text codes and export illustrated PNG plans.
+    </td>
+    <td valign="top">
+      <img src="assets/readme/icon-keys.png" width="36" alt=""><br>
+      <strong>Faster workflows</strong><br>
+      Use keyboard shortcuts, 50-step undo/redo history, object rotation and selection transformations.
+    </td>
+  </tr>
+</table>
 
-### Key Features
+## <img src="assets/readme/icon-catalog.png" width="28" alt=""> Catalog <a name="catalog"></a>
 
-| Feature | Description |
-|---------|-------------|
-| **Grid drawing tools** | Paint, erase, draw lines, rectangles and circles, and fill connected areas using the currently selected material |
-| **Construction colors** | Place walls, blocks, floors, bridges, fences, rails, mats and rugs as color-coded cells; Wiki colors are used where available and estimates are labeled |
-| **Object catalog** | Browse furniture, stations, lighting, plants, trees and crops with sprites and tile-size information |
-| **Object placement** | Place, select, move, copy, paste and rotate catalog items; door orientation is saved independently for every door |
-| **Core placement** | Add the Core and its starting statues with one click |
-| **Region editing** | Select, move, duplicate, flip, mirror and center parts of a blueprint |
-| **Annotations** | Add editable text notes directly on the blueprint |
-| **Plan controls** | Set blueprint dimensions and adjust zoom, grid, chunk guides, light coverage, line width and canvas background |
-| **Save and share** | Save and reopen project files, export or import a shareable code, and export PNG images with placed objects and legends |
-| **Bilingual** | Interface in Spanish and English |
+<table>
+  <tr>
+    <td valign="top" width="68%">
+      <strong>Everything you need to organize a base.</strong>
+      <p>The v1.0 catalog brings together <strong>466 unique selectable entries</strong>, organized into four sections.</p>
+      <ul>
+        <li>Search by English or Spanish name.</li>
+        <li>Save favorites locally in your browser.</li>
+        <li>Filter objects by size or layer.</li>
+        <li>Filter floors and nature by type, including crops, plants and trees.</li>
+      </ul>
+    </td>
+    <td align="center" valign="top">
+      <a href="assets/readme/catalog.png"><img src="assets/readme/catalog.png" alt="Searchable construction catalog" width="240"></a>
+    </td>
+  </tr>
+</table>
 
-### How to use (3 steps)
+| Category | Entries | Includes |
+| :--- | ---: | :--- |
+| 🧱 Blocks & colors | **65** | 27 walls, 8 bridges, 6 fences, 1 rail and 23 color-represented blocks |
+| 🟫 Floors & rugs | **62** | Crafted flooring, tiles, carpets, mats and in-game terrain |
+| 🛠️ Furniture & stations | **260** | Chests, workbenches, pedestals, beds, chairs, mechanisms, doors, lighting, stations and wall decorations |
+| 🌱 Plants & trees | **79** | 22 crops, 25 trees and 32 other plants or nature elements |
+| **Total** | **466** | Unique selectable catalog entries |
 
-1. **Download** the `.zip` file from [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases)
-2. **Extract** it to any folder on your computer
-3. **Open** `index.html` with your browser (Chrome, Edge, Brave, or Firefox)
+> **Catalog status:** the count refers to selectable entries, not individual sprites or visual stages. Version 1.0 does not yet include every item in the game.
 
-Ready. You can start drawing your blueprint.
+Wall and block colors follow values published on the Core Keeper Wiki when available. Missing values are represented using an estimated dominant sprite color and are marked as estimated.
 
-> [!WARNING]
-> **Don't want to unzip anything?** Download the standalone `.html` file from [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases) and open it directly in your browser.
+## <img src="assets/readme/icon-tools.png" width="28" alt=""> Editor <a name="editor"></a>
 
-The ZIP's `index.html` is also autonomous: extract it and open the file directly. No installation or setup is needed.
+### Drawing and construction
 
-### Requirements
+| Tool | What it does |
+| :--- | :--- |
+| Pencil / eraser | Paint or erase with a brush from 1 × 1 to 20 × 20 tiles |
+| Line | Draw a line between two points |
+| Rectangle | Draw an outline or a filled rectangle |
+| Circle | Draw an outline or a filled circle, starting from the center or a corner |
+| Area fill | Fill a contiguous color region |
+| Real-time mirror | Mirror pencil, eraser, line, rectangle and circle strokes horizontally, vertically or in four directions |
+| Place Core | Insert the Core and statue pattern, optionally include a teleport point and center the pattern in the plan |
+| Annotation | Add, edit, move or delete notes |
+| Rectangle selection / move selection | Select and move an area, including objects inside it |
+| Select | Select and move placed objects |
+| Hand | Pan around the canvas |
 
-- Any computer with Windows, Mac, or Linux
-- Modern web browser (Chrome, Edge, Brave, Firefox)
-- **No installation needed**
-- **No internet connection required** (works 100% offline)
+The active catalog item appears above the canvas alongside icons for its compatible tools.
 
-### Screenshot
+<table>
+  <tr>
+    <td align="center" width="50%"><a href="assets/readme/tool-options.png"><img src="assets/readme/tool-options.png" alt="Tool settings and mirroring options" width="100%"></a><br><sub>Tool and mirror options</sub></td>
+    <td align="center" width="50%"><a href="assets/readme/core-placement.png"><img src="assets/readme/core-placement.png" alt="Core placement settings" width="88%"></a><br><sub>Core placement</sub></td>
+  </tr>
+</table>
 
-![Core Keeper Planner - Overview](preview-en.png)
+### <img src="assets/readme/icon-layers.png" width="24" alt=""> Layers and objects
 
-### How to share your designs
+Every tile supports four independent construction layers:
 
-1. Design your blueprint in the editor
-2. Click **Export Code** to copy a shareable text code
-3. Paste that code on Reddit, Facebook, Discord, or any forum
-4. Another person pastes the code into their editor and loads your design exactly as you created it
+| Layer | Contents |
+| :--- | :--- |
+| 1. Floors | Terrain, floors and related surfaces |
+| 2. Walls & blocks | Walls and other building materials, including color-represented blocks |
+| 3. Objects | Furniture, stations, rugs and other placed objects |
+| 4. Wall decorations | Decorations that require a wall behind them |
 
-You can also export to **PNG** to share a visual image of your blueprint.
+Show, hide, lock or unlock each layer independently. For example, place a rug over a floor without removing the floor beneath it.
 
-### Quick keyboard shortcuts
+- Objects use their actual tile footprint, which can extend beyond a single tile; sprites may extend visually beyond that footprint.
+- Move, rotate in four directions, copy, cut, paste or delete selected objects. Each object retains its own orientation.
+- Select an area to copy, cut, paste, fill, erase, move, create a mirrored duplicate, flip horizontally or vertically, or center it on either or both axes.
+- Placement warnings flag objects extending outside the plan, overlaps on the same layer, missing backing walls and hidden or locked target layers.
+- Lighting objects can visualize approximate coverage; supported lights also allow range adjustments.
 
-| Key | Action |
-|-----|--------|
-| `V` | Select |
-| `P` | Pencil |
-| `E` | Eraser |
-| `L` | Line |
-| `R` | Rectangle |
-| `C` | Circle |
-| `K` | Place Core |
-| `S` | Rect Select |
-| `B` / `G` | Fill Area |
-| `M` | Move Selection |
-| `T` | Annotation |
-| `1-9` | Select palette color |
-| `+` / `-` | Zoom In / Zoom out |
-| `Space` | Pan canvas |
-| `Ctrl+Z` / `Ctrl+Y` | Undo / Redo |
+<p align="center">
+  <a href="assets/readme/selection-edit.png"><img src="assets/readme/selection-edit.png" width="440" alt="Selection editing and transformation actions"></a><br>
+  <sub>Selection editing and transformations</sub>
+</p>
 
-### Support
+### <img src="assets/readme/icon-map.png" width="24" alt=""> Canvas and viewing controls
 
-Made for the Core Keeper community. If you find a bug or have a suggestion, open an issue on GitHub.
+- Create a named plan with independent width and height, each between **10 and 300 tiles**.
+- Choose a light or dark grid while creating or editing a plan.
+- Zoom in and out, reset zoom, center the plan or fit it to the screen.
+- Pan with the hand tool, mouse wheel or middle mouse button; use Space + drag for quick navigation.
+- Show or hide grid lines, adjust their contrast and select one of three line thicknesses.
+- Highlight chunk boundaries every **16 × 16 tiles**.
+- The canvas automatically recenters the plan when the window is resized.
 
----
+<table>
+  <tr>
+    <td align="center" width="50%"><a href="assets/readme/new-plan.png"><img src="assets/readme/new-plan.png" alt="New plan name, dimensions and grid theme" height="285"></a><br><sub>Create a custom plan</sub></td>
+    <td align="center" width="50%"><a href="assets/readme/view-options.png"><img src="assets/readme/view-options.png" alt="Grid, layers and general viewing settings" height="285"></a><br><sub>View and layer settings</sub></td>
+  </tr>
+</table>
 
-## Español
+<p align="center">
+  <a href="assets/readme/editor-light.png"><img src="assets/readme/editor-light.png" width="100%" alt="Planner interface in light mode"></a><br>
+  <sub>The same planning workspace, with a light grid.</sub>
+</p>
 
-Diseña planos de habitaciones y bases para **Core Keeper** en una cuadrícula 1:1. Sin instalación, sin internet, sin registro.
+## <img src="assets/readme/icon-export.png" width="28" alt=""> Sharing <a name="sharing"></a>
 
-### ¿Qué es?
+Your designs are made to be kept, refined and shared.
 
-**Core Keeper Planner** es un editor de planos (blueprint editor) para el juego Core Keeper. Te permite dibujar habitaciones, pasillos, almacenes y estructuras sobre una cuadrícula, exactamente como se ven en el juego.
+| Function | Details |
+| :--- | :--- |
+| Project files | Create, open and save a project as a file |
+| Local autosave | Keep progress in your browser and recover a previous backup |
+| Undo & redo | Up to 50 history steps |
+| Share codes | Export a text code and import it to load a design |
+| PNG export | Choose scale, dark, blue, light or transparent background, and grid visibility |
+| Export legend | Include colors and placed objects, with names, tile footprints and quantities |
 
-Ideal para planear tu base antes de construirla en el juego, compartir diseños con la comunidad o guardar plantillas para reutilizar.
+<table>
+  <tr>
+    <td align="center" width="50%"><a href="assets/readme/file-menu.png"><img src="assets/readme/file-menu.png" alt="File and recovery menu" width="235"></a><br><sub>Project management</sub></td>
+    <td align="center" width="50%"><a href="assets/readme/png-export.png"><img src="assets/readme/png-export.png" alt="PNG export options and legend" width="290"></a><br><sub>PNG export options</sub></td>
+  </tr>
+</table>
 
-### Novedades de la v0.1.8
+<p align="center">
+  <a href="assets/readme/share-code.png"><img src="assets/readme/share-code.png" alt="Blueprint sharing code dialog" width="570"></a><br>
+  <sub>Share an entire blueprint as a text code.</sub>
+</p>
 
-- **Plantas, árboles y cultivos:** una nueva categoría reúne plantas y árboles colocables e incluye cultivos con sus etapas y dimensiones en tiles para representar correctamente los sprites grandes.
-- **Objetos incluidos en la selección:** la selección rectangular y su movimiento ahora abarcan objetos colocados; copiar, cortar, pegar y eliminar también operan sobre ellos junto con las casillas de color.
-- **Representación más precisa:** los sprites respetan su altura real y su huella en tiles, incluidos los pilares y la Lámpara de cristal.
-- **Exportación PNG completa:** las imágenes exportadas ahora muestran los objetos colocados y, al activar la leyenda, añaden una leyenda de objetos junto a la de colores con nombres traducidos, huella en tiles y cantidad.
-- **Descargas autónomas y sin conexión:** el ZIP incluye un `index.html` autónomo que se abre directamente después de extraerlo; también se ofrece un HTML independiente. Ambos incluyen el código y los recursos necesarios y funcionan sin conexión.
-- **Continuidad de la v0.1.6:** se conserva la paleta simplificada de construcción por colores, el catálogo agrupado, la orientación individual de cada puerta, las herramientas vinculadas al elemento seleccionado y los sprites ampliados y corregidos.
+## <img src="assets/readme/icon-leaf.png" width="28" alt=""> From idea to underground home
 
-### Camino hacia la v1.0.0
+Start with a blank canvas, draw your rooms, add floors and walls, then populate them with workstations, storage, crops and decorations.
 
-El proyecto se acerca a la **v1.0.0**. El siguiente objetivo es seguir revisando tamaños y apariencia de los objetos, pulir la edición y la exportación e incorporar comentarios de la comunidad antes de declarar estable el planner.
+<p align="center">
+  <a href="assets/readme/base-example.png"><img src="assets/readme/base-example.png" alt="Finished base example with crops, furniture, storage and a materials legend" width="560"></a><br>
+  <strong>Example base exported from Core Keeper Planner.</strong><br>
+  <sub>Click the image to explore the full-resolution design.</sub>
+</p>
 
-#### Capturas del catálogo v0.1.6
+## <img src="assets/readme/icon-keys.png" width="28" alt=""> Shortcuts <a name="shortcuts"></a>
 
-![Catálogo de muebles y objetos](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-muebles.png)
-![Catálogo de mesas](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-mesas.png)
-![Catálogo de estaciones](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-estaciones.png)
-![Catálogo de iluminación](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-iluminacion.png)
-![Colores de paredes](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-paredes.png)
-![Colores de suelos y bloques](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v0.1.6/catalogo-suelos-bloques.png)
+The interface is available in **English and Spanish**.
 
-### Características principales
+| Key | Action | Key | Action |
+| :--- | :--- | :--- | :--- |
+| `P` | Pencil | `E` | Eraser |
+| `L` | Line | `R` | Rectangle |
+| `C` | Circle | `B` / `G` | Area fill |
+| `S` | Rectangle selection | `M` | Move selection |
+| `K` | Place Core | `V` | Select |
+| `Ctrl+C` | Copy | `Ctrl+X` | Cut |
+| `Ctrl+V` | Paste | `Ctrl+Z` | Undo |
+| `Ctrl+Y` | Redo | `[` / `]` | Rotate selected object |
+| Mouse wheel | Zoom | Space + drag | Pan |
 
-| Característica | Descripción |
-|---------------|-------------|
-| **Herramientas de dibujo en cuadrícula** | Pintar, borrar, trazar líneas, rectángulos y círculos, y rellenar áreas conectadas con el material seleccionado |
-| **Colores de construcción** | Representar paredes, bloques, suelos, puentes, cercas, rieles, tapetes y alfombras con colores; los colores de la wiki se usan cuando existen y las estimaciones se identifican |
-| **Catálogo de objetos** | Explorar muebles, estaciones, iluminación, plantas, árboles y cultivos con sprites y dimensiones en tiles |
-| **Colocación de objetos** | Colocar, seleccionar, mover, copiar, pegar y girar objetos; cada puerta conserva su propia orientación |
-| **Colocación del Core** | Agregar el Core y sus estatuas iniciales con un clic |
-| **Edición de regiones** | Seleccionar, mover, duplicar, voltear, espejear y centrar partes del plano |
-| **Anotaciones** | Agregar y editar notas de texto directamente sobre el plano |
-| **Controles del plano** | Definir dimensiones y ajustar zoom, cuadrícula, guía de chunks, cobertura de luz, grosor de línea y fondo |
-| **Guardar y compartir** | Guardar y abrir proyectos, exportar o importar códigos compartibles y generar PNG con objetos y leyendas |
-| **Bilingüe** | Interfaz en español e inglés |
+<details>
+  <summary><strong>View the in-app keyboard shortcut panel</strong></summary>
+  <p align="center"><a href="assets/readme/keyboard-shortcuts.png"><img src="assets/readme/keyboard-shortcuts.png" alt="Keyboard shortcuts panel" width="450"></a></p>
+</details>
 
-### Cómo usarlo (3 pasos)
+## <img src="assets/readme/app-logo.svg" width="32" alt=""> Credits <a name="credits"></a>
 
-1. **Descarga** el archivo `.zip` desde [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases)
-2. **Descomprímelo** en cualquier carpeta de tu computadora
-3. **Abre** `index.html` con tu navegador (Chrome, Edge, Brave o Firefox)
+- **Core Keeper** — the game that inspired this project and the source of many in-game sprites and visual references.
+- [**Core Keeper Wiki**](https://core-keeper.fandom.com/wiki/Core_Keeper_Wiki) — catalog information, color values and other visual references.
+Core Keeper Planner is an independent project that I develop and maintain. It is not affiliated with, sponsored, or endorsed by the developers or publishers of Core Keeper. Game assets and trademarks belong to their respective rights holders. This is a planning tool; a shared planner code does not directly import a base into the game.
 
-Listo. Ya puedes empezar a dibujar tu plano.
-
-> [!WARNING]
-> **¿No quieres descomprimir nada?** Descarga el archivo `.html` independiente desde [Releases](https://github.com/kraventD/Core-Keeper-Planner/releases) y ábrelo directamente en tu navegador.
-
-El `index.html` del ZIP también es autónomo: extráelo y ábrelo directamente. No requiere instalación ni configuración.
-
-### Requisitos
-
-- Cualquier computadora con Windows, Mac o Linux
-- Navegador web moderno (Chrome, Edge, Brave, Firefox)
-- **No necesitas instalar nada**
-- **No necesitas conexión a internet** (funciona 100% offline)
-
-### Captura
-
-![Editor Core Keeper Planner - vista general](preview.png)
-
-### Cómo compartir tus diseños
-
-1. Diseña tu plano en el editor
-2. Haz clic en **Exportar código** para copiar un texto compartible
-3. Pega ese texto en Reddit, Facebook, Discord o cualquier foro
-4. Otra persona pega el código en su editor y carga tu diseño exactamente como lo creaste
-
-También puedes exportar a **PNG** para compartir una imagen visual de tu plano.
-
-### Atajos de teclado rápidos
-
-| Tecla | Acción |
-|-------|--------|
-| `V` | Seleccionar |
-| `P` | Lápiz |
-| `E` | Borrador |
-| `L` | Línea |
-| `R` | Rectángulo |
-| `C` | Círculo |
-| `K` | Colocar Core |
-| `S` | Selección rectangular |
-| `B` / `G` | Rellenar área |
-| `M` | Mover selección |
-| `T` | Anotación |
-| `1-9` | Seleccionar color de paleta |
-| `+` / `-` | Acercar / Alejar zoom |
-| `Espacio` | Mover el lienzo |
-| `Ctrl+Z` / `Ctrl+Y` | Deshacer / Rehacer |
-
-### Soporte
-
-Hecho para la comunidad de Core Keeper. Si encuentras un error o tienes una sugerencia, abre un issue en GitHub.
-
----
-
-*Core Keeper Planner - Planificador de construcción y habitaciones 1:1*
+<div align="center">
+  <img src="assets/readme/app-logo.svg" width="96" alt="Core Keeper Planner logo">
+  <br>
+  <strong>Plan it. Build it. Make it yours.</strong>
+  <br>
+  <sub>CORE KEEPER PLANNER · VERSION 1.0</sub>
+  <br>
+  <a href="README.es.md">Leer en español</a>
+</div>

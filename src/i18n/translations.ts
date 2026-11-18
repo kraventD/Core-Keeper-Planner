@@ -77,6 +77,11 @@ export interface Translations {
     horizontal: string;
     vertical: string;
   };
+  objectRotation: {
+    title: string;
+    direction: (rotation: number) => string;
+    shortcutsHint: string;
+  };
   doorTooltip: {
     title: string;
     text: string;
@@ -387,6 +392,11 @@ export const translations: Record<Language, Translations> = {
       horizontal: 'Horizontal',
       vertical: 'Vertical',
     },
+    objectRotation: {
+      title: 'Orientación del objeto',
+      shortcutsHint: 'Atajos: [ y ] giran 90°',
+      direction: rotation => ({ 0: 'Arriba', 90: 'Derecha', 180: 'Abajo', 270: 'Izquierda' }[rotation] ?? `${rotation}°`),
+    },
     doorTooltip: {
       title: 'Orientación de puerta',
       text: 'Aquí puedes cambiar la orientación de la puerta entre horizontal y vertical.',
@@ -688,6 +698,11 @@ export const translations: Record<Language, Translations> = {
       title: 'Door Orientation',
       horizontal: 'Horizontal',
       vertical: 'Vertical',
+    },
+    objectRotation: {
+      title: 'Object orientation',
+      shortcutsHint: 'Shortcuts: [ and ] rotate 90°',
+      direction: rotation => ({ 0: 'Up', 90: 'Right', 180: 'Down', 270: 'Left' }[rotation] ?? `${rotation}°`),
     },
     doorTooltip: {
       title: 'Door Orientation',

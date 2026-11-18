@@ -4,6 +4,7 @@ import { paletteWithBlockColors } from './blockCatalog';
 import { migrateStructurePlacementsToColors } from './storageCatalog';
 
 const AUTOSAVE_KEY = 'corekeeper_blueprint_autosave_v1';
+const RECOVERY_KEY = 'corekeeper_blueprint_recovery_v1';
 
 export function saveProjectToJson(project: BlueprintProject): void {
   const jsonStr = JSON.stringify(project, null, 2);
@@ -40,17 +41,7 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
   // Migración de paleta: eliminar 'doorway' y asegurar 'door' en segunda posición (índice 1)
   let migratedPalette: PaletteColor[] = [];
   if (Array.isArray(data.palette) && data.palette.length > 0) {
-    migratedPalette = data.palette.filter((p: PaletteColor) => p.id !== 'doorway');
-    const doorColor = { id: 'door', name: 'Door / Puerta', hex: '#000000', isDefault: true };
-    const doorIndex = migratedPalette.findIndex((p: PaletteColor) => p.id === 'door');
-    if (doorIndex === -1) {
-      // Si 'door' no existe, agregarlo en segunda posición (después del primero si hay alguno)
-      migratedPalette.length > 0 ? migratedPalette.splice(1, 0, doorColor) : migratedPalette.push(doorColor);
-    } else if (doorIndex !== 1) {
-      // Mover 'door' a segunda posición si no está ya ahí
-      const removed = migratedPalette.splice(doorIndex, 1)[0];
-      migratedPalette.splice(1, 0, removed);
-    }
+    migratedPalette = data.palette.filter((p: PaletteColor) => p.id !== 'doorway' && p.id !== 'door');
   } else {
     migratedPalette = [...DEFAULT_PALETTE];
   }
@@ -60,9 +51,7 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
   if (typeof data.cells === 'object' && data.cells !== null) {
     for (const [key, colorId] of Object.entries(data.cells)) {
       const storedColorId = colorId as string;
-      migratedCells[key] = storedColorId === 'doorway' || storedColorId === 'door'
-        ? 'door-horizontal'
-        : storedColorId;
+      migratedCells[key] = storedColorId;
     }
   }
 
@@ -75,7 +64,11 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
           Number.isInteger(placement.width) && Number.isInteger(placement.height);
       })
     : [];
-  const migratedStructures = migrateStructurePlacementsToColors(migratedCells, validStoragePlacements);
+  const migratedStructures = migrateStructurePlacementsToColors(
+    migratedCells,
+    validStoragePlacements,
+    typeof data.floorTiles === 'object' && data.floorTiles !== null ? data.floorTiles as Record<string, string> : {},
+  );
 
   return {
     id: typeof data.id === 'string' ? data.id : `proj_${Date.now()}`,
@@ -83,19 +76,25 @@ export function parseProjectJson(jsonStr: string): BlueprintProject {
     width: Math.max(5, Math.min(500, Math.round(data.width))),
     height: Math.max(5, Math.min(500, Math.round(data.height))),
     cells: migratedStructures.cells,
+    floorTiles: migratedStructures.floorTiles,
     palette: paletteWithBlockColors(migratedPalette),
     annotations: Array.isArray(data.annotations) ? data.annotations : [],
     storagePlacements: migratedStructures.storagePlacements,
     createdAt: data.createdAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : new Date().toISOString(),
   };
 }
 
-export function saveAutosave(project: BlueprintProject): void {
+export function saveAutosave(project: BlueprintProject): boolean {
   try {
-    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(project));
+    const next = JSON.stringify(project);
+    const previous = localStorage.getItem(AUTOSAVE_KEY);
+    if (previous && previous !== next) localStorage.setItem(RECOVERY_KEY, previous);
+    localStorage.setItem(AUTOSAVE_KEY, next);
+    return true;
   } catch (err) {
     console.warn('Autosave failed (storage full or disabled)', err);
+    return false;
   }
 }
 
@@ -106,6 +105,17 @@ export function loadAutosave(): BlueprintProject | null {
     return parseProjectJson(raw);
   } catch (err) {
     console.warn('Failed to load autosave', err);
+    return null;
+  }
+}
+
+export function loadRecoveryAutosave(): BlueprintProject | null {
+  try {
+    const raw = localStorage.getItem(RECOVERY_KEY);
+    if (!raw) return null;
+    return parseProjectJson(raw);
+  } catch (err) {
+    console.warn('Failed to load recovery backup', err);
     return null;
   }
 }

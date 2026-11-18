@@ -32,6 +32,7 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose,
     { key: 'Ctrl + V', desc: t.paste },
     { key: 'Delete / Backspace', desc: t.delete },
     { key: 'Escape', desc: t.clearSelection },
+    { key: '[ / ]', desc: t.objectRotation.shortcutsHint },
   ];
 
   const canvasShortcuts = [

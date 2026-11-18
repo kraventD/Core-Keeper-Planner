@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Translations } from '../i18n/translations';
 import { Language } from '../types/blueprint';
 import {
@@ -11,9 +11,12 @@ import {
   Sliders,
   Keyboard,
   Globe,
-  Grid,
   FileText,
+  History,
+  CloudCheck,
+  CloudOff,
 } from 'lucide-react';
+import { BrandIcon } from './BrandIcon';
 
 interface HeaderProps {
   projectName: string;
@@ -21,6 +24,9 @@ interface HeaderProps {
   onNewProject: () => void;
   onOpenProjectJson: (file: File) => void;
   onSaveProjectJson: () => void;
+  onRecoverAutosave: () => void;
+  hasRecoveryAutosave: boolean;
+  autosaveAvailable: boolean;
   onExportImage: () => void;
   onExportCode: () => void;
   onImportCode: () => void;
@@ -41,6 +47,9 @@ export const Header: React.FC<HeaderProps> = ({
   onNewProject,
   onOpenProjectJson,
   onSaveProjectJson,
+  onRecoverAutosave,
+  hasRecoveryAutosave,
+  autosaveAvailable,
   onExportImage,
   onExportCode,
   onImportCode,
@@ -55,6 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
   t,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [fileMenuOpen, setFileMenuOpen] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,159 +74,52 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
+  const fileActionClass = 'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs text-zinc-200 transition hover:bg-[#1a2940]';
+  const runFileAction = (action: () => void) => { action(); setFileMenuOpen(false); };
+
   return (
-    <header className="h-14 bg-[#14151a] border-b border-zinc-800/90 px-4 flex items-center justify-between gap-3 text-zinc-200 select-none shrink-0 z-30">
-      {/* Brand & Project Name */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2 pr-3 border-r border-zinc-800/80">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-sm">
-            <Grid className="w-4 h-4" />
-          </div>
-          <div className="hidden lg:block leading-tight">
-            <h1 className="text-xs font-bold tracking-wider text-amber-400 uppercase">
-              Core Keeper
-            </h1>
-            <p className="text-[10px] text-zinc-400 font-medium">Planner</p>
+    <header className="relative z-40 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-[#24334b] bg-[#080f1c] px-3 text-zinc-200 select-none sm:px-4">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 border-r border-[#26354c] pr-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-cyan-400/30 bg-cyan-400/10 text-cyan-300"><BrandIcon className="h-6 w-6" /></div>
+          <div className="hidden leading-tight sm:block">
+            <h1 className="text-[11px] font-bold tracking-wide text-cyan-200">Core Keeper</h1>
+            <p className="text-[10px] text-zinc-500">Planner</p>
           </div>
         </div>
-
-        {/* Project Name input */}
-        <input
-          type="text"
-          value={projectName}
-          onChange={e => onProjectNameChange(e.target.value)}
-          placeholder={t.projectNamePlaceholder}
-          aria-label={t.projectNamePlaceholder}
-          className="bg-transparent hover:bg-[#1a1b22] focus:bg-[#1a1b22] px-2.5 py-1 rounded-md text-sm font-semibold text-zinc-100 placeholder-zinc-500 border border-transparent focus:border-zinc-700 transition w-44 md:w-60 truncate focus:w-72"
-        />
+        <input type="text" value={projectName} onChange={event => onProjectNameChange(event.target.value)} placeholder={t.projectNamePlaceholder} aria-label={t.projectNamePlaceholder}
+          className="w-32 min-w-0 truncate rounded-md border border-transparent bg-transparent px-2 py-1 text-xs font-semibold text-zinc-100 transition hover:bg-[#111c2d] focus:border-[#345070] focus:bg-[#111c2d] focus:outline-none sm:w-52 lg:w-64" />
       </div>
 
-      {/* Primary Actions & Tooling */}
-      <div className="flex items-center gap-1.5 md:gap-2">
-        {/* Undo / Redo */}
-        <div className="flex items-center bg-[#1a1b22] border border-zinc-800 rounded-lg p-0.5">
-          <button
-            onClick={onUndo}
-            disabled={!canUndo}
-            title={`${t.undo} (Ctrl+Z)`}
-            aria-label={`${t.undo} (Ctrl+Z)`}
-            className="p-1.5 rounded-md text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 disabled:opacity-30 disabled:pointer-events-none transition"
-          >
-            <Undo2 className="w-4 h-4" />
-          </button>
-          <button
-            onClick={onRedo}
-            disabled={!canRedo}
-            title={`${t.redo} (Ctrl+Y / Ctrl+Shift+Z)`}
-            aria-label={`${t.redo} (Ctrl+Y / Ctrl+Shift+Z)`}
-            className="p-1.5 rounded-md text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 disabled:opacity-30 disabled:pointer-events-none transition"
-          >
-            <Redo2 className="w-4 h-4" />
-          </button>
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center rounded-lg border border-[#26354c] bg-[#101a2b] p-0.5">
+          <button onClick={onUndo} disabled={!canUndo} title={`${t.undo} (Ctrl+Z)`} aria-label={t.undo} className="rounded-md p-1.5 text-zinc-300 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-30"><Undo2 className="h-4 w-4" /></button>
+          <button onClick={onRedo} disabled={!canRedo} title={`${t.redo} (Ctrl+Y / Ctrl+Shift+Z)`} aria-label={t.redo} className="rounded-md p-1.5 text-zinc-300 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-30"><Redo2 className="h-4 w-4" /></button>
         </div>
+        <button onClick={onRecoverAutosave} disabled={!hasRecoveryAutosave} title={hasRecoveryAutosave ? (currentLanguage === 'es' ? 'Recuperar respaldo anterior' : 'Recover previous backup') : (currentLanguage === 'es' ? 'Aún no hay respaldo anterior' : 'No previous backup yet')} aria-label={currentLanguage === 'es' ? 'Recuperar respaldo' : 'Recover backup'}
+          className="rounded-lg border border-[#26354c] bg-[#101a2b] p-2 text-cyan-200 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-35"><History className="h-4 w-4" /></button>
+        <span title={autosaveAvailable ? (currentLanguage === 'es' ? 'Autoguardado local activo' : 'Local autosave active') : (currentLanguage === 'es' ? 'No se pudo guardar en este navegador' : 'Could not save in this browser')} className={`hidden items-center gap-1 text-[10px] xl:flex ${autosaveAvailable ? 'text-emerald-300' : 'text-red-300'}`}>
+          {autosaveAvailable ? <CloudCheck className="h-3.5 w-3.5" /> : <CloudOff className="h-3.5 w-3.5" />}{autosaveAvailable ? (currentLanguage === 'es' ? 'Guardado' : 'Saved') : (currentLanguage === 'es' ? 'Sin respaldo' : 'Not saved')}
+        </span>
+        <button onClick={onExportImage} title={t.exportImage} aria-label={t.exportImage} className="flex items-center gap-1.5 rounded-lg bg-amber-400 px-2.5 py-2 text-xs font-semibold text-[#111827] shadow-sm transition hover:bg-amber-300"><Download className="h-3.5 w-3.5" /><span className="hidden sm:inline">{t.exportImage}</span></button>
 
-        <div className="h-5 w-[1px] bg-zinc-800 mx-0.5 hidden sm:block" />
-
-        {/* File operations */}
-        <button
-          onClick={onNewProject}
-          title={t.newProject}
-          aria-label={t.newProject}
-          className="px-2.5 py-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
-        >
-          <FilePlus className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">{t.newProject}</span>
-        </button>
-
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          title={t.openProject}
-          aria-label={t.openProject}
-          className="px-2.5 py-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
-        >
-          <FolderOpen className="w-3.5 h-3.5 text-sky-400" />
-          <span className="hidden sm:inline">{t.openProject}</span>
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,.ckbp.json"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-
-        <button
-          onClick={onSaveProjectJson}
-          title={t.saveProject}
-          aria-label={t.saveProject}
-          className="px-2.5 py-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
-        >
-          <Save className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="hidden sm:inline">{t.saveProject}</span>
-        </button>
-
-        <button
-          onClick={onExportImage}
-          title={t.exportImage}
-          aria-label={t.exportImage}
-          className="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-semibold text-xs transition flex items-center gap-1.5 shadow-sm"
-        >
-          <Download className="w-3.5 h-3.5" />
-          <span className="hidden md:inline">{t.exportImage}</span>
-        </button>
-
-        <button
-          onClick={onExportCode}
-          title={t.exportCode}
-          aria-label={t.exportCode}
-          className="px-2.5 py-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
-        >
-          <FileText className="w-3.5 h-3.5 text-zinc-300" />
-          <span className="hidden sm:inline">{t.exportCode}</span>
-        </button>
-
-        <button
-          onClick={onImportCode}
-          title={t.importCode}
-          aria-label={t.importCode}
-          className="px-2.5 py-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
-        >
-          <FileText className="w-3.5 h-3.5 text-zinc-300" />
-          <span className="hidden sm:inline">{t.importCode}</span>
-        </button>
-
-        <div className="h-5 w-[1px] bg-zinc-800 mx-0.5" />
-
-        {/* Blueprint settings (Width/Height resize modal) */}
-        <button
-          onClick={onOpenSettings}
-          title={t.settings}
-          aria-label={t.settings}
-          className="p-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-zinc-100 transition"
-        >
-          <Sliders className="w-4 h-4" />
-        </button>
-
-        {/* Shortcuts */}
-        <button
-          onClick={onOpenShortcuts}
-          title={t.shortcuts}
-          aria-label={t.shortcuts}
-          className="p-1.5 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-zinc-100 transition hidden sm:flex items-center"
-        >
-          <Keyboard className="w-4 h-4" />
-        </button>
-
-        {/* Language selector toggle */}
-        <button
-          onClick={() => onLanguageChange(currentLanguage === 'es' ? 'en' : 'es')}
-          title={t.language}
-          aria-label={t.language}
-          className="px-2 py-1 rounded-lg bg-[#1a1b22] hover:bg-zinc-800 border border-zinc-800 text-xs font-mono font-semibold text-zinc-300 hover:text-amber-400 transition flex items-center gap-1.5"
-        >
-          <Globe className="w-3.5 h-3.5 text-zinc-400" />
-          <span>{currentLanguage.toUpperCase()}</span>
-        </button>
+        <div className="relative">
+          <button type="button" onClick={() => setFileMenuOpen(value => !value)} aria-expanded={fileMenuOpen} className="flex items-center gap-1.5 rounded-lg border border-[#2a3b55] bg-[#101a2b] px-2.5 py-2 text-xs transition hover:bg-[#1d2b41]">
+            <FolderOpen className="h-3.5 w-3.5 text-amber-300" /><span>{currentLanguage === 'es' ? 'Archivo' : 'File'}</span>
+          </button>
+          {fileMenuOpen && <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-[#2b3d58] bg-[#0d1728] p-1.5 shadow-2xl">
+            <button className={fileActionClass} onClick={() => runFileAction(onNewProject)}><FilePlus className="h-3.5 w-3.5 text-amber-300" />{t.newProject}</button>
+            <button className={fileActionClass} onClick={() => runFileAction(() => fileInputRef.current?.click())}><FolderOpen className="h-3.5 w-3.5 text-cyan-300" />{t.openProject}</button>
+            <button className={fileActionClass} onClick={() => runFileAction(onSaveProjectJson)}><Save className="h-3.5 w-3.5 text-emerald-300" />{t.saveProject}</button>
+            <div className="my-1 border-t border-[#24334b]" />
+            <button className={fileActionClass} onClick={() => runFileAction(onExportCode)}><FileText className="h-3.5 w-3.5" />{t.exportCode}</button>
+            <button className={fileActionClass} onClick={() => runFileAction(onImportCode)}><FileText className="h-3.5 w-3.5" />{t.importCode}</button>
+            <button className={fileActionClass} onClick={() => runFileAction(onOpenSettings)}><Sliders className="h-3.5 w-3.5" />{t.settings}</button>
+            <button className={fileActionClass} onClick={() => runFileAction(onOpenShortcuts)}><Keyboard className="h-3.5 w-3.5" />{t.shortcuts}</button>
+          </div>}
+        </div>
+        <input ref={fileInputRef} type="file" accept=".json,.ckbp.json" onChange={handleFileChange} className="hidden" />
+        <button onClick={() => onLanguageChange(currentLanguage === 'es' ? 'en' : 'es')} title={t.language} aria-label={t.language} className="rounded-lg border border-[#26354c] bg-[#101a2b] px-2 py-2 text-[10px] font-bold text-zinc-300 transition hover:text-cyan-200">{currentLanguage.toUpperCase()}</button>
       </div>
     </header>
   );

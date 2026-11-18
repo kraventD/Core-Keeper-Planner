@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Translations } from '../../i18n/translations';
 import { X, Sparkles } from 'lucide-react';
 
 interface NewProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (name: string, width: number, height: number) => void;
+  onConfirm: (name: string, width: number, height: number, theme: 'light' | 'dark') => void;
+  currentGridTheme: 'light' | 'dark';
   t: Translations;
   currentHasContent: boolean;
 }
@@ -16,10 +17,16 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({
   onConfirm,
   t,
   currentHasContent,
+  currentGridTheme,
 }) => {
   const [name, setName] = useState('');
   const [width, setWidth] = useState(50);
   const [height, setHeight] = useState(50);
+  const [gridTheme, setGridTheme] = useState<'light' | 'dark'>(currentGridTheme);
+
+  useEffect(() => {
+    if (isOpen) setGridTheme(currentGridTheme);
+  }, [isOpen, currentGridTheme]);
 
   if (!isOpen) return null;
 
@@ -32,7 +39,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onConfirm(name.trim() || t.defaultProjectName, Math.max(10, Math.min(300, width)), Math.max(10, Math.min(300, height)));
+    onConfirm(name.trim() || t.defaultProjectName, Math.max(10, Math.min(300, width)), Math.max(10, Math.min(300, height)), gridTheme);
     onClose();
   };
 
@@ -119,6 +126,24 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({
                 onChange={e => setHeight(parseInt(e.target.value, 10) || 10)}
                 className="w-full bg-[#121316] border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-amber-500 font-mono"
               />
+            </div>
+          </div>
+
+          <div>
+            <span className="block text-xs font-medium text-zinc-400 mb-2">{t.gridBackground}</span>
+            <div className="grid grid-cols-2 gap-2">
+              {(['light', 'dark'] as const).map(theme => (
+                <button
+                  key={theme}
+                  type="button"
+                  onClick={() => setGridTheme(theme)}
+                  aria-pressed={gridTheme === theme}
+                  className={`flex items-center gap-2 rounded-lg border p-2.5 text-left text-xs transition ${gridTheme === theme ? 'border-amber-500 bg-amber-500/10 text-amber-200' : 'border-zinc-800 bg-[#121316] text-zinc-300 hover:border-zinc-700'}`}
+                >
+                  <span className={`h-5 w-5 rounded border ${theme === 'light' ? 'border-zinc-400 bg-white' : 'border-zinc-600 bg-[#111d30]'}`} />
+                  <span>{theme === 'light' ? t.gridBgLight : t.gridBgDark}</span>
+                </button>
+              ))}
             </div>
           </div>
 

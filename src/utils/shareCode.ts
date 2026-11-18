@@ -9,6 +9,7 @@ export interface ShareCodeData {
   width: number;
   height: number;
   cells: Record<string, string>;
+  floorTiles?: Record<string, string>;
   palette: Array<{
     id: string;
     name: string;
@@ -35,6 +36,7 @@ export function encodeShareCode(project: BlueprintProject): string {
       width: typeof project.width === 'number' ? project.width : 0,
       height: typeof project.height === 'number' ? project.height : 0,
       cells: project.cells && typeof project.cells === 'object' ? project.cells : {},
+      floorTiles: project.floorTiles && typeof project.floorTiles === 'object' ? project.floorTiles : {},
       palette: Array.isArray(project.palette)
         ? project.palette.map(p => ({
             id: p.id || '',
@@ -100,6 +102,7 @@ export function decodeShareCode(code: string): Partial<BlueprintProject> {
     width: data.width,
     height: data.height,
     cells: data.cells,
+    floorTiles: data.floorTiles ?? {},
     palette: data.palette ?? [],
     annotations: data.annotations ?? [],
     storagePlacements: data.storagePlacements ?? [],

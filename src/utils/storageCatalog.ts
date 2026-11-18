@@ -1,4 +1,4 @@
-export type StorageCategory = 'chest' | 'table' | 'pedestal' | 'pet' | 'bed' | 'chair' | 'terrarium' | 'aquarium' | 'other' | 'station' | 'mechanism' | 'rail' | 'door' | 'gate' | 'wall' | 'floor' | 'bridge' | 'fence' | 'light' | 'nature';
+export type StorageCategory = 'chest' | 'table' | 'pedestal' | 'pet' | 'bed' | 'chair' | 'terrarium' | 'aquarium' | 'other' | 'station' | 'mechanism' | 'rail' | 'door' | 'gate' | 'wall' | 'wall_decoration' | 'floor' | 'bridge' | 'fence' | 'light' | 'nature';
 
 export interface StorageItemDefinition {
   id: string;
@@ -12,7 +12,7 @@ export interface StorageItemDefinition {
   spriteId?: string;
   color?: string;
   estimatedColor?: boolean;
-  layer?: 'bridge' | 'floor' | 'rail' | 'fence' | 'wall' | 'object' | 'light';
+  layer?: 'bridge' | 'floor' | 'rail' | 'fence' | 'wall' | 'wall_decoration' | 'object' | 'light';
   defaultLightRadius?: number;
   estimatedSize?: boolean;
   /** Draw the placed sprite at its original game pixel scale, anchored to its tile footprint. */
@@ -123,7 +123,6 @@ const wikiPlacedSpriteById: Partial<Record<string, string>> = {
   'alien-tech-chest': '/object-sprites/placed-alien-tech-chest.png',
   'amalgam-basin': '/object-sprites/placed-amalgam-basin.png',
   'ancient-chest': '/object-sprites/placed-ancient-chest.png',
-  'ancient-waypoint': '/object-sprites/placed-ancient-waypoint.png',
   'anteverse-portal': '/object-sprites/placed-anteverse-portal.png',
   'aquarium': '/object-sprites/placed-aquarium.png',
   'arrow-sign': '/object-sprites/placed-arrow-sign.png',
@@ -297,7 +296,51 @@ const withWikiPlacedSprite = (item: StorageItemDefinition): StorageItemDefinitio
     : item;
 };
 
-export const STORAGE_ITEMS: StorageItemDefinition[] = seeds.map(([id, nameEn, nameEs, category, width, height, estimatedSize]) => withWikiPlacedSprite({
+const additionalStorageItems: StorageItemDefinition[] = [
+  { id: 'plain-chest', nameEn: 'Plain Chest', nameEs: 'Cofre sencillo', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/plain-chest.png', color: '#9c7046', estimatedSize: true },
+  { id: 'relucite-chest', nameEn: 'Relucite Chest', nameEs: 'Cofre de relucita', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/relucite-chest.png', spriteId: 'lootsprite_reluciteChest' },
+  { id: 'locked-relucite-chest', nameEn: 'Locked Relucite Chest', nameEs: 'Cofre de relucita cerrado', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/locked-relucite-chest.png', spriteId: 'lootsprite_reluciteChestLocked' },
+  { id: 'locked-desert-prince-chest', nameEn: 'Locked Desert Prince Chest', nameEs: 'Cofre cerrado del Príncipe del Desierto', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/locked-desert-prince-chest.png', color: '#aa8d56', estimatedSize: true },
+  { id: 'locked-desert-queen-chest', nameEn: 'Locked Desert Queen Chest', nameEs: 'Cofre cerrado de la Reina del Desierto', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/locked-desert-queen-chest.png', color: '#aa8d56', estimatedSize: true },
+  { id: 'locked-desert-king-chest', nameEn: 'Locked Desert King Chest', nameEs: 'Cofre cerrado del Rey del Desierto', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/locked-desert-king-chest.png', color: '#aa8d56', estimatedSize: true },
+  { id: 'seasonal-calendar', nameEn: 'Seasonal Calendar', nameEs: 'Calendario estacional', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/seasonal-calendar.png', color: '#b39562', estimatedSize: true },
+  { id: 'slime-oil-idol', nameEn: 'Slime Oil Idol', nameEs: 'Ídolo de aceite de slime', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/slime-oil-idol.png', color: '#8f9d67', estimatedSize: true },
+  { id: 'mysterious-idol', nameEn: 'Mysterious Idol', nameEs: 'Ídolo misterioso', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/mysterious-idol.png', estimatedSize: true },
+  { id: 'pile-of-chum-idol', nameEn: 'Pile of Chum Idol', nameEs: 'Ídolo de montón de carnada', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/pile-of-chum-idol.png', color: '#87765c', estimatedSize: true },
+  { id: 'nuclear-battery-idol', nameEn: 'Nuclear Battery Idol', nameEs: 'Ídolo de batería nuclear', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/nuclear-battery-idol.png', color: '#73ad63', estimatedSize: true },
+  { id: 'void-idol', nameEn: 'Void Idol', nameEs: 'Ídolo del Vacío', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/void-idol.png', color: '#78559a', estimatedSize: true },
+  { id: 'magic-mirror', nameEn: 'Magic Mirror', nameEs: 'Espejo mágico', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/magic-mirror.png', estimatedSize: true },
+  { id: 'training-dummy', nameEn: 'Training Dummy', nameEs: 'Muñeco de entrenamiento', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/training-dummy.png', estimatedSize: true },
+  { id: 'banner', nameEn: 'Banner', nameEs: 'Estandarte', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 2, imageUrl: '/storage-items/banner.png', estimatedSize: true },
+  { id: 'tapestry', nameEn: 'Tapestry', nameEs: 'Tapiz', category: 'wall_decoration', layer: 'wall_decoration', width: 2, height: 1, imageUrl: '/storage-items/tapestry.png', estimatedSize: true },
+  { id: 'painting', nameEn: 'Painting', nameEs: 'Cuadro', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/painting.png', estimatedSize: true },
+  { id: 'music-sheet-stand', nameEn: 'Music Sheet Stand', nameEs: 'Atril para partituras', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/music-sheet-stand.png', estimatedSize: true },
+  { id: 'tombstone', nameEn: 'Tombstone', nameEs: 'Lápida', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/tombstone.png', color: '#858388', estimatedSize: true },
+  { id: 'caveling-brute-plushie', nameEn: 'Caveling Brute Plushie', nameEs: 'Peluche de bruto caveling', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/caveling-brute-plushie.png', color: '#9b8064', estimatedSize: true },
+  { id: 'snowman', nameEn: 'Snowman', nameEs: 'Muñeco de nieve', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/snowman.png', color: '#d5e4e8', estimatedSize: true },
+  { id: 'snowball-pyramid', nameEn: 'Snowball Pyramid', nameEs: 'Pirámide de bolas de nieve', category: 'other', width: 2, height: 2, imageUrl: '/storage-items/snowball-pyramid.png', estimatedSize: true },
+  { id: 'guardian-beast-statue', nameEn: 'Guardian Beast Statue', nameEs: 'Estatua de bestia guardiana', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/guardian-beast-statue.png', color: '#c1a35f', estimatedSize: true },
+  { id: 'decorative-skeleton', nameEn: 'Decorative Skeleton', nameEs: 'Esqueleto decorativo', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/decorative-skeleton.png', color: '#c3bdaa', estimatedSize: true },
+  { id: 'folding-screen', nameEn: 'Folding Screen', nameEs: 'Biombo', category: 'other', width: 2, height: 1, imageUrl: '/storage-items/folding-screen.png', color: '#ad7650', estimatedSize: true },
+  { id: 'lucky-cat', nameEn: 'Lucky Cat', nameEs: 'Gato de la suerte', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/lucky-cat.png', estimatedSize: true },
+  { id: 'large-golden-egg', nameEn: 'Large Golden Egg', nameEs: 'Huevo dorado grande', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/large-golden-egg.png', color: '#e2ba43', estimatedSize: true },
+  { id: 'pink-rose-bouquet', nameEn: 'Pink Rose Bouquet', nameEs: 'Ramo de rosas rosas', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/pink-rose-bouquet.png', estimatedSize: true },
+  { id: 'white-rose-bouquet', nameEn: 'White Rose Bouquet', nameEs: 'Ramo de rosas blancas', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/white-rose-bouquet.png', estimatedSize: true },
+  { id: 'golden-rose-bouquet', nameEn: 'Golden Rose Bouquet', nameEs: 'Ramo de rosas doradas', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/golden-rose-bouquet.png', estimatedSize: true },
+  { id: 'winter-wreath-wall-decoration', nameEn: 'Winter Wreath Wall Decoration', nameEs: 'Corona invernal de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/winter-wreath-wall-decoration.png', color: '#5f8e56', estimatedSize: true },
+  { id: 'holiday-sock-wall-decoration', nameEn: 'Holiday Sock Wall Decoration', nameEs: 'Calcetín festivo de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/holiday-sock-wall-decoration.png', color: '#b84d55', estimatedSize: true },
+  { id: 'candy-cane-wall-decoration', nameEn: 'Candy Cane Wall Decoration', nameEs: 'Bastón de caramelo de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/candy-cane-wall-decoration.png', color: '#d05c56', estimatedSize: true },
+  { id: 'winter-candle-wall-decoration', nameEn: 'Winter Candle Wall Decoration', nameEs: 'Vela invernal de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/winter-candle-wall-decoration.png', color: '#d9b879', estimatedSize: true },
+  { id: 'snowflake-wall-decoration', nameEn: 'Snowflake Wall Decoration', nameEs: 'Copo de nieve de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/snowflake-wall-decoration.png', color: '#abd2e4', estimatedSize: true },
+  { id: 'mystic-knot-tassel', nameEn: 'Mystic Knot Tassel', nameEs: 'Borla de nudo místico', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/mystic-knot-tassel.png', spriteId: 'lootsprite_chineseWallKnot', estimatedSize: true },
+  { id: 'wall-hearts', nameEn: 'Wall Hearts', nameEs: 'Corazones de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/wall-hearts.png', spriteId: 'wallhearts_valentine_0', estimatedSize: true },
+  { id: 'heart-painting', nameEn: 'Heart Painting', nameEs: 'Cuadro de corazones', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/heart-painting.png', color: '#cb6978', estimatedSize: true },
+  { id: 'easter-garland', nameEn: 'Easter Garland', nameEs: 'Guirnalda de Pascua', category: 'wall_decoration', layer: 'wall_decoration', width: 2, height: 1, imageUrl: '/storage-items/easter-garland.png', estimatedSize: true },
+  { id: 'haunted-hive-mother-summoning-idol', nameEn: 'Haunted Hive Mother Summoning Idol', nameEs: 'Ídolo de invocación de Madre de la Colmena encantada', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/haunted-hive-mother-summoning-idol.png', color: '#77658d', estimatedSize: true },
+];
+
+export const STORAGE_ITEMS: StorageItemDefinition[] = [
+  ...seeds.map(([id, nameEn, nameEs, category, width, height, estimatedSize]) => withWikiPlacedSprite({
   id,
   nameEn,
   nameEs,
@@ -306,7 +349,9 @@ export const STORAGE_ITEMS: StorageItemDefinition[] = seeds.map(([id, nameEn, na
   height,
   estimatedSize,
   imageUrl: `/storage-items/${id}.png`,
-}));
+  })),
+  ...additionalStorageItems.map(withWikiPlacedSprite),
+];
 
 // Buildable wall segments and bridges. Wall pieces use flat colors in the planner.
 export const STRUCTURE_ITEMS: StorageItemDefinition[] = [
@@ -349,8 +394,13 @@ export const STRUCTURE_ITEMS: StorageItemDefinition[] = [
   { id: 'gleam-wood-floor', nameEn: 'Gleam Wood Floor', nameEs: 'Suelo de madera resplandeciente', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#80f2ff' },
   { id: 'grimy-stone-floor', nameEn: 'Grimy Stone Floor', nameEs: 'Suelo de piedra mugrienta', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#776d65', estimatedColor: true },
   { id: 'eerie-floor', nameEn: 'Eerie Floor', nameEs: 'Suelo siniestro', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#78618b', estimatedColor: true },
-  { id: 'rug', nameEn: 'Rug', nameEs: 'Alfombra', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#7c477b' },
-  { id: 'woven-mat', nameEn: 'Woven Mat', nameEs: 'Tapete tejido', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#3a8b41' },
+  { id: 'rug', nameEn: 'Rug', nameEs: 'Alfombra', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/Rug.png', placementImageUrl: '/floor-sprites/Rug.png', renderAtNativeScale: true },
+  { id: 'woven-mat', nameEn: 'Woven Mat', nameEs: 'Tapete tejido', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/WovenMat.png', placementImageUrl: '/floor-sprites/WovenMat.png', renderAtNativeScale: true },
+  { id: 'heart-shaped-rug', nameEn: 'Heart-shaped Rug', nameEs: 'Alfombra de corazón', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/ValentineRug.png', placementImageUrl: '/floor-sprites/ValentineRug.png', renderAtNativeScale: true },
+  { id: 'temple-decor-rug', nameEn: 'Temple Decor Rug', nameEs: 'Alfombra decorativa del templo', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/SmallTempleRug.png', placementImageUrl: '/floor-sprites/SmallTempleRug.png', renderAtNativeScale: true },
+  { id: 'large-temple-decor-rug', nameEn: 'Large Temple Decor Rug', nameEs: 'Alfombra grande del templo', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/LargeTempleRug.png', placementImageUrl: '/floor-sprites/LargeTempleRug.png', renderAtNativeScale: true },
+  { id: 'larvaskin-rug', nameEn: 'Larvaskin Rug', nameEs: 'Alfombra de piel de larva', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/LarvaskinRug.png', placementImageUrl: '/floor-sprites/LarvaskinRug.png', renderAtNativeScale: true },
+  { id: 'hive-larvaskin-rug', nameEn: 'Hive Larvaskin Rug', nameEs: 'Alfombra de piel de larva de colmena', category: 'other', layer: 'object', width: 1, height: 1, imageUrl: '/floor-sprites/LarvaskinRugRed.png', placementImageUrl: '/floor-sprites/LarvaskinRugRed.png', renderAtNativeScale: true },
   { id: 'loose-flooring', nameEn: 'Loose Flooring', nameEs: 'Piso suelto', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#b48467', estimatedColor: true },
   { id: 'rose-petal-flooring', nameEn: 'Rose Petal Flooring', nameEs: 'Piso de pétalos de rosa', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#d988a9', estimatedColor: true },
   { id: 'daisy-flooring', nameEn: 'Daisy Flooring', nameEs: 'Piso de margaritas', category: 'floor', layer: 'floor', width: 1, height: 1, imageUrl: '', color: '#e8dfbd', estimatedColor: true },
@@ -379,15 +429,35 @@ export const STRUCTURE_ITEMS: StorageItemDefinition[] = [
   { id: 'stone-lantern', nameEn: 'Stone Lantern', nameEs: 'Farol de piedra', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_stoneLantern', color: '#e6bd5a', defaultLightRadius: 5 },
   { id: 'soul-lantern', nameEn: 'Soul Lantern', nameEs: 'Farol de almas', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_soulLantern', color: '#79b6cf', defaultLightRadius: 5 },
   { id: 'chinese-lantern', nameEn: 'Chinese Lantern', nameEs: 'Farol chino', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_chineseLantern', color: '#d97758', defaultLightRadius: 5 },
-  { id: 'chinese-wall-lantern', nameEn: 'Chinese Wall Lantern', nameEs: 'Farol chino de pared', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_chineseWallLantern', color: '#d97758', defaultLightRadius: 5 },
+  { id: 'chinese-wall-lantern', nameEn: 'Chinese Wall Lantern', nameEs: 'Farol chino de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_chineseWallLantern', color: '#d97758', defaultLightRadius: 5 },
   { id: 'crystal-lamp', nameEn: 'Crystal Lamp', nameEs: 'Lámpara de cristal', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/object-sprites/crystal-lamp.png', placementImageUrl: '/object-sprites/crystal-lamp-placed.png', renderAtNativeScale: true, color: '#78c3d9', defaultLightRadius: 6 },
-  { id: 'wood-door', nameEn: 'Wood Door', nameEs: 'Puerta de madera', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#9c7046' },
-  { id: 'stone-door', nameEn: 'Stone Door', nameEs: 'Puerta de piedra', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#727a7a' },
-  { id: 'electrical-door', nameEn: 'Electrical Door', nameEs: 'Puerta eléctrica', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#5793a8' },
-  { id: 'scarlet-door', nameEn: 'Scarlet Door', nameEs: 'Puerta escarlata', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#9b3447' },
-  { id: 'coral-door', nameEn: 'Coral Door', nameEs: 'Puerta de coral', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_coralDoor', color: '#d48b9a' },
-  { id: 'galaxite-door', nameEn: 'Galaxite Door', nameEs: 'Puerta de galaxita', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', spriteId: 'lootsprite_galaxiteDoor', color: '#615bb3' },
-  { id: 'gleam-wood-door', nameEn: 'Gleam Wood Door', nameEs: 'Puerta de madera resplandeciente', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#61b9b1' },
+  { id: 'aether-candelabra', nameEn: 'Aether Candelabra', nameEs: 'Candelabro de éter', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/aether-candelabra.png', color: '#81a9cc', estimatedSize: true },
+  { id: 'alien-crystal-light', nameEn: 'Alien Crystal Light', nameEs: 'Luz de cristal alienígena', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/alien-crystal-light.png', color: '#63ced0', estimatedSize: true },
+  { id: 'caveling-fireplace', nameEn: 'Caveling Fireplace', nameEs: 'Chimenea caveling', category: 'light', layer: 'light', width: 2, height: 1, imageUrl: '/storage-items/caveling-fireplace.png', color: '#d47a3a', estimatedSize: true },
+  { id: 'easter-egg-lamp', nameEn: 'Easter Egg Lamp', nameEs: 'Lámpara de huevo de Pascua', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/easter-egg-lamp.png', color: '#edce79', estimatedSize: true },
+  { id: 'paper-lantern', nameEn: 'Paper Lantern', nameEs: 'Farol de papel', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/paper-lantern.png', spriteId: 'lootsprite_chineseLantern', color: '#cf7855', estimatedSize: true },
+  { id: 'festive-fireplace', nameEn: 'Festive Fireplace', nameEs: 'Chimenea festiva', category: 'light', layer: 'light', width: 2, height: 1, imageUrl: '/storage-items/festive-fireplace.png', color: '#ba7650', estimatedSize: true },
+  { id: 'twisted-roots-torch', nameEn: 'Twisted Roots Torch', nameEs: 'Antorcha de raíces retorcidas', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/twisted-roots-torch.png', color: '#a7774a', estimatedSize: true },
+  { id: 'sun-crystal', nameEn: 'Sun Crystal', nameEs: 'Cristal solar', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/sun-crystal.png', color: '#f2c95c', estimatedSize: true },
+  { id: 'large-sun-crystal', nameEn: 'Large Sun Crystal', nameEs: 'Cristal solar grande', category: 'light', layer: 'light', width: 2, height: 2, imageUrl: '/storage-items/large-sun-crystal.png', placementImageUrl: '/storage-items/large-sun-crystal.png', renderAtNativeScale: true, color: '#f2c95c', estimatedSize: true },
+  { id: 'blue-glowbug', nameEn: 'Blue Glowbug', nameEs: 'Luciérnaga azul', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/blue-glowbug.png', color: '#5ebdea', estimatedSize: true },
+  { id: 'green-glowbug', nameEn: 'Green Glowbug', nameEs: 'Luciérnaga verde', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/green-glowbug.png', color: '#70c963', estimatedSize: true },
+  { id: 'purple-glowbug', nameEn: 'Purple Glowbug', nameEs: 'Luciérnaga morada', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/purple-glowbug.png', color: '#a279d8', estimatedSize: true },
+  { id: 'red-glowbug', nameEn: 'Red Glowbug', nameEs: 'Luciérnaga roja', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/red-glowbug.png', color: '#dc6d66', estimatedSize: true },
+  { id: 'yellow-glowbug', nameEn: 'Yellow Glowbug', nameEs: 'Luciérnaga amarilla', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/yellow-glowbug.png', color: '#dfd052', estimatedSize: true },
+  { id: 'festive-wall-lights', nameEn: 'Festive Wall Lights', nameEs: 'Luces festivas de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 2, height: 1, imageUrl: '/storage-items/festive-wall-lights.png', color: '#e6c463', estimatedSize: true },
+  { id: 'paintable-festive-wall-lights', nameEn: 'Paintable Festive Wall Lights', nameEs: 'Luces festivas de pared pintables', category: 'wall_decoration', layer: 'wall_decoration', width: 2, height: 1, imageUrl: '/storage-items/paintable-festive-wall-lights.png', color: '#e6c463', estimatedSize: true },
+  { id: 'wall-light-bulb', nameEn: 'Wall Light Bulb', nameEs: 'Bombilla de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/wall-light-bulb.png', color: '#d2b85e', estimatedSize: true },
+  { id: 'wall-paper-lantern', nameEn: 'Wall Paper Lantern', nameEs: 'Farol de papel de pared', category: 'wall_decoration', layer: 'wall_decoration', width: 1, height: 1, imageUrl: '/storage-items/wall-paper-lantern.png', spriteId: 'lootsprite_chineseWallLantern', estimatedSize: true },
+  { id: 'wood-door', nameEn: 'Wood Door', nameEs: 'Puerta de madera', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/wood-door.png', color: '#9c7046' },
+  { id: 'stone-door', nameEn: 'Stone Door', nameEs: 'Puerta de piedra', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/stone-door.png', color: '#727a7a' },
+  { id: 'electrical-door', nameEn: 'Electrical Door', nameEs: 'Puerta eléctrica', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/electrical-door.png', color: '#5793a8' },
+  { id: 'scarlet-door', nameEn: 'Scarlet Door', nameEs: 'Puerta escarlata', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/scarlet-door.png', color: '#9b3447' },
+  { id: 'coral-door', nameEn: 'Coral Door', nameEs: 'Puerta de coral', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/coral-door.png', color: '#d48b9a' },
+  { id: 'galaxite-door', nameEn: 'Galaxite Door', nameEs: 'Puerta de galaxita', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/galaxite-door.png', color: '#615bb3' },
+  { id: 'gleam-wood-door', nameEn: 'Gleam Wood Door', nameEs: 'Puerta de madera resplandeciente', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/gleam-wood-door.png', color: '#61b9b1' },
+  { id: 'obsidian-door', nameEn: 'Obsidian Door', nameEs: 'Puerta de obsidiana', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/obsidian-door.png', color: '#35413f' },
+  { id: 'locked-obsidian-door', nameEn: 'Locked Obsidian Door', nameEs: 'Puerta de obsidiana cerrada', category: 'door', layer: 'wall', width: 1, height: 1, imageUrl: '/storage-items/locked-obsidian-door.png', color: '#35413f' },
   { id: 'wood-fence-gate', nameEn: 'Wood Fence Gate', nameEs: 'Portón de cerca de madera', category: 'gate', layer: 'fence', width: 1, height: 1, imageUrl: '', color: '#9c7046' },
   { id: 'stone-fence-gate', nameEn: 'Stone Fence Gate', nameEs: 'Portón de cerca de piedra', category: 'gate', layer: 'fence', width: 1, height: 1, imageUrl: '', spriteId: 'fence_gate_stone_0', color: '#727a7a' },
   { id: 'scarlet-fence-gate', nameEn: 'Scarlet Fence Gate', nameEs: 'Portón de cerca escarlata', category: 'gate', layer: 'fence', width: 1, height: 1, imageUrl: '', spriteId: 'fence_gate_scarlet_0', color: '#9b3447' },
@@ -422,6 +492,8 @@ const functionalItemDefinitions: StorageItemDefinition[] = [
   { id: 'solarite-anvil', nameEn: 'Solarite Anvil', nameEs: 'Yunque de solarita', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/solarite-anvil.png', color: '#d5a349' },
   { id: 'smelter-kiln', nameEn: 'Smelter Kiln', nameEs: 'Horno de fundición', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/smelter-kiln.png', color: '#bd633e' },
   { id: 'cooking-pot', nameEn: 'Cooking Pot', nameEs: 'Olla de cocina', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/cooking-pot.png', color: '#77848b' },
+  { id: 'critter-catcher', nameEn: 'Critter Catcher', nameEs: 'Capturador de criaturas', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/critter-catcher.png', estimatedSize: true },
+  { id: 'fishing-net', nameEn: 'Fishing Net', nameEs: 'Red de pesca', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/fishing-net.png', estimatedSize: true },
   { id: 'carpenters-table', nameEn: "Carpenter's Table", nameEs: 'Mesa de carpintería', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/carpenters-table.png', color: '#a47a4f' },
   { id: 'electronics-table', nameEn: 'Electronics Table', nameEs: 'Mesa de electrónica', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/electronics-table.png', color: '#687d8e' },
   { id: 'painter-table', nameEn: "Painter's Table", nameEs: 'Mesa del pintor', category: 'station', width: 1, height: 1, imageUrl: '/storage-items/painter-table.png', color: '#b98575' },
@@ -487,7 +559,6 @@ const functionalItemDefinitions: StorageItemDefinition[] = [
   { id: 'arrow-sign', nameEn: 'Arrow Sign', nameEs: 'Letrero con flecha', category: 'other', width: 1, height: 1, imageUrl: '/storage-items/arrow-sign.png', color: '#a47a4f' },
   { id: 'anteverse-portal', nameEn: 'Anteverse Portal', nameEs: 'Portal anteverso', category: 'other', layer: 'light', width: 3, height: 1, imageUrl: '/object-sprites/anteverse-portal.png', color: '#ce61d5', defaultLightRadius: 4 },
   { id: 'portal', nameEn: 'Portal', nameEs: 'Portal', category: 'other', layer: 'light', width: 3, height: 1, imageUrl: '/object-sprites/portal.png', color: '#54c9e3', defaultLightRadius: 4 },
-  { id: 'ancient-waypoint', nameEn: 'Ancient Waypoint', nameEs: 'Punto de teletransporte antiguo', category: 'other', layer: 'light', width: 3, height: 3, imageUrl: '/object-sprites/ancient-waypoint.png', color: '#69c8dc', defaultLightRadius: 5 },
 
   // Decorative pillars occupy one tile; their native placed art is much taller.
   { id: 'wooden-pillar', nameEn: 'Wooden Pillar', nameEs: 'Pilar de madera', category: 'other', width: 1, height: 1, imageUrl: '/object-sprites/pillar-wooden.png', renderAtNativeScale: true },
@@ -590,19 +661,64 @@ export const STORAGE_ITEM_BY_ID = new Map([...STORAGE_ITEMS, ...FUNCTIONAL_ITEMS
 export function migrateStructurePlacementsToColors(
   cells: Record<string, string>,
   placements: import('../types/blueprint').StorageItemPlacement[],
-): { cells: Record<string, string>; storagePlacements: import('../types/blueprint').StorageItemPlacement[] } {
+  existingFloorTiles: Record<string, string> = {},
+): { cells: Record<string, string>; floorTiles: Record<string, string>; storagePlacements: import('../types/blueprint').StorageItemPlacement[] } {
   const migratedCells = { ...cells };
+  const migratedFloorTiles = { ...existingFloorTiles };
   const remainingPlacements: import('../types/blueprint').StorageItemPlacement[] = [];
+
+  // Rugs are decorative objects placed over a base floor, not base-floor tiles.
+  for (const [key, itemId] of Object.entries(migratedFloorTiles)) {
+    const item = STORAGE_ITEM_BY_ID.get(itemId);
+    if (item?.layer !== 'object') continue;
+    const [x, y] = key.split(',').map(Number);
+    remainingPlacements.push({ id: `migrated_${itemId}_${x}_${y}`, itemId, x, y, width: item.width, height: item.height, layer: 'object' });
+    delete migratedFloorTiles[key];
+  }
+
+  // Convert the former generic door marker into a wood door placement so existing plans keep their layout.
+  for (const [key, colorId] of Object.entries(migratedCells)) {
+    const legacyDoorColorId = colorId.startsWith('color-') ? colorId.slice(6) : colorId;
+    if (!['door-horizontal', 'door-vertical', 'doorway', 'door'].includes(legacyDoorColorId)) continue;
+    const [x, y] = key.split(',').map(Number);
+    const rotation = legacyDoorColorId === 'door-vertical' ? 90 : 0;
+    remainingPlacements.push({ id: `migrated_wood-door_${x}_${y}`, itemId: 'wood-door', x, y, width: 1, height: 1, rotation, layer: 'wall' });
+    delete migratedCells[key];
+  }
+
+  // Earlier versions represented floors and terrain ground as colored cells.
+  for (const [key, colorId] of Object.entries(migratedCells)) {
+    const legacyId = colorId.startsWith('color-') ? colorId.slice(6) : colorId;
+    const floorId = legacyId.startsWith('block-') && legacyId.endsWith('-ground')
+      ? legacyId
+      : ['wood-floor', 'stone-floor', 'paintable-floor', 'scarlet-floor', 'lit-floor', 'coral-floor', 'galaxite-floor', 'glass-floor', 'woven-straw-floor', 'gleam-wood-floor', 'grimy-stone-floor', 'eerie-floor', 'rug', 'woven-mat', 'heart-shaped-rug', 'temple-decor-rug', 'large-temple-decor-rug', 'larvaskin-rug', 'hive-larvaskin-rug', 'loose-flooring', 'rose-petal-flooring', 'daisy-flooring'].includes(legacyId)
+        ? legacyId
+        : null;
+    if (floorId) {
+      const floorItem = STORAGE_ITEM_BY_ID.get(floorId);
+      if (floorItem?.layer === 'object') {
+        const [x, y] = key.split(',').map(Number);
+        remainingPlacements.push({ id: `migrated_${floorId}_${x}_${y}`, itemId: floorId, x, y, width: floorItem.width, height: floorItem.height, layer: 'object' });
+      } else migratedFloorTiles[key] = floorId;
+      delete migratedCells[key];
+    }
+  }
 
   for (const placement of placements) {
     const item = STORAGE_ITEM_BY_ID.get(placement.itemId);
-    if (!item || !['wall', 'floor', 'bridge', 'fence', 'rail', 'door', 'gate'].includes(item.category)) {
-      remainingPlacements.push(placement);
+    if (item?.category === 'floor') {
+      for (let y = placement.y; y < placement.y + placement.height; y++) {
+        for (let x = placement.x; x < placement.x + placement.width; x++) migratedFloorTiles[`${x},${y}`] = placement.itemId;
+      }
+      continue;
+    }
+    if (!item || item.category === 'door' || !['wall', 'bridge', 'fence', 'rail', 'gate'].includes(item.category)) {
+      remainingPlacements.push(item?.layer === 'object' ? { ...placement, layer: 'object' } : placement);
       continue;
     }
 
-    const colorId = item.category === 'door' || item.category === 'gate'
-      ? placement.rotation === 90 ? 'door-vertical' : 'door-horizontal'
+    const colorId = item.category === 'gate'
+      ? (placement.rotation === 90 || placement.rotation === 270) ? 'door-vertical' : 'door-horizontal'
       : `color-${item.id}`;
     for (let y = placement.y; y < placement.y + placement.height; y++) {
       for (let x = placement.x; x < placement.x + placement.width; x++) {
@@ -611,5 +727,5 @@ export function migrateStructurePlacementsToColors(
     }
   }
 
-  return { cells: migratedCells, storagePlacements: remainingPlacements };
+  return { cells: migratedCells, floorTiles: migratedFloorTiles, storagePlacements: remainingPlacements };
 }
