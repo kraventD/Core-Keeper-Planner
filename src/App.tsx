@@ -128,6 +128,7 @@ export default function App() {
   const [includeWaypoint, setIncludeWaypoint] = useState<boolean>(true);
   const [mirrorMode, setMirrorMode] = useState<MirrorMode>('none');
   const [brushSize, setBrushSize] = useState<number>(1);
+  const [eraseObjectsWithEraser, setEraseObjectsWithEraser] = useState<boolean>(false);
   const [activeColor, setActiveColor] = useState<PaletteColor>(() =>
     project.palette.find(color => color.id === DEFAULT_ACTIVE_COLOR.id) ?? DEFAULT_ACTIVE_COLOR,
   );
@@ -159,9 +160,10 @@ export default function App() {
 
   // 5. View state
   const [showGrid, setShowGrid] = useState<boolean>(true);
-  const [showMajorGrid, setShowMajorGrid] = useState<boolean>(true);
+  const [showMajorGrid, setShowMajorGrid] = useState<boolean>(false);
+  const [showCenterGuide, setShowCenterGuide] = useState<boolean>(true);
   const [showCoordinates, setShowCoordinates] = useState<boolean>(true);
-  const [showLightRanges, setShowLightRanges] = useState<boolean>(true);
+  const [showLightRanges, setShowLightRanges] = useState<boolean>(false);
   const [gridLineWidth, setGridLineWidth] = useState<number>(1.5);
   const [highContrastGrid, setHighContrastGrid] = useState<boolean>(true);
   const [gridTheme, setGridTheme] = useState<'light' | 'dark'>('dark');
@@ -277,6 +279,7 @@ export default function App() {
         saveAutosave(updated);
         return updated;
       });
+      setSelectedStoragePlacementId(current => current && !safePlacements.some(item => item.id === current) ? null : current);
       pushHistory(safeCells, description, project.width, project.height, safePlacements, safeFloorTiles);
     },
     [plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, project.floorTiles, pushHistory]
@@ -897,18 +900,26 @@ export default function App() {
     pushHistory(project.cells, `Colocar ${language === 'es' ? item.nameEs : item.nameEn} (${item.width}×${item.height})`, project.width, project.height, nextPlacements);
   }, [language, plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
 
-  const handleRemoveStorageItem = useCallback((placementId: string) => {
-    const target = (project.storagePlacements ?? []).find(item => item.id === placementId);
-    if (!target || !isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(target, STORAGE_ITEM_BY_ID.get(target.itemId)))) return;
-    const nextPlacements = (project.storagePlacements ?? []).filter(item => item.id !== placementId);
+  const handleRemoveStorageItems = useCallback((placementIds: string[]) => {
+    const requestedIds = new Set(placementIds);
+    const placements = project.storagePlacements ?? [];
+    const removableIds = new Set(placements
+      .filter(item => requestedIds.has(item.id) && isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))))
+      .map(item => item.id));
+    if (removableIds.size === 0) return;
+    const nextPlacements = placements.filter(item => !removableIds.has(item.id));
     setProject(prev => {
       const updated = { ...prev, storagePlacements: nextPlacements, updatedAt: new Date().toISOString() };
       saveAutosave(updated);
       return updated;
     });
-    pushHistory(project.cells, 'Eliminar objeto de almacenamiento', project.width, project.height, nextPlacements);
-    setSelectedStoragePlacementId(current => current === placementId ? null : current);
+    pushHistory(project.cells, removableIds.size === 1 ? 'Eliminar objeto de almacenamiento' : `Eliminar ${removableIds.size} objetos`, project.width, project.height, nextPlacements);
+    setSelectedStoragePlacementId(current => current && removableIds.has(current) ? null : current);
   }, [plannerLayerStates, project.cells, project.storagePlacements, project.width, project.height, pushHistory]);
+
+  const handleRemoveStorageItem = useCallback((placementId: string) => {
+    handleRemoveStorageItems([placementId]);
+  }, [handleRemoveStorageItems]);
 
   const handleMoveStorageItem = useCallback((placementId: string, x: number, y: number) => {
     const placements = project.storagePlacements ?? [];
@@ -1134,6 +1145,8 @@ export default function App() {
           onChangeMirrorMode={setMirrorMode}
           brushSize={brushSize}
           onChangeBrushSize={setBrushSize}
+          eraseObjectsWithEraser={eraseObjectsWithEraser}
+          onChangeEraseObjectsWithEraser={setEraseObjectsWithEraser}
           activeColor={activeColor}
           doorOrientation={doorOrientation}
           onChangeDoorOrientation={setDoorOrientation}
@@ -1187,9 +1200,11 @@ export default function App() {
             includeWaypoint={includeWaypoint}
             mirrorMode={mirrorMode}
             brushSize={brushSize}
+            eraseObjectsWithEraser={eraseObjectsWithEraser}
             showGrid={showGrid}
             onToggleGrid={() => setShowGrid(v => !v)}
             showMajorGrid={showMajorGrid}
+            showCenterGuide={showCenterGuide}
             showCoordinates={showCoordinates}
             showLightRanges={showLightRanges}
             gridLineWidth={gridLineWidth}
@@ -1206,7 +1221,6 @@ export default function App() {
             selectedStorageItem={selectedStorageItem}
             gameSprites={gameSprites}
             onPlaceStorageItem={handlePlaceStorageItem}
-            onRemoveStorageItem={handleRemoveStorageItem}
             selectedStoragePlacementId={selectedStoragePlacementId}
             onSelectStoragePlacement={setSelectedStoragePlacementId}
             onRotateStoragePlacement={rotation => selectedStoragePlacementId && handleRotateStorageItem(selectedStoragePlacementId, rotation)}
@@ -1235,6 +1249,8 @@ export default function App() {
           onToggleLightRanges={() => setShowLightRanges(v => !v)}
           showMajorGrid={showMajorGrid}
           onToggleMajorGrid={() => setShowMajorGrid(v => !v)}
+          showCenterGuide={showCenterGuide}
+          onToggleCenterGuide={() => setShowCenterGuide(v => !v)}
           gridLineWidth={gridLineWidth}
           onChangeGridLineWidth={setGridLineWidth}
           highContrastGrid={highContrastGrid}

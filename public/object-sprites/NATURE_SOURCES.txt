@@ -100,3 +100,6 @@ Sunrice: https://core-keeper.fandom.com/wiki/File:Sunrice_placed_stage_4.gif
 Golden Sunrice: https://core-keeper.fandom.com/wiki/File:Golden_Sunrice_placed_stage_4.gif
 Grumpkin: https://core-keeper.fandom.com/wiki/File:Grumpkin_placed_stage_4.gif
 Golden Grumpkin: https://core-keeper.fandom.com/wiki/File:Golden_Grumpkin_placed_stage_4.gif
+
+Decorative Pot crop variants are local composites: the matching mature crop sprite above is placed over the Decorative Pot placed sprite. The catalog placement footprint remains 1×1; each composite retains the full native pixel height of the crop plus the pot.
+Decorative Pot placed sprite used for composites: https://core-keeper.fandom.com/wiki/File:Decorative_Pot_placed.png

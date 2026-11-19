@@ -141,7 +141,24 @@ function drawPlacedItem(ctx: CanvasRenderingContext2D, entry: ResolvedPlacement,
   ctx.save();
   ctx.imageSmoothingEnabled = false;
   const nativeScale = item.renderAtNativeScale && (item.placementImageUrl || !sprite);
-  if (nativeScale) {
+  const hasCustomVisualBounds = item.visualWidthTiles !== undefined || item.visualHeightTiles !== undefined;
+  if (hasCustomVisualBounds && !nativeScale) {
+    const visualWidth = (item.visualWidthTiles ?? placement.width) * cellSize;
+    const visualHeight = (item.visualHeightTiles ?? placement.height) * cellSize;
+    const visualX = (width - visualWidth) / 2;
+    const visualY = height - visualHeight;
+    const source = getSpriteSource(image, sprite);
+    const rotation = placement.rotation ?? 0;
+    if (rotation !== 0) {
+      ctx.translate(x + width / 2, y + height / 2);
+      ctx.rotate(rotation * Math.PI / 180);
+      ctx.drawImage(image, source.x, source.y, source.width, source.height,
+        visualX - width / 2, visualY - height / 2, visualWidth, visualHeight);
+    } else {
+      ctx.drawImage(image, source.x, source.y, source.width, source.height,
+        x + visualX, y + visualY, visualWidth, visualHeight);
+    }
+  } else if (nativeScale) {
     drawNativeSprite(ctx, image, getImageBounds(image), x, y, width, height, cellSize, placement.rotation ?? 0);
   } else {
     const source = getSpriteSource(image, sprite);

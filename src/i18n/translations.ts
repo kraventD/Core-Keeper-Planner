@@ -61,6 +61,7 @@ export interface Translations {
   };
   toolOptions: {
     brushSize: string;
+    eraseObjects: string;
     rectMode: string;
     circleMode: string;
     circleOrigin: string;
@@ -97,6 +98,7 @@ export interface Translations {
   zoom: string;
   viewOptions: string;
   showGrid: string;
+  showCenterGuide: string;
   showMajorGrid: string;
   showCoordinates: string;
   gridBackground: string;
@@ -376,6 +378,7 @@ export const translations: Record<Language, Translations> = {
     },
     toolOptions: {
       brushSize: 'Grosor',
+      eraseObjects: 'Borrar objetos y suelos',
       rectMode: 'Modo rectángulo',
       circleMode: 'Modo círculo',
       circleOrigin: 'Trazado',
@@ -411,6 +414,7 @@ export const translations: Record<Language, Translations> = {
     zoom: 'Zoom',
     viewOptions: 'Opciones de vista',
     showGrid: 'Mostrar cuadrícula',
+    showCenterGuide: 'Guía del centro',
     showMajorGrid: 'Guía de chunks 16x16',
     showCoordinates: 'Reglas y coordenadas',
     gridBackground: 'Fondo del plano',
@@ -683,6 +687,7 @@ export const translations: Record<Language, Translations> = {
     },
     toolOptions: {
       brushSize: 'Size',
+      eraseObjects: 'Erase objects and floors',
       rectMode: 'Rectangle Mode',
       circleMode: 'Circle Mode',
       circleOrigin: 'Drawing Origin',
@@ -718,6 +723,7 @@ export const translations: Record<Language, Translations> = {
     zoom: 'Zoom',
     viewOptions: 'View Options',
     showGrid: 'Show grid lines',
+    showCenterGuide: 'Center guide',
     showMajorGrid: 'Chunk guides 16x16',
     showCoordinates: 'Rulers & coordinates',
     gridBackground: 'Blueprint background',

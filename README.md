@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="assets/readme/banner-en.png" alt="Core Keeper Planner — base design and blueprint editor, version 1.0" width="100%">
+  <img src="assets/readme/banner-en.png" alt="Core Keeper Planner — base design and blueprint editor, version 1.1" width="100%">
 
   **Build your underground home before you place the first block.**
 
-  <img src="assets/readme/stats-en.png" alt="Version 1.0 · 466 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
+  <img src="assets/readme/stats-en.svg" alt="Version 1.1.0 · 488 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
 
   **🇬🇧 English** · [🇪🇸 Español](README.es.md)
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Latest hotfix — v1.0.0a:** floor tiles now render above colored blocks in the editor and PNG exports, so a floor remains visible when placed over grass or another block. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.zip).
+> **Latest release — v1.1.0:** adds 22 potted crop variants, a center guide enabled by default, optional object and floor erasing, and correct tall-sprite PNG exports. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.zip).
 
 Release numbering follows the project policy in [VERSIONING.md](VERSIONING.md).
 
@@ -35,7 +35,7 @@ Combine a flexible editor, an extensive catalog and shareable blueprints to turn
   <tr>
     <td width="50%" valign="top">
       <img src="assets/readme/icon-catalog.png" width="36" alt=""><br>
-      <strong>466 catalog entries</strong><br>
+      <strong>488 catalog entries</strong><br>
       Browse building materials, floors, furniture, stations and nature. Search in either language and save favorites.
     </td>
     <td width="50%" valign="top">
@@ -53,7 +53,7 @@ Combine a flexible editor, an extensive catalog and shareable blueprints to turn
     <td valign="top">
       <img src="assets/readme/icon-map.png" width="36" alt=""><br>
       <strong>Customizable canvas</strong><br>
-      Build on grids from 10 × 10 to 300 × 300 tiles, with zoom controls and optional 16 × 16 chunk guides.
+      Build on grids from 10 × 10 to 300 × 300 tiles, with a center guide enabled by default and optional chunk and light guides.
     </td>
   </tr>
   <tr>
@@ -76,7 +76,7 @@ Combine a flexible editor, an extensive catalog and shareable blueprints to turn
   <tr>
     <td valign="top" width="68%">
       <strong>Everything you need to organize a base.</strong>
-      <p>The v1.0 catalog brings together <strong>466 unique selectable entries</strong>, organized into four sections.</p>
+      <p>The v1.1 catalog brings together <strong>488 unique selectable entries</strong>, organized into four sections.</p>
       <ul>
         <li>Search by English or Spanish name.</li>
         <li>Save favorites locally in your browser.</li>
@@ -95,10 +95,10 @@ Combine a flexible editor, an extensive catalog and shareable blueprints to turn
 | 🧱 Blocks & colors | **65** | 27 walls, 8 bridges, 6 fences, 1 rail and 23 color-represented blocks |
 | 🟫 Floors & rugs | **62** | Crafted flooring, tiles, carpets, mats and in-game terrain |
 | 🛠️ Furniture & stations | **260** | Chests, workbenches, pedestals, beds, chairs, mechanisms, doors, lighting, stations and wall decorations |
-| 🌱 Plants & trees | **79** | 22 crops, 25 trees and 32 other plants or nature elements |
-| **Total** | **466** | Unique selectable catalog entries |
+| 🌱 Plants & trees | **101** | 44 crop entries including potted variants, 25 trees and 32 other plants or nature elements |
+| **Total** | **488** | Unique selectable catalog entries |
 
-> **Catalog status:** the count refers to selectable entries, not individual sprites or visual stages. Version 1.0 does not yet include every item in the game.
+> **Catalog status:** the count refers to selectable entries, not individual sprites or visual stages. Version 1.1 does not yet include every item in the game.
 
 Wall and block colors follow values published on the Core Keeper Wiki when available. Missing values are represented using an estimated dominant sprite color and are marked as estimated.
 
@@ -108,7 +108,7 @@ Wall and block colors follow values published on the Core Keeper Wiki when avail
 
 | Tool | What it does |
 | :--- | :--- |
-| Pencil / eraser | Paint or erase with a brush from 1 × 1 to 20 × 20 tiles |
+| Pencil / eraser | Paint with a brush from 1 × 1 to 20 × 20 tiles. An eraser option can also remove objects and floors. |
 | Line | Draw a line between two points |
 | Rectangle | Draw an outline or a filled rectangle |
 | Circle | Draw an outline or a filled circle, starting from the center or a corner |
@@ -143,6 +143,7 @@ Every tile supports four independent construction layers:
 Show, hide, lock or unlock each layer independently. For example, place a rug over a floor without removing the floor beneath it.
 
 - Objects use their actual tile footprint, which can extend beyond a single tile; sprites may extend visually beyond that footprint.
+- Tall object sprites preserve their visual height in both the editor and PNG exports.
 - Move, rotate in four directions, copy, cut, paste or delete selected objects. Each object retains its own orientation.
 - Select an area to copy, cut, paste, fill, erase, move, create a mirrored duplicate, flip horizontally or vertically, or center it on either or both axes.
 - Placement warnings flag objects extending outside the plan, overlaps on the same layer, missing backing walls and hidden or locked target layers.
@@ -160,7 +161,7 @@ Show, hide, lock or unlock each layer independently. For example, place a rug ov
 - Zoom in and out, reset zoom, center the plan or fit it to the screen.
 - Pan with the hand tool, mouse wheel or middle mouse button; use Space + drag for quick navigation.
 - Show or hide grid lines, adjust their contrast and select one of three line thicknesses.
-- Highlight chunk boundaries every **16 × 16 tiles**.
+- Keep the blueprint center guide visible by default for symmetric layouts; chunk and approximate light coverage guides start hidden and can be enabled in view options.
 - The canvas automatically recenters the plan when the window is resized.
 
 <table>
@@ -242,7 +243,7 @@ Core Keeper Planner is an independent project that I develop and maintain. It is
   <br>
   <strong>Plan it. Build it. Make it yours.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSION 1.0</sub>
+  <sub>CORE KEEPER PLANNER · VERSION 1.1.0</sub>
   <br>
   <a href="README.es.md">Leer en español</a>
 </div>

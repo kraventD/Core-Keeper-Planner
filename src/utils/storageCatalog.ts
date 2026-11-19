@@ -17,6 +17,9 @@ export interface StorageItemDefinition {
   estimatedSize?: boolean;
   /** Draw the placed sprite at its original game pixel scale, anchored to its tile footprint. */
   renderAtNativeScale?: boolean;
+  /** Visual sprite size in tiles, independent of the occupied placement footprint. */
+  visualWidthTiles?: number;
+  visualHeightTiles?: number;
 }
 
 type ItemSeed = [id: string, en: string, es: string, category: StorageCategory, width: number, height: number, estimated?: boolean];
@@ -433,10 +436,10 @@ export const STRUCTURE_ITEMS: StorageItemDefinition[] = [
   { id: 'crystal-lamp', nameEn: 'Crystal Lamp', nameEs: 'Lámpara de cristal', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/object-sprites/crystal-lamp.png', placementImageUrl: '/object-sprites/crystal-lamp-placed.png', renderAtNativeScale: true, color: '#78c3d9', defaultLightRadius: 6 },
   { id: 'aether-candelabra', nameEn: 'Aether Candelabra', nameEs: 'Candelabro de éter', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/aether-candelabra.png', color: '#81a9cc', estimatedSize: true },
   { id: 'alien-crystal-light', nameEn: 'Alien Crystal Light', nameEs: 'Luz de cristal alienígena', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/alien-crystal-light.png', color: '#63ced0', estimatedSize: true },
-  { id: 'caveling-fireplace', nameEn: 'Caveling Fireplace', nameEs: 'Chimenea caveling', category: 'light', layer: 'light', width: 2, height: 1, imageUrl: '/storage-items/caveling-fireplace.png', color: '#d47a3a', estimatedSize: true },
+  { id: 'caveling-fireplace', nameEn: 'Caveling Fireplace', nameEs: 'Chimenea caveling', category: 'light', layer: 'light', width: 2, height: 1, visualWidthTiles: 2, visualHeightTiles: 2, imageUrl: '/storage-items/caveling-fireplace.png', color: '#d47a3a' },
   { id: 'easter-egg-lamp', nameEn: 'Easter Egg Lamp', nameEs: 'Lámpara de huevo de Pascua', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/easter-egg-lamp.png', color: '#edce79', estimatedSize: true },
   { id: 'paper-lantern', nameEn: 'Paper Lantern', nameEs: 'Farol de papel', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/paper-lantern.png', spriteId: 'lootsprite_chineseLantern', color: '#cf7855', estimatedSize: true },
-  { id: 'festive-fireplace', nameEn: 'Festive Fireplace', nameEs: 'Chimenea festiva', category: 'light', layer: 'light', width: 2, height: 1, imageUrl: '/storage-items/festive-fireplace.png', color: '#ba7650', estimatedSize: true },
+  { id: 'festive-fireplace', nameEn: 'Festive Fireplace', nameEs: 'Chimenea festiva', category: 'light', layer: 'light', width: 2, height: 1, visualWidthTiles: 2, visualHeightTiles: 2, imageUrl: '/storage-items/festive-fireplace.png', color: '#ba7650' },
   { id: 'twisted-roots-torch', nameEn: 'Twisted Roots Torch', nameEs: 'Antorcha de raíces retorcidas', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/twisted-roots-torch.png', color: '#a7774a', estimatedSize: true },
   { id: 'sun-crystal', nameEn: 'Sun Crystal', nameEs: 'Cristal solar', category: 'light', layer: 'light', width: 1, height: 1, imageUrl: '/storage-items/sun-crystal.png', color: '#f2c95c', estimatedSize: true },
   { id: 'large-sun-crystal', nameEn: 'Large Sun Crystal', nameEs: 'Cristal solar grande', category: 'light', layer: 'light', width: 2, height: 2, imageUrl: '/storage-items/large-sun-crystal.png', placementImageUrl: '/storage-items/large-sun-crystal.png', renderAtNativeScale: true, color: '#f2c95c', estimatedSize: true },
@@ -652,6 +655,43 @@ const functionalItemDefinitions: StorageItemDefinition[] = [
   { id: 'potted-magma-tulip', nameEn: 'Potted Magma Tulip', nameEs: 'Tulipán de magma en maceta', category: 'nature', width: 1, height: 1, imageUrl: '/object-sprites/nature-potted-magma-tulip.png', renderAtNativeScale: true },
   { id: 'potted-lucent-oak', nameEn: 'Potted Lucent Oak', nameEs: 'Roble lúcido en maceta', category: 'nature', width: 1, height: 1, imageUrl: '/object-sprites/nature-potted-lucent-oak-icon.png', placementImageUrl: '/object-sprites/nature-potted-lucent-oak.png', renderAtNativeScale: true },
   { id: 'potted-alien-flower', nameEn: 'Potted Alien Flower', nameEs: 'Flor alienígena en maceta', category: 'nature', width: 1, height: 1, imageUrl: '/object-sprites/nature-potted-alien-flower-icon.png', placementImageUrl: '/object-sprites/nature-potted-alien-flower.png', renderAtNativeScale: true },
+  ...([
+    ['bomb-pepper', 'Bomb Pepper', 'Pimiento bomba'],
+    ['golden-bomb-pepper', 'Golden Bomb Pepper', 'Pimiento bomba dorado'],
+    ['glow-tulip', 'Glow Tulip', 'Tulipán brillante'],
+    ['golden-glow-tulip', 'Golden Glow Tulip', 'Tulipán brillante dorado'],
+    ['heart-berry', 'Heart Berry', 'Baya corazón'],
+    ['golden-heart-berry', 'Golden Heart Berry', 'Baya corazón dorada'],
+    ['carrock', 'Carrock', 'Carrock'],
+    ['golden-carrock', 'Golden Carrock', 'Carrock dorado'],
+    ['bloat-oat', 'Bloat Oat', 'Avena hinchada'],
+    ['golden-bloat-oat', 'Golden Bloat Oat', 'Avena hinchada dorada'],
+    ['puffungi', 'Puffungi', 'Puffungi'],
+    ['golden-puffungi', 'Golden Puffungi', 'Puffungi dorado'],
+    ['pewpaya', 'Pewpaya', 'Pewpaya'],
+    ['golden-pewpaya', 'Golden Pewpaya', 'Pewpaya dorada'],
+    ['pinegrapple', 'Pinegrapple', 'Piñanábulo'],
+    ['golden-pinegrapple', 'Golden Pinegrapple', 'Piñanábulo dorado'],
+    ['lunacorn', 'Lunacorn', 'Lunacorn'],
+    ['golden-lunacorn', 'Golden Lunacorn', 'Lunacorn dorado'],
+    ['sunrice', 'Sunrice', 'Sunrice'],
+    ['golden-sunrice', 'Golden Sunrice', 'Sunrice dorado'],
+    ['grumpkin', 'Grumpkin', 'Grumpkin'],
+    ['golden-grumpkin', 'Golden Grumpkin', 'Grumpkin dorado'],
+  ] as const).map(([cropId, cropNameEn, cropNameEs]) => {
+    const imageUrl = `/object-sprites/potted-crop-${cropId}.png`;
+    return {
+      id: `potted-crop-${cropId}`,
+      nameEn: `Decorative Pot: ${cropNameEn}`,
+      nameEs: `Maceta decorativa: ${cropNameEs}`,
+      category: 'nature' as const,
+      width: 1,
+      height: 1,
+      imageUrl,
+      placementImageUrl: imageUrl,
+      renderAtNativeScale: true,
+    };
+  }),
 ];
 
 export const FUNCTIONAL_ITEMS = functionalItemDefinitions.map(withWikiPlacedSprite);

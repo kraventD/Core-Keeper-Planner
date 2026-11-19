@@ -36,6 +36,8 @@ interface PropertiesPanelProps {
   onToggleLightRanges: () => void;
   showMajorGrid: boolean;
   onToggleMajorGrid: () => void;
+  showCenterGuide: boolean;
+  onToggleCenterGuide: () => void;
   gridLineWidth: number;
   onChangeGridLineWidth: (width: number) => void;
   highContrastGrid: boolean;
@@ -80,6 +82,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onToggleLightRanges,
   showMajorGrid,
   onToggleMajorGrid,
+  showCenterGuide,
+  onToggleCenterGuide,
   gridLineWidth,
   onChangeGridLineWidth,
   highContrastGrid,
@@ -180,6 +184,16 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               type="checkbox"
               checked={showGrid}
               onChange={onToggleGrid}
+              className="rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-0"
+            />
+          </label>
+
+          <label className="flex items-center justify-between cursor-pointer py-0.5">
+            <span className="text-zinc-300 text-[11px]">{t.showCenterGuide}</span>
+            <input
+              type="checkbox"
+              checked={showCenterGuide}
+              onChange={onToggleCenterGuide}
               className="rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-0"
             />
           </label>

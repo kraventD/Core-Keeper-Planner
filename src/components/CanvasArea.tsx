@@ -151,9 +151,11 @@ interface CanvasAreaProps {
   includeWaypoint?: boolean;
   mirrorMode?: MirrorMode;
   brushSize: number;
+  eraseObjectsWithEraser?: boolean;
   showGrid: boolean;
   onToggleGrid: () => void;
   showMajorGrid: boolean;
+  showCenterGuide: boolean;
   showCoordinates: boolean;
   showLightRanges?: boolean;
   gridLineWidth?: number;
@@ -170,7 +172,6 @@ interface CanvasAreaProps {
   selectedStorageItem?: StorageItemDefinition | null;
   gameSprites?: Record<string, GameSpriteEntry>;
   onPlaceStorageItem?: (x: number, y: number, item: StorageItemDefinition) => void;
-  onRemoveStorageItem?: (placementId: string) => void;
   selectedStoragePlacementId?: string | null;
   onSelectStoragePlacement?: (id: string | null) => void;
   onRotateStoragePlacement?: (rotation: StorageItemRotation) => void;
@@ -197,11 +198,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   includeWaypoint = true,
   mirrorMode = 'none',
   brushSize,
+  eraseObjectsWithEraser = false,
   showGrid,
   onToggleGrid,
   showMajorGrid,
+  showCenterGuide,
   showCoordinates,
-  showLightRanges = true,
+  showLightRanges = false,
   gridLineWidth = 1.5,
   highContrastGrid = true,
   gridTheme = 'light',
@@ -216,7 +219,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   selectedStorageItem = null,
   gameSprites = {},
   onPlaceStorageItem,
-  onRemoveStorageItem,
   selectedStoragePlacementId = null,
   onSelectStoragePlacement,
   onRotateStoragePlacement,
@@ -250,6 +252,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [dragCurrentCell, setDragCurrentCell] = useState<CellCoord | null>(null);
   const storageDragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
   const [storageDragPreview, setStorageDragPreview] = useState<CellCoord | null>(null);
+  const erasedStoragePlacementIdsRef = useRef<Set<string>>(new Set());
 
   // Annotation drag state
   const [draggingAnnotationId, setDraggingAnnotationId] = useState<string | null>(null);
@@ -263,6 +266,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   // Transient stroke buffer for continuous pencil/eraser drawing
   const strokeBufferRef = useRef<Record<string, string>>({});
+  const floorStrokeBufferRef = useRef<Record<string, string>>({});
 
   // Recently changed cells for subtle animation (key -> timestamp)
   const recentChangesRef = useRef<Record<string, number>>({});
@@ -327,8 +331,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const drawNativeStorageSprite = (context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number, cellSize: number, rotation = 0) => {
     const bounds = getSpriteContentBounds(image);
     const scale = cellSize / 16;
-    const spriteWidth = bounds.width * scale;
-    const spriteHeight = bounds.height * scale;
+    const spriteWidth = Math.max(bounds.width * scale, width);
+    const spriteHeight = Math.max(bounds.height * scale, height);
     if (rotation !== 0) {
       const quarterTurn = rotation === 90 || rotation === 270;
       const baseWidth = quarterTurn ? height : width;
@@ -562,19 +566,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       return;
     }
 
-    if (activeTool === 'eraser' && cell && onRemoveStorageItem) {
-      const visiblePlacements = (project.storagePlacements ?? []).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
-      const placement = placementAtCell(visiblePlacements, cell.x, cell.y);
-      if (placement) {
-        if (plannerLayerStates[getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId))].locked) {
-          setIsPointerDown(false);
-          return;
-        }
-        onRemoveStorageItem(placement.id);
-        if (placement.id === selectedStoragePlacementId) onSelectStoragePlacement?.(null);
-        setIsPointerDown(false);
-        return;
-      }
+      if (activeTool === 'eraser') {
+      erasedStoragePlacementIdsRef.current.clear();
+      if (cell) eraseStorageObjectsAtBrush(cell.x, cell.y);
     }
 
     if (activeTool === 'select' && cell) {
@@ -672,9 +666,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       if (activeTool === 'pencil' || activeTool === 'eraser') {
         // Apply immediate initial stroke
-        const workingCells = selectedFloorItem ? { ...(project.floorTiles ?? {}) } : { ...project.cells };
-        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? selectedFloorItem?.id ?? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
-        strokeBufferRef.current = workingCells;
+        if (activeTool === 'eraser' && eraseObjectsWithEraser) {
+          const workingCells = { ...project.cells };
+          const workingFloors = { ...(project.floorTiles ?? {}) };
+          if (isPlannerLayerEditable(plannerLayerStates, 'walls')) applyBrush(workingCells, cell.x, cell.y, null);
+          if (isPlannerLayerEditable(plannerLayerStates, 'floors')) applyBrush(workingFloors, cell.x, cell.y, null);
+          strokeBufferRef.current = workingCells;
+          floorStrokeBufferRef.current = workingFloors;
+        } else {
+          const workingCells = selectedFloorItem ? { ...(project.floorTiles ?? {}) } : { ...project.cells };
+          applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? selectedFloorItem?.id ?? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
+          strokeBufferRef.current = workingCells;
+          floorStrokeBufferRef.current = {};
+        }
       }
     } else {
       if (activeTool === 'rect_select' || activeTool === 'select') {
@@ -705,6 +709,60 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         }
       }
     }
+  };
+
+  const eraseStorageObjectsAtBrush = (cx: number, cy: number) => {
+    if (!eraseObjectsWithEraser) return;
+    const brushCells = new Set<string>();
+    const offset = Math.floor(brushSize / 2);
+    for (let dy = 0; dy < brushSize; dy++) {
+      for (let dx = 0; dx < brushSize; dx++) {
+        const x = cx + dx - offset;
+        const y = cy + dy - offset;
+        for (const pt of getMirroredCoords(x, y, project.width, project.height, mirrorMode)) {
+          brushCells.add(coordKey(pt.x, pt.y));
+        }
+      }
+    }
+
+    const placementsToErase = (project.storagePlacements ?? []).filter(placement => {
+      if (erasedStoragePlacementIdsRef.current.has(placement.id)) return false;
+      const layerId = getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId));
+      if (!isPlannerLayerEditable(plannerLayerStates, layerId)) return false;
+      const item = STORAGE_ITEM_BY_ID.get(placement.itemId);
+      let visualLeft = placement.x;
+      let visualTop = placement.y;
+      let visualWidth = item?.visualWidthTiles ?? placement.width;
+      let visualHeight = item?.visualHeightTiles ?? placement.height;
+      const gameSprite = item?.spriteId ? gameSprites[item.spriteId] : undefined;
+      const image = getSpriteImage(item?.placementImageUrl ?? gameSprite?.atlas ?? item?.imageUrl);
+      if (item?.renderAtNativeScale && image && (item.placementImageUrl || !gameSprite)) {
+        const bounds = getSpriteContentBounds(image);
+        visualWidth = item.visualWidthTiles ?? Math.max(placement.width, bounds.width / 16);
+        visualHeight = item.visualHeightTiles ?? Math.max(placement.height, bounds.height / 16);
+        if ((placement.rotation ?? 0) === 90 || (placement.rotation ?? 0) === 270) {
+          [visualWidth, visualHeight] = [visualHeight, visualWidth];
+        }
+        visualLeft = placement.x + (placement.width - visualWidth) / 2;
+        visualTop = placement.y + placement.height - visualHeight;
+      } else if (item && (item.visualWidthTiles || item.visualHeightTiles)) {
+        visualLeft = placement.x + (placement.width - visualWidth) / 2;
+        visualTop = placement.y + placement.height - visualHeight;
+      }
+      for (let y = placement.y; y < placement.y + placement.height; y++) {
+        for (let x = placement.x; x < placement.x + placement.width; x++) {
+          if (brushCells.has(coordKey(x, y))) return true;
+        }
+      }
+      for (const key of brushCells) {
+        const [x, y] = key.split(',').map(Number);
+        if (x < visualLeft + visualWidth && x + 1 > visualLeft && y < visualTop + visualHeight && y + 1 > visualTop) return true;
+      }
+      return false;
+    });
+
+    if (placementsToErase.length === 0) return;
+    placementsToErase.forEach(placement => erasedStoragePlacementIdsRef.current.add(placement.id));
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -750,9 +808,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       setDragCurrentCell(cell);
 
       if (activeTool === 'pencil' || activeTool === 'eraser') {
-        const workingCells = { ...strokeBufferRef.current };
-        applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? selectedFloorItem?.id ?? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
-        strokeBufferRef.current = workingCells;
+        if (activeTool === 'eraser' && eraseObjectsWithEraser) {
+          const workingCells = { ...strokeBufferRef.current };
+          const workingFloors = { ...floorStrokeBufferRef.current };
+          if (isPlannerLayerEditable(plannerLayerStates, 'walls')) applyBrush(workingCells, cell.x, cell.y, null);
+          if (isPlannerLayerEditable(plannerLayerStates, 'floors')) applyBrush(workingFloors, cell.x, cell.y, null);
+          strokeBufferRef.current = workingCells;
+          floorStrokeBufferRef.current = workingFloors;
+        } else {
+          const workingCells = { ...strokeBufferRef.current };
+          applyBrush(workingCells, cell.x, cell.y, activeTool === 'pencil' ? selectedFloorItem?.id ?? getDoorPlacementColorId(activeColor.id, doorOrientation) : null);
+          strokeBufferRef.current = workingCells;
+        }
+        if (activeTool === 'eraser') eraseStorageObjectsAtBrush(cell.x, cell.y);
       }
     }
   };
@@ -792,9 +860,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     if (activeTool === 'pencil' || activeTool === 'eraser') {
       markRecentChanges(strokeBufferRef.current);
-      if (selectedFloorItem) onUpdateCells(project.cells, activeTool === 'pencil' ? 'Pintar suelo' : 'Borrar suelo', undefined, strokeBufferRef.current);
+      if (activeTool === 'eraser' && eraseObjectsWithEraser) {
+        const cellsToSave = isPlannerLayerEditable(plannerLayerStates, 'walls') ? strokeBufferRef.current : project.cells;
+        const floorsToSave = isPlannerLayerEditable(plannerLayerStates, 'floors') ? floorStrokeBufferRef.current : (project.floorTiles ?? {});
+        const erasedIds = erasedStoragePlacementIdsRef.current;
+        const placementsToSave = erasedIds.size > 0
+          ? (project.storagePlacements ?? []).filter(placement => !erasedIds.has(placement.id))
+          : (project.storagePlacements ?? []);
+        onUpdateCells(cellsToSave, 'Borrador', placementsToSave, floorsToSave);
+      }
+      else if (selectedFloorItem) onUpdateCells(project.cells, activeTool === 'pencil' ? 'Pintar suelo' : 'Borrar suelo', undefined, strokeBufferRef.current);
       else onUpdateCells(strokeBufferRef.current, activeTool === 'pencil' ? 'Lápiz' : 'Borrador');
       strokeBufferRef.current = {};
+      floorStrokeBufferRef.current = {};
+      erasedStoragePlacementIdsRef.current.clear();
     } else if (activeTool === 'line' && dragStartCell && dragCurrentCell) {
       const lineCells = getMirroredShapeCells(getBresenhamLine(
         dragStartCell.x,
@@ -949,12 +1028,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       const minVisibleY = Math.max(0, Math.floor(-bpY / currentCellSize));
       const maxVisibleY = Math.min(project.height - 1, Math.ceil((height - bpY) / currentCellSize));
 
-      const activeRenderFloors = !plannerLayerStates.floors.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && selectedFloorItem
+      const activeRenderFloors = !plannerLayerStates.floors.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && activeTool === 'eraser' && eraseObjectsWithEraser
+        ? floorStrokeBufferRef.current
+        : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && selectedFloorItem
         ? strokeBufferRef.current
         : (project.floorTiles ?? {});
 
       // 3. Render cells (combine project cells + live stroke buffer)
-      const activeRenderCells = !plannerLayerStates.walls.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && !selectedFloorItem
+      const activeRenderCells = !plannerLayerStates.walls.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && activeTool === 'eraser' && eraseObjectsWithEraser
+        ? strokeBufferRef.current
+        : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && !selectedFloorItem
         ? strokeBufferRef.current
         : project.cells;
 
@@ -1136,6 +1219,28 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         }
       }
 
+      // The center axes help align symmetric layouts and remain independent of grid visibility.
+      if (showCenterGuide) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(bpX, bpY, bpW, bpH);
+        ctx.clip();
+        ctx.strokeStyle = gridTheme === 'light'
+          ? 'rgba(8, 145, 178, 0.82)'
+          : 'rgba(34, 211, 238, 0.88)';
+        ctx.lineWidth = Math.max(1.5, Math.min(currentCellSize * 0.12, gridLineWidth + 0.5));
+        ctx.setLineDash([Math.max(4, currentCellSize * 0.35), Math.max(2, currentCellSize * 0.18)]);
+        ctx.beginPath();
+        const centerX = bpX + bpW / 2;
+        const centerY = bpY + bpH / 2;
+        ctx.moveTo(Math.round(centerX) + 0.5, bpY);
+        ctx.lineTo(Math.round(centerX) + 0.5, bpY + bpH);
+        ctx.moveTo(bpX, Math.round(centerY) + 0.5);
+        ctx.lineTo(bpX + bpW, Math.round(centerY) + 0.5);
+        ctx.stroke();
+        ctx.restore();
+      }
+
       // Blueprint outer frame
       ctx.strokeStyle = gridTheme === 'light' ? '#0f172a' : 'rgba(251, 191, 36, 0.55)';
       ctx.lineWidth = 2;
@@ -1205,18 +1310,52 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         const movePreviewDy = movingSelection ? dragCurrentCell.y - dragStartCell.y : 0;
         const drawX = placement.x + movePreviewDx;
         const drawY = placement.y + movePreviewDy;
-        if (drawX + placement.width < minVisibleX || drawX > maxVisibleX || drawY + placement.height < minVisibleY || drawY > maxVisibleY) continue;
         const gameSprite = item.spriteId ? gameSprites[item.spriteId] : undefined;
         const image = getSpriteImage(item.placementImageUrl ?? gameSprite?.atlas ?? item.imageUrl);
         const itemX = bpX + drawX * currentCellSize;
         const itemY = bpY + drawY * currentCellSize;
         const itemW = placement.width * currentCellSize;
         const itemH = placement.height * currentCellSize;
+        const nativeSprite = image && item.renderAtNativeScale && (item.placementImageUrl || !gameSprite);
+        const nativeBounds = nativeSprite && image ? getSpriteContentBounds(image) : null;
+        let visualWidthTiles = item.visualWidthTiles ?? (nativeBounds ? Math.max(placement.width, nativeBounds.width / 16) : placement.width);
+        let visualHeightTiles = item.visualHeightTiles ?? (nativeBounds ? Math.max(placement.height, nativeBounds.height / 16) : placement.height);
+        if ((placement.rotation === 90 || placement.rotation === 270) && nativeBounds && !item.visualWidthTiles && !item.visualHeightTiles) {
+          [visualWidthTiles, visualHeightTiles] = [visualHeightTiles, visualWidthTiles];
+        }
+        const visualX = itemX + (itemW - visualWidthTiles * currentCellSize) / 2;
+        const visualY = itemY + itemH - visualHeightTiles * currentCellSize;
+        const visualLeftTile = drawX + (placement.width - visualWidthTiles) / 2;
+        const visualTopTile = drawY + placement.height - visualHeightTiles;
+        if (visualLeftTile + visualWidthTiles < minVisibleX || visualLeftTile > maxVisibleX + 1 || visualTopTile + visualHeightTiles < minVisibleY || visualTopTile > maxVisibleY + 1) continue;
         if (image && item.category !== 'bridge' && item.category !== 'fence') {
           ctx.save();
           ctx.imageSmoothingEnabled = false;
           if (movePreviewDx !== 0 || movePreviewDy !== 0) ctx.globalAlpha = 0.6;
-          if (item.renderAtNativeScale && (item.placementImageUrl || !gameSprite)) {
+          if (item.visualWidthTiles || item.visualHeightTiles) {
+            const rotation = placement.rotation ?? 0;
+            if (rotation !== 0) {
+              ctx.translate(itemX + itemW / 2, itemY + itemH / 2);
+              ctx.rotate(rotation * Math.PI / 180);
+              if (gameSprite) {
+                const sourceY = gameSprite.rect.origin === 'bottom-left'
+                  ? image.naturalHeight - gameSprite.rect.y - gameSprite.rect.height
+                  : gameSprite.rect.y;
+                ctx.drawImage(image, gameSprite.rect.x, sourceY, gameSprite.rect.width, gameSprite.rect.height,
+                  visualX - (itemX + itemW / 2), visualY - (itemY + itemH / 2), visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
+              } else {
+                drawStorageSprite(ctx, image, visualX - (itemX + itemW / 2), visualY - (itemY + itemH / 2), visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
+              }
+            } else if (gameSprite) {
+              const sourceY = gameSprite.rect.origin === 'bottom-left'
+                ? image.naturalHeight - gameSprite.rect.y - gameSprite.rect.height
+                : gameSprite.rect.y;
+              ctx.drawImage(image, gameSprite.rect.x, sourceY, gameSprite.rect.width, gameSprite.rect.height,
+                visualX, visualY, visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
+            } else {
+              drawStorageSprite(ctx, image, visualX, visualY, visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
+            }
+          } else if (item.renderAtNativeScale && (item.placementImageUrl || !gameSprite)) {
             drawNativeStorageSprite(ctx, image, itemX, itemY, itemW, itemH, currentCellSize, placement.rotation ?? 0);
           } else if (gameSprite) {
             const sourceY = gameSprite.rect.origin === 'bottom-left'
@@ -1602,8 +1741,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           const image = getSpriteImage(selectedStorageItem.placementImageUrl ?? previewSprite?.atlas ?? selectedStorageItem.imageUrl);
           const nativeSprite = image && selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite);
           const spriteBounds = nativeSprite && image ? getSpriteContentBounds(image) : null;
-          const visualHeightTiles = spriteBounds ? spriteBounds.height / 16 : itemHeight;
-          const visualWidthTiles = spriteBounds ? spriteBounds.width / 16 : itemWidth;
+          const visualHeightTiles = selectedStorageItem.visualHeightTiles ?? (spriteBounds ? Math.max(itemHeight, spriteBounds.height / 16) : itemHeight);
+          const visualWidthTiles = selectedStorageItem.visualWidthTiles ?? (spriteBounds ? Math.max(itemWidth, spriteBounds.width / 16) : itemWidth);
           const visualLeft = hoverCell.x + (itemWidth - visualWidthTiles) / 2;
           const visualTop = hoverCell.y + itemHeight - visualHeightTiles;
           const visualFits = visualLeft >= 0 && visualTop >= 0 && visualLeft + visualWidthTiles <= project.width && visualTop + visualHeightTiles <= project.height;
@@ -1634,7 +1773,19 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             ctx.save();
             ctx.globalAlpha = 0.72;
             ctx.imageSmoothingEnabled = false;
-            if (selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite)) {
+            if (selectedStorageItem.visualWidthTiles || selectedStorageItem.visualHeightTiles) {
+              const visualX = bpX + visualLeft * currentCellSize;
+              const visualY = bpY + visualTop * currentCellSize;
+              if (previewSprite) {
+                const sourceY = previewSprite.rect.origin === 'bottom-left'
+                  ? image.naturalHeight - previewSprite.rect.y - previewSprite.rect.height
+                  : previewSprite.rect.y;
+                ctx.drawImage(image, previewSprite.rect.x, sourceY, previewSprite.rect.width, previewSprite.rect.height,
+                  visualX, visualY, visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
+              } else {
+                drawStorageSprite(ctx, image, visualX, visualY, visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
+              }
+            } else if (selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite)) {
               drawNativeStorageSprite(ctx, image, x, y, w, h, currentCellSize);
             } else if (previewSprite) {
               const sourceY = previewSprite.rect.origin === 'bottom-left'
@@ -1767,6 +1918,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     currentCellSize,
     showGrid,
     showMajorGrid,
+    showCenterGuide,
     showCoordinates,
     showLightRanges,
     gridLineWidth,

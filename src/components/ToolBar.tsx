@@ -56,6 +56,8 @@ interface ToolBarProps {
   onChangeMirrorMode: (mode: MirrorMode) => void;
   brushSize: number;
   onChangeBrushSize: (size: number) => void;
+  eraseObjectsWithEraser: boolean;
+  onChangeEraseObjectsWithEraser: (enabled: boolean) => void;
   activeColor: PaletteColor;
   doorOrientation: DoorOrientation;
   onChangeDoorOrientation: (orientation: DoorOrientation) => void;
@@ -83,6 +85,8 @@ export const ToolBar: React.FC<ToolBarProps> = ({
   onChangeMirrorMode,
   brushSize,
   onChangeBrushSize,
+  eraseObjectsWithEraser,
+  onChangeEraseObjectsWithEraser,
   activeColor,
   doorOrientation,
   onChangeDoorOrientation,
@@ -457,6 +461,17 @@ export const ToolBar: React.FC<ToolBarProps> = ({
               <span>1×1</span>
               <span>20×20</span>
             </div>
+            {activeTool === 'eraser' && (
+              <label className="mt-3 flex cursor-pointer items-center gap-2 rounded-lg border border-[#26354c] bg-[#111c2d] px-2.5 py-2 text-xs text-zinc-300 transition hover:border-cyan-500/40 hover:text-zinc-100">
+                <input
+                  type="checkbox"
+                  checked={eraseObjectsWithEraser}
+                  onChange={event => onChangeEraseObjectsWithEraser(event.target.checked)}
+                  className="h-4 w-4 accent-cyan-400"
+                />
+                <span>{t.toolOptions.eraseObjects}</span>
+              </label>
+            )}
           </div>
         )}
 

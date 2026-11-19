@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.0" width="100%">
+  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.1" width="100%">
 
   **Construye tu hogar subterráneo antes de colocar el primer bloque.**
 
-  <img src="assets/readme/stats-es.png" alt="Versión 1.0 · 466 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
+  <img src="assets/readme/stats-es.svg" alt="Versión 1.1.0 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
 
   [🇬🇧 English](README.md) · **🇪🇸 Español**
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Último hotfix — v1.0.0a:** los suelos ahora se dibujan sobre los bloques de color en el editor y al exportar PNG; así permanecen visibles sobre hierba y cualquier otro bloque. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.zip).
+> **Última versión — v1.1.0:** añade 22 cultivos en macetas, una guía del centro activada por defecto, borrado opcional de objetos y suelos, y exportación PNG con la altura visual correcta de los sprites. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.zip).
 
 La numeración de versiones sigue la política del proyecto en [VERSIONING.md](VERSIONING.md).
 
@@ -35,7 +35,7 @@ Combina un editor flexible, un amplio catálogo y planos compartibles para trans
   <tr>
     <td width="50%" valign="top">
       <img src="assets/readme/icon-catalog.png" width="36" alt=""><br>
-      <strong>466 entradas del catálogo</strong><br>
+      <strong>488 entradas del catálogo</strong><br>
       Explora materiales, suelos, muebles, estaciones y naturaleza. Busca en ambos idiomas y guarda favoritos.
     </td>
     <td width="50%" valign="top">
@@ -53,7 +53,7 @@ Combina un editor flexible, un amplio catálogo y planos compartibles para trans
     <td valign="top">
       <img src="assets/readme/icon-map.png" width="36" alt=""><br>
       <strong>Lienzo personalizable</strong><br>
-      Construye en cuadrículas de 10 × 10 a 300 × 300 casillas, con zoom y guías opcionales de chunks de 16 × 16.
+      Construye en cuadrículas de 10 × 10 a 300 × 300 casillas, con guía del centro activada y guías opcionales de chunks e iluminación.
     </td>
   </tr>
   <tr>
@@ -76,7 +76,7 @@ Combina un editor flexible, un amplio catálogo y planos compartibles para trans
   <tr>
     <td valign="top" width="68%">
       <strong>Todo lo que necesitas para organizar una base.</strong>
-      <p>El catálogo de la v1.0 reúne <strong>466 entradas únicas seleccionables</strong>, organizadas en cuatro secciones.</p>
+      <p>El catálogo de la v1.1 reúne <strong>488 entradas únicas seleccionables</strong>, organizadas en cuatro secciones.</p>
       <ul>
         <li>Busca por nombre en español o inglés.</li>
         <li>Guarda favoritos localmente en el navegador.</li>
@@ -95,10 +95,10 @@ Combina un editor flexible, un amplio catálogo y planos compartibles para trans
 | 🧱 Bloques y colores | **65** | 27 paredes, 8 puentes, 6 cercas, 1 riel y 23 bloques representados con colores |
 | 🟫 Suelos y alfombras | **62** | Suelos construidos, baldosas, alfombras, tapetes y terrenos del juego |
 | 🛠️ Muebles y estaciones | **260** | Cofres, mesas, pedestales, camas, sillas, mecanismos, puertas, iluminación, estaciones y decoraciones de pared |
-| 🌱 Plantas y árboles | **79** | 22 cultivos, 25 árboles y 32 plantas u otros elementos de naturaleza |
-| **Total** | **466** | Entradas únicas seleccionables |
+| 🌱 Plantas y árboles | **101** | 44 entradas de cultivos, incluidas las variantes en maceta, 25 árboles y 32 plantas u otros elementos de naturaleza |
+| **Total** | **488** | Entradas únicas seleccionables |
 
-> **Estado del catálogo:** la cifra cuenta entradas seleccionables, no cada sprite individual ni cada etapa visual. La versión 1.0 todavía no incluye todos los objetos del juego.
+> **Estado del catálogo:** la cifra cuenta entradas seleccionables, no cada sprite individual ni cada etapa visual. La versión 1.1 todavía no incluye todos los objetos del juego.
 
 Los colores de paredes y bloques siguen los valores publicados en la wiki de Core Keeper cuando están disponibles. Si falta un valor, se utiliza un color representativo basado en el tono predominante del sprite y se marca como estimado.
 
@@ -108,7 +108,7 @@ Los colores de paredes y bloques siguen los valores publicados en la wiki de Cor
 
 | Herramienta | Qué permite hacer |
 | :--- | :--- |
-| Lápiz / borrador | Pintar o borrar con un pincel de 1 × 1 a 20 × 20 casillas |
+| Lápiz / borrador | Pintar con un pincel de 1 × 1 a 20 × 20 casillas. Una opción del borrador también permite eliminar objetos y suelos. |
 | Línea | Dibujar una línea entre dos puntos |
 | Rectángulo | Dibujar un contorno o rectángulo relleno |
 | Círculo | Dibujar un contorno o círculo relleno, desde el centro o una esquina |
@@ -143,6 +143,7 @@ Cada casilla admite cuatro capas de construcción independientes:
 Muestra, oculta, bloquea o desbloquea cada capa de forma independiente. Por ejemplo, puedes colocar una alfombra sobre un suelo sin eliminar el suelo que hay debajo.
 
 - Los objetos utilizan su huella de colocación en casillas, que puede superar 1 × 1; los sprites pueden extenderse visualmente más allá de esa huella.
+- Los sprites altos conservan su altura visual tanto en el editor como en las exportaciones PNG.
 - Mueve, gira en cuatro orientaciones, copia, corta, pega o elimina los objetos seleccionados. Cada objeto conserva su propia orientación.
 - Selecciona una zona para copiar, cortar, pegar, rellenar, borrar, mover, duplicar reflejada, voltear horizontal o verticalmente, o centrar en uno o ambos ejes.
 - Los avisos de colocación indican objetos fuera del plano, espacios ocupados en la misma capa, falta de una pared detrás y capas de destino ocultas o bloqueadas.
@@ -160,7 +161,7 @@ Muestra, oculta, bloquea o desbloquea cada capa de forma independiente. Por ejem
 - Acerca o aleja la vista, restablece el zoom, centra el plano o ajústalo a la pantalla.
 - Desplaza la vista con la herramienta mano, la rueda o el botón central del ratón; usa Espacio + arrastre para navegar rápidamente.
 - Muestra u oculta la cuadrícula, regula su contraste y elige entre tres grosores de línea.
-- Destaca los límites de chunks de **16 × 16 casillas**.
+- La guía del centro para diseños simétricos está visible por defecto; las guías de chunks y de cobertura aproximada de luces empiezan ocultas y pueden activarse en las opciones de vista.
 - El lienzo vuelve a centrar el plano automáticamente al cambiar el tamaño de la ventana.
 
 <table>
@@ -244,7 +245,7 @@ Core Keeper Planner es un proyecto independiente que desarrollo y mantengo perso
   <br>
   <strong>Planifica. Construye. Hazlo tuyo.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSIÓN 1.0</sub>
+  <sub>CORE KEEPER PLANNER · VERSIÓN 1.1.0</sub>
   <br>
   <a href="README.md">Read in English</a>
 </div>
