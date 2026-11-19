@@ -949,25 +949,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       const minVisibleY = Math.max(0, Math.floor(-bpY / currentCellSize));
       const maxVisibleY = Math.min(project.height - 1, Math.ceil((height - bpY) / currentCellSize));
 
-      // Floor tiles are rendered as their own layer beneath the color/building layer.
       const activeRenderFloors = !plannerLayerStates.floors.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && selectedFloorItem
         ? strokeBufferRef.current
         : (project.floorTiles ?? {});
-      for (const [key, itemId] of Object.entries(activeRenderFloors)) {
-        const [xStr, yStr] = key.split(',');
-        const cx = Number(xStr);
-        const cy = Number(yStr);
-        if (cx < minVisibleX || cx > maxVisibleX || cy < minVisibleY || cy > maxVisibleY) continue;
-        const floor = FLOOR_ITEM_BY_ID.get(itemId);
-        if (!floor) continue;
-        const image = getSpriteImage(floor.placementImageUrl ?? floor.imageUrl);
-        if (image) {
-          ctx.save();
-          ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(image, bpX + cx * currentCellSize, bpY + cy * currentCellSize, currentCellSize, currentCellSize);
-          ctx.restore();
-        }
-      }
 
       // 3. Render cells (combine project cells + live stroke buffer)
       const activeRenderCells = !plannerLayerStates.walls.visible ? {} : isPointerDown && (activeTool === 'pencil' || activeTool === 'eraser') && !selectedFloorItem
@@ -1034,6 +1018,33 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               currentCellSize
             );
           }
+        }
+      }
+
+      // Floor tiles sit on top of the terrain/block color layer, while later
+      // drawing passes keep grid lines and placed objects visible above them.
+      for (const [key, itemId] of Object.entries(activeRenderFloors)) {
+        const [xStr, yStr] = key.split(',');
+        const cx = Number(xStr);
+        const cy = Number(yStr);
+        if (cx < minVisibleX || cx > maxVisibleX || cy < minVisibleY || cy > maxVisibleY) continue;
+        const floor = FLOOR_ITEM_BY_ID.get(itemId);
+        if (!floor) continue;
+        const image = getSpriteImage(floor.placementImageUrl ?? floor.imageUrl);
+        if (image) {
+          const floorX = bpX + cx * currentCellSize;
+          const floorY = bpY + cy * currentCellSize;
+          ctx.save();
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(image, floorX, floorY, currentCellSize, currentCellSize);
+          if (showGrid && currentCellSize >= 3) {
+            ctx.strokeStyle = gridTheme === 'light'
+              ? 'rgba(0, 0, 0, 0.90)'
+              : (highContrastGrid ? 'rgba(0, 0, 0, 0.70)' : 'rgba(0, 0, 0, 0.40)');
+            ctx.lineWidth = Math.max(1, Math.min(currentCellSize * 0.15, gridLineWidth));
+            ctx.strokeRect(floorX, floorY, currentCellSize, currentCellSize);
+          }
+          ctx.restore();
         }
       }
 

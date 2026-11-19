@@ -12,6 +12,10 @@
 
 </div>
 
+> **Latest hotfix — v1.0.0a:** floor tiles now render above colored blocks in the editor and PNG exports, so a floor remains visible when placed over grass or another block. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.zip).
+
+Release numbering follows the project policy in [VERSIONING.md](VERSIONING.md).
+
 ## <img src="assets/readme/app-logo.svg" width="32" alt=""> What is Core Keeper Planner?
 
 <img src="assets/readme/crystal-island.png" align="right" width="155" alt="Pixel art of a glowing crystal cluster">

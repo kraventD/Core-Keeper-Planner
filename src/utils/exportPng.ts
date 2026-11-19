@@ -325,16 +325,6 @@ export async function exportBlueprintToPng(
     ctx.fillRect(startX, startY, gridPixelWidth, gridPixelHeight);
   }
 
-  for (const [key, itemId] of Object.entries(project.floorTiles ?? {})) {
-    const [x, y] = key.split(',').map(Number);
-    const image = floorImages.get(itemId);
-    if (!image || x < 0 || y < 0 || x >= width || y >= height) continue;
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(image, startX + x * cellSize, startY + y * cellSize, cellSize, cellSize);
-    ctx.restore();
-  }
-
   for (const [key, colorId] of Object.entries(cells)) {
     const [xStr, yStr] = key.split(',');
     const x = parseInt(xStr, 10);
@@ -357,6 +347,22 @@ export async function exportBlueprintToPng(
       ctx.lineWidth = Math.max(1, Math.round(cellSize * 0.06));
       ctx.strokeRect(cellX, cellY, cellSize, cellSize);
     }
+  }
+
+  // Floors overlay the terrain/block color cells, matching the editor render order.
+  for (const [key, itemId] of Object.entries(project.floorTiles ?? {})) {
+    const [x, y] = key.split(',').map(Number);
+    const image = floorImages.get(itemId);
+    if (!image || x < 0 || y < 0 || x >= width || y >= height) continue;
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(image, startX + x * cellSize, startY + y * cellSize, cellSize, cellSize);
+    if (showGrid) {
+      ctx.strokeStyle = background === 'light' ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.70)';
+      ctx.lineWidth = Math.max(1, Math.round(cellSize * 0.06));
+      ctx.strokeRect(startX + x * cellSize, startY + y * cellSize, cellSize, cellSize);
+    }
+    ctx.restore();
   }
 
   if (showGrid) {

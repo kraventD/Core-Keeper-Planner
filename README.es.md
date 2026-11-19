@@ -12,6 +12,10 @@
 
 </div>
 
+> **Último hotfix — v1.0.0a:** los suelos ahora se dibujan sobre los bloques de color en el editor y al exportar PNG; así permanecen visibles sobre hierba y cualquier otro bloque. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.0.0a/core-keeper-planner-1.0.0a.zip).
+
+La numeración de versiones sigue la política del proyecto en [VERSIONING.md](VERSIONING.md).
+
 ## <img src="assets/readme/app-logo.svg" width="32" alt=""> ¿Qué es Core Keeper Planner?
 
 <img src="assets/readme/crystal-island.png" align="right" width="155" alt="Ilustración pixel art de cristales luminosos">

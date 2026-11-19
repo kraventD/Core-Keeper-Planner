@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.resolve(root, process.argv[2] ?? 'dist');
 const output = path.join(dist, 'release');
-const version = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')).version;
+const packageMetadata = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+const version = packageMetadata.releaseVersion ?? packageMetadata.version;
 const html = await readFile(path.join(dist, 'index.html'), 'utf8');
 
 const jsPath = html.match(/<script\b[^>]*\bsrc="([^"]+\.js)"[^>]*><\/script>/i)?.[1];
