@@ -12,7 +12,7 @@
 
 </div>
 
-> **Última versión — v1.1.1:** rellena áreas conectadas con suelos u objetos del catálogo, añade alcances para la selección rectangular y permite editar, mover, borrar y girar notas. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
+> **Última versión — v1.1.1:** rellena áreas conectadas con suelos u objetos del catálogo, añade alcances para la selección rectangular, permite editar, mover, borrar y girar notas, y corrige un error que podía borrar los bloques de color al hacer clic en una nota. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
 
 La numeración de versiones sigue la política del proyecto en [VERSIONING.md](VERSIONING.md).
 

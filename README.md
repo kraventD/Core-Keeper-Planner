@@ -12,7 +12,7 @@
 
 </div>
 
-> **Latest release — v1.1.1:** fills connected areas with floors or catalog objects, adds selectable content scopes for rectangular selection, and makes notes editable, movable, deletable and rotatable. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
+> **Latest release — v1.1.1:** fills connected areas with floors or catalog objects, adds selectable content scopes for rectangular selection, makes notes editable, movable, deletable and rotatable, and fixes a bug where clicking a note could clear colored blocks. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
 
 Release numbering follows the project policy in [VERSIONING.md](VERSIONING.md).
 

@@ -576,6 +576,23 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     setIsPointerDown(true);
 
+    // Notes sit above the drawing layers. Handle their clicks before starting
+    // any tool action so an eraser/pencil click cannot modify the blueprint.
+    if (annotations.length > 0 && cell) {
+      const ann = annotations.find(a => a.x === cell.x && a.y === cell.y);
+      if (ann) {
+        setSelectedAnnotationId(ann.id);
+        if (e.detail >= 2) {
+          setAnnotationEditor({ mode: 'edit', annotationId: ann.id, x: ann.x, y: ann.y, text: ann.text });
+          setIsPointerDown(false);
+          return;
+        }
+        setDraggingAnnotationId(ann.id);
+        setAnnotationDragStartCell({ x: ann.x, y: ann.y });
+        return;
+      }
+    }
+
     if (activeTool === 'place_storage') {
       if (cell && selectedStorageItem && onPlaceStorageItem) {
         onPlaceStorageItem(cell.x, cell.y, selectedStorageItem);
@@ -618,21 +635,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       onDoorPlaced();
     }
 
-    // Click izquierdo: iniciar arrastre de anotación existente
-    if (annotations.length > 0 && cell) {
-      const ann = annotations.find(a => a.x === cell.x && a.y === cell.y);
-      if (ann) {
-        setSelectedAnnotationId(ann.id);
-        if (e.detail >= 2) {
-          setAnnotationEditor({ mode: 'edit', annotationId: ann.id, x: ann.x, y: ann.y, text: ann.text });
-          setIsPointerDown(false);
-          return;
-        }
-        setDraggingAnnotationId(ann.id);
-        setAnnotationDragStartCell({ x: ann.x, y: ann.y });
-        return;
-      }
-    }
     setSelectedAnnotationId(null);
 
     if (activeTool === 'move') {
@@ -948,6 +950,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     if (draggingAnnotationId) {
       setDraggingAnnotationId(null);
       setAnnotationDragStartCell(null);
+      setIsPointerDown(false);
+      return;
     }
 
     if (activeTool === 'pencil' || activeTool === 'eraser') {

@@ -18,8 +18,8 @@ For every release, update `releaseVersion`, add bilingual release notes, and bui
 - `core-keeper-planner-<releaseVersion>.html` — standalone, self-contained app.
 - `core-keeper-planner-<releaseVersion>.zip` — includes the autonomous `index.html`, both README files, and their images.
 
-Use the Git tag `v<releaseVersion>`. Mark correction-only commits with a `hotfix:` subject. Push the source, documentation and artifacts together, and publish a GitHub release with the same version and notes in English and Spanish. Do not replace or rewrite an earlier release.
+Use the Git tag `v<releaseVersion>`. Mark correction-only commits with a `hotfix:` subject. Push the source, documentation and artifacts together, and publish a GitHub release with the same version and notes in English and Spanish. Normally publish each version once; if the maintainer explicitly requests correcting an already-published release without a version increment, update that release's tag, notes, and downloadable artifacts in place.
 
 ## Current release
 
-`1.1.1` adds catalog-aware connected fill, clearer note editing and rotation, and content filters for rectangular selection. It also corrects rotated double-chest sprite sizing.
+`1.1.1` adds catalog-aware connected fill, clearer note editing and rotation, and content filters for rectangular selection. It also corrects rotated double-chest sprite sizing and prevents note clicks from clearing blueprint blocks.

@@ -4,6 +4,7 @@
 
 ### English
 
+- Fixed a destructive note-click bug: clicking or dragging a note while the pencil or eraser is active no longer submits an empty stroke that clears the blueprint's colored blocks.
 - Expanded connected-area fill to apply the selected floor or catalog object across the connected region. Multi-tile objects respect their full footprint and skip overlaps or positions outside the plan.
 - Made note actions discoverable: select a note to edit, rotate or delete it, double-click to edit, and drag to move. Replaced browser prompts with an in-app note editor. Note rotation is preserved in share codes.
 - Added rectangular selection scopes for all contents, floors only, or placed objects only. Copy, cut, move and delete now honor the chosen scope.
@@ -11,6 +12,7 @@
 
 ### Español
 
+- Se corrigió un error destructivo al interactuar con notas: hacer clic o arrastrar una nota con el lápiz o el borrador activos ya no guarda un trazo vacío que borra los bloques de color del plano.
 - El rellenado de áreas conectadas ahora aplica el suelo u objeto seleccionado del catálogo a toda la región. Los objetos de varias casillas respetan su huella completa y omiten espacios ocupados o fuera del plano.
 - Se hicieron visibles las acciones de las notas: al seleccionarlas puedes editarlas, girarlas o borrarlas; el doble clic abre la edición y también puedes arrastrarlas para moverlas. El editor de notas ahora está integrado en la app. La rotación se conserva en los códigos compartidos.
 - Se añadieron alcances para la selección rectangular: todo el contenido, solo suelos o solo objetos colocados. Copiar, cortar, mover y borrar respetan el alcance elegido.
