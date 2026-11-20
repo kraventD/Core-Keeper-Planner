@@ -8,6 +8,7 @@ import {
   DoorOrientation,
   PaletteColor,
   Language,
+  SelectionScope,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
 import { StorageItemDefinition } from '../utils/storageCatalog';
@@ -63,6 +64,8 @@ interface ToolBarProps {
   onChangeDoorOrientation: (orientation: DoorOrientation) => void;
   showDoorTooltip: boolean;
   onDismissDoorTooltip: () => void;
+  selectionScope: SelectionScope;
+  onChangeSelectionScope: (scope: SelectionScope) => void;
   language: Language;
   t: Translations;
 }
@@ -92,12 +95,14 @@ export const ToolBar: React.FC<ToolBarProps> = ({
   onChangeDoorOrientation,
   showDoorTooltip,
   onDismissDoorTooltip,
+  selectionScope,
+  onChangeSelectionScope,
   language,
   t,
 }) => {
   const [toolOptionsOpen, setToolOptionsOpen] = useState(true);
   const supportsMirror = ['pencil', 'eraser', 'line', 'rectangle', 'circle'].includes(activeTool);
-  const hasToolOptions = supportsMirror || activeTool === 'place_core';
+  const hasToolOptions = supportsMirror || activeTool === 'place_core' || activeTool === 'rect_select';
 
   useEffect(() => {
     setToolOptionsOpen(hasToolOptions);
@@ -269,6 +274,39 @@ export const ToolBar: React.FC<ToolBarProps> = ({
               <X className="h-3.5 w-3.5" />
             </button>
           </div>
+        {activeTool === 'rect_select' && (
+          <div className="mt-3 space-y-2 border-t border-[#26354c] px-1 pt-3">
+            <span className="mb-1.5 block text-[10px] font-semibold uppercase text-zinc-500">
+              {language === 'es' ? 'Contenido de la selección' : 'Selection contents'}
+            </span>
+            {([
+              { scope: 'all', label: language === 'es' ? 'Seleccionar todo' : 'Select all' },
+              { scope: 'floors', label: language === 'es' ? 'Solo suelos' : 'Floors only' },
+              { scope: 'objects', label: language === 'es' ? 'Solo objetos' : 'Objects only' },
+            ] as const).map(option => (
+              <label
+                key={option.scope}
+                className={`flex cursor-pointer items-center gap-2 rounded-lg border px-2 py-2 text-[11px] transition ${selectionScope === option.scope ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-100' : 'border-[#26354c] bg-[#101a2a] text-zinc-300 hover:border-[#3b506f]'}`}
+              >
+                <input
+                  type="checkbox"
+                  name="selection-scope"
+                  value={option.scope}
+                  checked={selectionScope === option.scope}
+                  onChange={() => onChangeSelectionScope(option.scope)}
+                  className="h-3.5 w-3.5 accent-cyan-400"
+                />
+                <span>{option.label}</span>
+              </label>
+            ))}
+            <p className="text-[10px] leading-relaxed text-zinc-500">
+              {language === 'es'
+                ? 'El contenido elegido se aplicará al copiar, mover o borrar la región.'
+                : 'The chosen contents will be used when copying, moving, or deleting the region.'}
+            </p>
+          </div>
+        )}
+
         {/* Dynamic Tool Options: Rectangle */}
         {activeTool === 'rectangle' && (
           <div className="pt-3 mt-3 border-t border-[#26354c] block px-1">

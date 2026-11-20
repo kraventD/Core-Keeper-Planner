@@ -269,10 +269,33 @@ export function floodFill(
   }
 
   const newCells = { ...cells };
+  for (const { x, y } of getConnectedRegion(cells, startX, startY, gridWidth, gridHeight)) {
+    const key = coordKey(x, y);
+    if (newColorId === null) {
+      delete newCells[key];
+    } else {
+      newCells[key] = newColorId;
+    }
+  }
+
+  return newCells;
+}
+
+/** Returns the 4-directionally connected cells matching the color under the start tile. */
+export function getConnectedRegion(
+  cells: Record<string, string>,
+  startX: number,
+  startY: number,
+  gridWidth: number,
+  gridHeight: number,
+): CellCoord[] {
+  if (!isInBounds(startX, startY, gridWidth, gridHeight)) return [];
+
+  const targetColorId = cells[coordKey(startX, startY)] ?? null;
   const visited = new Set<string>();
   const queue: CellCoord[] = [{ x: startX, y: startY }];
-  visited.add(startKey);
-
+  const region: CellCoord[] = [];
+  visited.add(coordKey(startX, startY));
   const neighbors = [
     { dx: 0, dy: -1 },
     { dx: 0, dy: 1 },
@@ -280,15 +303,11 @@ export function floodFill(
     { dx: 1, dy: 0 },
   ];
 
-  while (queue.length > 0) {
-    const curr = queue.shift()!;
+  for (let index = 0; index < queue.length; index++) {
+    const curr = queue[index];
     const key = coordKey(curr.x, curr.y);
-
-    if (newColorId === null) {
-      delete newCells[key];
-    } else {
-      newCells[key] = newColorId;
-    }
+    if ((cells[key] ?? null) !== targetColorId) continue;
+    region.push(curr);
 
     for (const n of neighbors) {
       const nx = curr.x + n.dx;
@@ -296,18 +315,15 @@ export function floodFill(
 
       if (isInBounds(nx, ny, gridWidth, gridHeight)) {
         const nKey = coordKey(nx, ny);
-        if (!visited.has(nKey)) {
+        if (!visited.has(nKey) && (cells[nKey] ?? null) === targetColorId) {
           visited.add(nKey);
-          const currentColor = newCells[nKey] ?? null;
-          if (currentColor === targetColorId) {
-            queue.push({ x: nx, y: ny });
-          }
+          queue.push({ x: nx, y: ny });
         }
       }
     }
   }
 
-  return newCells;
+  return region;
 }
 
 /**

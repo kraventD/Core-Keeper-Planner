@@ -11,6 +11,7 @@ import {
   ShapeMode,
   CircleOrigin,
   SelectionBox,
+  SelectionScope,
   StorageItemPlacement,
   StorageItemRotation,
   ToolType,
@@ -156,6 +157,7 @@ export default function App() {
 
   // 4. Selection & Clipboard state
   const [selectionBox, setSelectionBox] = useState<SelectionBox | null>(null);
+  const [selectionScope, setSelectionScope] = useState<SelectionScope>('all');
   const [clipboard, setClipboard] = useState<ClipboardData | null>(null);
 
   // 5. View state
@@ -361,8 +363,9 @@ export default function App() {
   }, []);
 
   const handleMoveSelection = useCallback((box: SelectionBox, deltaX: number, deltaY: number): boolean => {
+    const scope = box.scope ?? 'all';
     const placements = project.storagePlacements ?? [];
-    const selected = placements.filter(item =>
+    const selected = scope === 'floors' ? [] : placements.filter(item =>
       item.x >= box.minX && item.y >= box.minY &&
       item.x + item.width - 1 <= box.maxX && item.y + item.height - 1 <= box.maxY,
     ).filter(item => isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))));
@@ -386,9 +389,9 @@ export default function App() {
       return false;
     }
 
-    const movedCells = isPlannerLayerEditable(plannerLayerStates, 'walls')
+    const movedCells = scope === 'all' && isPlannerLayerEditable(plannerLayerStates, 'walls')
       ? moveCells(project.cells, box, deltaX, deltaY, project.width, project.height) : project.cells;
-    const movedFloorTiles = isPlannerLayerEditable(plannerLayerStates, 'floors')
+    const movedFloorTiles = scope !== 'objects' && isPlannerLayerEditable(plannerLayerStates, 'floors')
       ? moveCells(project.floorTiles ?? {}, box, deltaX, deltaY, project.width, project.height) : (project.floorTiles ?? {});
     const movedById = new Map(movedPlacements.map(item => [item.id, item]));
     const nextPlacements = placements.map(item => movedById.get(item.id) ?? item);
@@ -405,8 +408,9 @@ export default function App() {
   const getSelectionClipboard = useCallback((): ClipboardData | null => {
     let box = selectionBox;
     let placementsToCopy: StorageItemPlacement[] = [];
+    let scope: SelectionScope = selectionBox?.scope ?? 'all';
     if (box) {
-      placementsToCopy = (project.storagePlacements ?? []).filter(item =>
+      placementsToCopy = scope === 'floors' ? [] : (project.storagePlacements ?? []).filter(item =>
         item.x >= box!.minX && item.y >= box!.minY &&
         item.x + item.width - 1 <= box!.maxX && item.y + item.height - 1 <= box!.maxY,
       );
@@ -415,12 +419,14 @@ export default function App() {
       if (!selected) return null;
       box = { minX: selected.x, minY: selected.y, maxX: selected.x + selected.width - 1, maxY: selected.y + selected.height - 1 };
       placementsToCopy = [selected];
+      scope = 'objects';
     } else {
       return null;
     }
 
-    const clipboardData = copySelection(isPlannerLayerEditable(plannerLayerStates, 'walls') ? project.cells : {}, box);
-    clipboardData.floorTiles = isPlannerLayerEditable(plannerLayerStates, 'floors') ? Object.entries(project.floorTiles ?? {}).flatMap(([key, itemId]) => {
+    const clipboardData = copySelection(scope === 'all' && isPlannerLayerEditable(plannerLayerStates, 'walls') ? project.cells : {}, box);
+    clipboardData.scope = scope;
+    clipboardData.floorTiles = scope !== 'objects' && isPlannerLayerEditable(plannerLayerStates, 'floors') ? Object.entries(project.floorTiles ?? {}).flatMap(([key, itemId]) => {
       const [x, y] = key.split(',').map(Number);
       return x >= box!.minX && x <= box!.maxX && y >= box!.minY && y <= box!.maxY
         ? [{ relX: x - box!.minX, relY: y - box!.minY, itemId }]
@@ -447,8 +453,9 @@ export default function App() {
     const data = getSelectionClipboard();
     if (!data) return;
     setClipboard(data);
-    const deleted = selectionBox ? deleteSelection(project.cells, selectionBox) : project.cells;
-    const selectedIds = new Set(selectionBox
+    const scope = selectionBox?.scope ?? 'all';
+    const deleted = selectionBox && scope === 'all' ? deleteSelection(project.cells, selectionBox) : project.cells;
+    const selectedIds = new Set(selectionBox && scope !== 'floors'
       ? (project.storagePlacements ?? []).filter(placement =>
         placement.x >= selectionBox.minX && placement.y >= selectionBox.minY &&
         placement.x + placement.width - 1 <= selectionBox.maxX && placement.y + placement.height - 1 <= selectionBox.maxY,
@@ -456,7 +463,7 @@ export default function App() {
       : selectedStoragePlacementId ? [selectedStoragePlacementId] : []);
     const remainingPlacements = (project.storagePlacements ?? []).filter(item => !selectedIds.has(item.id));
     const deletedFloors = { ...(project.floorTiles ?? {}) };
-    if (selectionBox) for (const key of Object.keys(deletedFloors)) {
+    if (selectionBox && scope !== 'objects') for (const key of Object.keys(deletedFloors)) {
       const [x, y] = key.split(',').map(Number);
       if (x >= selectionBox.minX && x <= selectionBox.maxX && y >= selectionBox.minY && y <= selectionBox.maxY) delete deletedFloors[key];
     }
@@ -497,11 +504,13 @@ export default function App() {
     }
     const pasted = pasteSelection(project.cells, clipboard, destX, destY, project.width, project.height);
     const pastedFloors = { ...(project.floorTiles ?? {}) };
-    for (const [key] of Object.entries(pastedFloors)) {
-      const [x, y] = key.split(',').map(Number);
-      if (x >= destX && x < destX + clipboard.width && y >= destY && y < destY + clipboard.height) delete pastedFloors[key];
+    if ((clipboard.scope ?? 'all') !== 'objects') {
+      for (const [key] of Object.entries(pastedFloors)) {
+        const [x, y] = key.split(',').map(Number);
+        if (x >= destX && x < destX + clipboard.width && y >= destY && y < destY + clipboard.height) delete pastedFloors[key];
+      }
     }
-    for (const tile of clipboard.floorTiles ?? []) {
+    for (const tile of (clipboard.scope ?? 'all') === 'objects' ? [] : clipboard.floorTiles ?? []) {
       const x = destX + tile.relX;
       const y = destY + tile.relY;
       if (x >= 0 && y >= 0 && x < project.width && y < project.height) pastedFloors[`${x},${y}`] = tile.itemId;
@@ -512,32 +521,37 @@ export default function App() {
       minY: destY,
       maxX: Math.min(project.width - 1, destX + clipboard.width - 1),
       maxY: Math.min(project.height - 1, destY + clipboard.height - 1),
+      scope: clipboard.scope ?? 'all',
     });
     showToast(t.alerts.pasted);
   }, [clipboard, selectionBox, project.cells, project.floorTiles, project.storagePlacements, project.width, project.height, handleUpdateCells, handleSetSelectionBox, showToast, t.alerts, language]);
 
   const handleDeleteSelection = useCallback(() => {
     if (!selectionBox) return;
-    const deleted = deleteSelection(project.cells, selectionBox);
+    const scope = selectionBox.scope ?? 'all';
+    const deleted = scope === 'all' ? deleteSelection(project.cells, selectionBox) : project.cells;
     const remainingPlacements = (project.storagePlacements ?? []).filter(item =>
-      !(item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
+      scope === 'floors' || !(item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
         item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY),
     );
     const remainingFloors = { ...(project.floorTiles ?? {}) };
-    for (const key of Object.keys(remainingFloors)) {
-      const [x, y] = key.split(',').map(Number);
-      if (x >= selectionBox.minX && x <= selectionBox.maxX && y >= selectionBox.minY && y <= selectionBox.maxY) delete remainingFloors[key];
+    if (scope !== 'objects') {
+      for (const key of Object.keys(remainingFloors)) {
+        const [x, y] = key.split(',').map(Number);
+        if (x >= selectionBox.minX && x <= selectionBox.maxX && y >= selectionBox.minY && y <= selectionBox.maxY) delete remainingFloors[key];
+      }
     }
     handleUpdateCells(deleted, 'Eliminar selección', remainingPlacements, remainingFloors);
   }, [selectionBox, project.cells, project.floorTiles, project.storagePlacements, handleUpdateCells]);
 
   const handleFillSelection = useCallback(() => {
     if (!selectionBox) return;
-    if (selectedFloorItemId) {
+    const scope = selectionBox.scope ?? 'all';
+    if ((scope === 'floors' || (scope === 'all' && selectedFloorItemId)) && selectedFloorItemId) {
       const filledFloors = { ...(project.floorTiles ?? {}) };
       for (let y = selectionBox.minY; y <= selectionBox.maxY; y++) for (let x = selectionBox.minX; x <= selectionBox.maxX; x++) filledFloors[`${x},${y}`] = selectedFloorItemId;
       handleUpdateCells(project.cells, 'Rellenar suelo', undefined, filledFloors);
-    } else {
+    } else if (scope === 'all') {
       const filled = fillSelection(project.cells, selectionBox, getDoorPlacementColorId(activeColor.id, doorOrientation), project.width, project.height);
       handleUpdateCells(filled, 'Rellenar selección');
     }
@@ -550,21 +564,20 @@ export default function App() {
   const handleDuplicateMirrorSelection = useCallback(
     (axis: 'horizontal' | 'vertical') => {
       if (!selectionBox) return;
-      const { updatedCells, mirroredBox } = duplicateMirrorSelection(
-        project.cells,
-        selectionBox,
-        axis,
-        project.width,
-        project.height
-      );
-      const updatedFloorTiles = transformFloorSelection(project.floorTiles ?? {}, selectionBox, axis, project.width, project.height, true);
+      const scope = selectionBox.scope ?? 'all';
+      const { updatedCells, mirroredBox } = scope === 'all'
+        ? duplicateMirrorSelection(project.cells, selectionBox, axis, project.width, project.height)
+        : { updatedCells: project.cells, mirroredBox: selectionBox };
+      const updatedFloorTiles = scope === 'objects'
+        ? (project.floorTiles ?? {})
+        : transformFloorSelection(project.floorTiles ?? {}, selectionBox, axis, project.width, project.height, true);
       handleUpdateCells(
         updatedCells,
         `Duplicar espejo (${axis === 'horizontal' ? 'H' : 'V'})`,
         undefined,
         updatedFloorTiles,
       );
-      setSelectionBox(mirroredBox);
+      setSelectionBox({ ...mirroredBox, scope });
       showToast(
         axis === 'horizontal'
           ? t.mirror.duplicatedOppositeH
@@ -587,12 +600,11 @@ export default function App() {
   const handleFlipSelection = useCallback(
     (direction: 'horizontal' | 'vertical') => {
       if (!selectionBox) return;
-      const flippedCells = flipSelectionInPlace(
-        project.cells,
-        selectionBox,
-        direction
-      );
-      const flippedFloorTiles = transformFloorSelection(project.floorTiles ?? {}, selectionBox, direction, project.width, project.height, false);
+      const scope = selectionBox.scope ?? 'all';
+      const flippedCells = scope === 'all' ? flipSelectionInPlace(project.cells, selectionBox, direction) : project.cells;
+      const flippedFloorTiles = scope === 'objects'
+        ? (project.floorTiles ?? {})
+        : transformFloorSelection(project.floorTiles ?? {}, selectionBox, direction, project.width, project.height, false);
       handleUpdateCells(
         flippedCells,
         `Voltear selección (${direction === 'horizontal' ? 'H' : 'V'})`,
@@ -621,7 +633,7 @@ export default function App() {
     const centered = centerSelectionHorizontally(selectionBox, project.width, project.height);
     const dx = centered.minX - selectionBox.minX;
     if (dx !== 0 && !handleMoveSelection(selectionBox, dx, 0)) return;
-    handleSetSelectionBox(centered);
+    handleSetSelectionBox({ ...centered, scope: selectionBox.scope });
     showToast(t.mirror.centeredH);
   }, [selectionBox, project.width, project.height, handleMoveSelection, handleSetSelectionBox, showToast, t.mirror.centeredH]);
 
@@ -630,7 +642,7 @@ export default function App() {
     const centered = centerSelectionVertically(selectionBox, project.width, project.height);
     const dy = centered.minY - selectionBox.minY;
     if (dy !== 0 && !handleMoveSelection(selectionBox, 0, dy)) return;
-    handleSetSelectionBox(centered);
+    handleSetSelectionBox({ ...centered, scope: selectionBox.scope });
     showToast(t.mirror.centeredV);
   }, [selectionBox, project.width, project.height, handleMoveSelection, handleSetSelectionBox, showToast, t.mirror.centeredV]);
 
@@ -640,44 +652,40 @@ export default function App() {
     const dx = centered.minX - selectionBox.minX;
     const dy = centered.minY - selectionBox.minY;
     if ((dx !== 0 || dy !== 0) && !handleMoveSelection(selectionBox, dx, dy)) return;
-    handleSetSelectionBox(centered);
+    handleSetSelectionBox({ ...centered, scope: selectionBox.scope });
     showToast(t.mirror.centeredBoth);
   }, [selectionBox, project.width, project.height, handleMoveSelection, handleSetSelectionBox, showToast, t.mirror.centeredBoth]);
 
   // Annotation handlers
-  const handleAddAnnotation = useCallback((x: number, y: number) => {
-    const text = window.prompt(t.annotationPrompt);
-    if (text !== null && text.trim() !== '') {
-      const newAnnotation: Annotation = {
-        id: `ann_${Date.now()}`,
-        x,
-        y,
-        text: text.trim(),
-      };
-      setProject(prev => ({
-        ...prev,
-        annotations: [...prev.annotations, newAnnotation],
-        updatedAt: new Date().toISOString(),
-      }));
-      showToast(t.annotationAdded);
-    }
-  }, [showToast, t.annotationPrompt, t.annotationAdded]);
+  const handleAddAnnotation = useCallback((x: number, y: number, text: string) => {
+    const trimmedText = text.trim();
+    if (!trimmedText) return;
+    const newAnnotation: Annotation = {
+      id: `ann_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      x,
+      y,
+      text: trimmedText,
+    };
+    setProject(prev => ({
+      ...prev,
+      annotations: [...prev.annotations, newAnnotation],
+      updatedAt: new Date().toISOString(),
+    }));
+    showToast(t.annotationAdded);
+  }, [showToast, t.annotationAdded]);
 
-  const handleEditAnnotation = useCallback((annotationId: string) => {
-    const ann = project.annotations.find(a => a.id === annotationId);
-    if (!ann) return;
-    const text = window.prompt(t.annotationEditPrompt, ann.text);
-    if (text !== null) {
-      setProject(prev => ({
-        ...prev,
-        annotations: prev.annotations.map(a =>
-          a.id === annotationId ? { ...a, text: text.trim() } : a
-        ),
-        updatedAt: new Date().toISOString(),
-      }));
-      showToast(t.annotationUpdated);
-    }
-  }, [project.annotations, showToast, t.annotationEditPrompt, t.annotationUpdated]);
+  const handleEditAnnotation = useCallback((annotationId: string, text: string) => {
+    const trimmedText = text.trim();
+    if (!trimmedText) return;
+    setProject(prev => ({
+      ...prev,
+      annotations: prev.annotations.map(a =>
+        a.id === annotationId ? { ...a, text: trimmedText } : a
+      ),
+      updatedAt: new Date().toISOString(),
+    }));
+    showToast(t.annotationUpdated);
+  }, [showToast, t.annotationUpdated]);
 
   const handleDeleteAnnotation = useCallback((annotationId: string) => {
     setProject(prev => ({
@@ -687,6 +695,16 @@ export default function App() {
     }));
     showToast(t.annotationDeleted);
   }, [showToast, t.annotationDeleted]);
+
+  const handleRotateAnnotation = useCallback((annotationId: string) => {
+    setProject(prev => ({
+      ...prev,
+      annotations: prev.annotations.map(annotation => annotation.id === annotationId
+        ? { ...annotation, rotation: (((annotation.rotation ?? 0) + 90) % 360) as StorageItemRotation }
+        : annotation),
+      updatedAt: new Date().toISOString(),
+    }));
+  }, []);
 
   const handleMoveAnnotation = useCallback((annotationId: string, x: number, y: number) => {
     setProject(prev => ({
@@ -761,6 +779,7 @@ export default function App() {
           minY: selectionBox.minY,
           maxX: Math.min(newWidth - 1, selectionBox.maxX),
           maxY: Math.min(newHeight - 1, selectionBox.maxY),
+          scope: selectionBox.scope,
         });
       }
     }
@@ -1152,6 +1171,8 @@ export default function App() {
           onChangeDoorOrientation={setDoorOrientation}
           showDoorTooltip={showDoorTooltip}
           onDismissDoorTooltip={handleDismissDoorTooltip}
+          selectionScope={selectionScope}
+          onChangeSelectionScope={setSelectionScope}
           language={language}
           t={t}
         />
@@ -1214,6 +1235,7 @@ export default function App() {
             plannerLayerStates={plannerLayerStates}
             language={language}
             selectionBox={selectionBox}
+            selectionScope={selectionScope}
             onSetSelectionBox={handleSetSelectionBox}
             onMoveSelection={handleMoveSelection}
             onUpdateCells={handleUpdateCells}
@@ -1230,6 +1252,7 @@ export default function App() {
             onAddAnnotation={handleAddAnnotation}
             onEditAnnotation={handleEditAnnotation}
             onDeleteAnnotation={handleDeleteAnnotation}
+            onRotateAnnotation={handleRotateAnnotation}
             onMoveAnnotation={handleMoveAnnotation}
             onDoorPlaced={handleDoorPlaced}
             doorOrientation={doorOrientation}

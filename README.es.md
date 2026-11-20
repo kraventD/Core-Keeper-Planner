@@ -4,7 +4,7 @@
 
   **Construye tu hogar subterráneo antes de colocar el primer bloque.**
 
-  <img src="assets/readme/stats-es.svg" alt="Versión 1.1.0 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
+  <img src="assets/readme/stats-es.svg" alt="Versión 1.1.1 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
 
   [🇬🇧 English](README.md) · **🇪🇸 Español**
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Última versión — v1.1.0:** añade 22 cultivos en macetas, una guía del centro activada por defecto, borrado opcional de objetos y suelos, y exportación PNG con la altura visual correcta de los sprites. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.zip).
+> **Última versión — v1.1.1:** rellena áreas conectadas con suelos u objetos del catálogo, añade alcances para la selección rectangular y permite editar, mover, borrar y girar notas. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
 
 La numeración de versiones sigue la política del proyecto en [VERSIONING.md](VERSIONING.md).
 
@@ -112,11 +112,11 @@ Los colores de paredes y bloques siguen los valores publicados en la wiki de Cor
 | Línea | Dibujar una línea entre dos puntos |
 | Rectángulo | Dibujar un contorno o rectángulo relleno |
 | Círculo | Dibujar un contorno o círculo relleno, desde el centro o una esquina |
-| Rellenar área | Rellenar una región de color |
+| Rellenar área | Rellenar una región conectada con el color, suelo u objeto activo del catálogo |
 | Espejo en tiempo real | Reflejar trazos de lápiz, borrador, línea, rectángulo y círculo horizontalmente, verticalmente o en cuatro direcciones |
 | Colocar Core | Insertar el patrón del Core y las estatuas, añadir opcionalmente un punto de teletransporte y centrar el patrón en el plano |
-| Anotación | Agregar, editar, mover o borrar notas |
-| Selección rectangular / mover selección | Seleccionar y mover una zona, incluidos los objetos que contiene |
+| Anotación | Agregar, editar, girar, mover o borrar notas |
+| Selección rectangular / mover selección | Seleccionar todo, solo suelos o solo objetos; copiar, mover o borrar el contenido elegido |
 | Seleccionar | Seleccionar y mover objetos colocados |
 | Mano | Desplazar la vista del lienzo |
 
@@ -245,7 +245,7 @@ Core Keeper Planner es un proyecto independiente que desarrollo y mantengo perso
   <br>
   <strong>Planifica. Construye. Hazlo tuyo.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSIÓN 1.1.0</sub>
+  <sub>CORE KEEPER PLANNER · VERSIÓN 1.1.1</sub>
   <br>
   <a href="README.md">Read in English</a>
 </div>

@@ -13,6 +13,7 @@ import {
   DoorOrientation,
   StorageItemRotation,
   PlannerLayerStates,
+  SelectionScope,
   Language,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
@@ -32,6 +33,7 @@ import {
   normalizeBox,
   isInBounds,
   floodFill,
+  getConnectedRegion,
   moveCells,
   getCorePatternCells,
   stampCorePattern,
@@ -46,6 +48,7 @@ import {
   Maximize2,
   Crosshair,
   RotateCcw,
+  RotateCw,
   Grid2X2,
   Pencil,
   Slash,
@@ -55,6 +58,7 @@ import {
   PackageOpen,
   Sun,
   Moon,
+  Trash2,
 } from 'lucide-react';
 
 interface SpriteContentBounds {
@@ -62,6 +66,14 @@ interface SpriteContentBounds {
   y: number;
   width: number;
   height: number;
+}
+
+interface AnnotationEditorState {
+  mode: 'add' | 'edit';
+  x: number;
+  y: number;
+  annotationId?: string;
+  text: string;
 }
 
 const CONTEXT_TOOL_ICONS: Array<{ tool: ToolType; icon: React.ComponentType<{ className?: string }> }> = [
@@ -165,6 +177,7 @@ interface CanvasAreaProps {
   plannerLayerStates: PlannerLayerStates;
   language: Language;
   selectionBox: SelectionBox | null;
+  selectionScope: SelectionScope;
   onSetSelectionBox: (box: SelectionBox | null) => void;
   onMoveSelection?: (box: SelectionBox, deltaX: number, deltaY: number) => boolean;
   onUpdateCells: (newCells: Record<string, string>, description: string, storagePlacements?: StorageItemPlacement[], floorTiles?: Record<string, string>) => void;
@@ -178,9 +191,10 @@ interface CanvasAreaProps {
   onMoveStorageItem?: (id: string, x: number, y: number) => void;
   onZoomChange?: (zoom: number) => void;
   annotations: Annotation[];
-  onAddAnnotation: (x: number, y: number) => void;
-  onEditAnnotation: (annotationId: string) => void;
+  onAddAnnotation: (x: number, y: number, text: string) => void;
+  onEditAnnotation: (annotationId: string, text: string) => void;
   onDeleteAnnotation: (annotationId: string) => void;
+  onRotateAnnotation: (annotationId: string) => void;
   onMoveAnnotation: (annotationId: string, x: number, y: number) => void;
   onDoorPlaced?: () => void;
   doorOrientation: DoorOrientation;
@@ -212,6 +226,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   plannerLayerStates = DEFAULT_PLANNER_LAYER_STATES,
   language,
   selectionBox,
+  selectionScope,
   onSetSelectionBox,
   onMoveSelection,
   onUpdateCells,
@@ -228,6 +243,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onAddAnnotation,
   onEditAnnotation,
   onDeleteAnnotation,
+  onRotateAnnotation,
   onMoveAnnotation,
   onDoorPlaced,
   doorOrientation = 'horizontal',
@@ -257,6 +273,8 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   // Annotation drag state
   const [draggingAnnotationId, setDraggingAnnotationId] = useState<string | null>(null);
   const [annotationDragStartCell, setAnnotationDragStartCell] = useState<CellCoord | null>(null);
+  const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
+  const [annotationEditor, setAnnotationEditor] = useState<AnnotationEditorState | null>(null);
 
   // Door tooltip tracking (per session)
   const doorTooltipNotifiedRef = useRef<boolean>(false);
@@ -331,12 +349,12 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const drawNativeStorageSprite = (context: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number, cellSize: number, rotation = 0) => {
     const bounds = getSpriteContentBounds(image);
     const scale = cellSize / 16;
-    const spriteWidth = Math.max(bounds.width * scale, width);
-    const spriteHeight = Math.max(bounds.height * scale, height);
+    const quarterTurn = rotation === 90 || rotation === 270;
+    const baseWidth = quarterTurn ? height : width;
+    const baseHeight = quarterTurn ? width : height;
+    const spriteWidth = Math.max(bounds.width * scale, baseWidth);
+    const spriteHeight = Math.max(bounds.height * scale, baseHeight);
     if (rotation !== 0) {
-      const quarterTurn = rotation === 90 || rotation === 270;
-      const baseWidth = quarterTurn ? height : width;
-      const baseHeight = quarterTurn ? width : height;
       context.translate(x + width / 2, y + height / 2);
       context.rotate(rotation * Math.PI / 180);
       context.drawImage(
@@ -604,11 +622,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     if (annotations.length > 0 && cell) {
       const ann = annotations.find(a => a.x === cell.x && a.y === cell.y);
       if (ann) {
+        setSelectedAnnotationId(ann.id);
+        if (e.detail >= 2) {
+          setAnnotationEditor({ mode: 'edit', annotationId: ann.id, x: ann.x, y: ann.y, text: ann.text });
+          setIsPointerDown(false);
+          return;
+        }
         setDraggingAnnotationId(ann.id);
         setAnnotationDragStartCell({ x: ann.x, y: ann.y });
         return;
       }
     }
+    setSelectedAnnotationId(null);
 
     if (activeTool === 'move') {
       if (selectionBox) {
@@ -620,6 +645,72 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     if (activeTool === 'fill') {
       if (cell) {
+        const region = getConnectedRegion(project.cells, cell.x, cell.y, project.width, project.height);
+
+        if (selectedFloorItem) {
+          if (!isPlannerLayerEditable(plannerLayerStates, getStorageItemLayerId(selectedFloorItem, selectedFloorItem.layer))) return;
+          const floorTiles = { ...(project.floorTiles ?? {}) };
+          for (const { x, y } of region) floorTiles[coordKey(x, y)] = selectedFloorItem.id;
+          onUpdateCells(project.cells, 'Rellenar área con suelo', undefined, floorTiles);
+          return;
+        }
+
+        if (selectedStorageItem) {
+          const layerId = getStorageItemLayerId(selectedStorageItem, selectedStorageItem.layer);
+          if (!isPlannerLayerEditable(plannerLayerStates, layerId)) return;
+
+          const regionKeys = new Set(region.map(({ x, y }) => coordKey(x, y)));
+          const placements = [...(project.storagePlacements ?? [])];
+          const added: StorageItemPlacement[] = [];
+          const reserved = new Set<string>();
+          const layer = selectedStorageItem.layer ?? 'object';
+          const itemWidth = selectedStorageItem.width;
+          const itemHeight = selectedStorageItem.height;
+          const occupiedByLayer = (x: number, y: number) => placements.some(existing =>
+            getStoragePlacementLayerId(existing, STORAGE_ITEM_BY_ID.get(existing.itemId)) === layerId &&
+            x < existing.x + existing.width && x + itemWidth > existing.x &&
+            y < existing.y + existing.height && y + itemHeight > existing.y,
+          );
+
+          for (const { x, y } of region) {
+            if (x + itemWidth > project.width || y + itemHeight > project.height) continue;
+            const footprint: string[] = [];
+            let fullyInside = true;
+            for (let dy = 0; dy < itemHeight && fullyInside; dy++) {
+              for (let dx = 0; dx < itemWidth; dx++) {
+                const key = coordKey(x + dx, y + dy);
+                if (!regionKeys.has(key) || reserved.has(key)) {
+                  fullyInside = false;
+                  break;
+                }
+                footprint.push(key);
+              }
+            }
+            if (!fullyInside || occupiedByLayer(x, y)) continue;
+
+            const placement: StorageItemPlacement = {
+              id: `storage_${Date.now()}_${Math.random().toString(36).slice(2, 7)}_${added.length}`,
+              itemId: selectedStorageItem.id,
+              x,
+              y,
+              width: itemWidth,
+              height: itemHeight,
+              layer,
+              lightRadius: selectedStorageItem.defaultLightRadius,
+              rotation: 0,
+            };
+            added.push(placement);
+            placements.push(placement);
+            footprint.forEach(key => reserved.add(key));
+          }
+
+          if (added.length > 0) {
+            const itemName = language === 'es' ? selectedStorageItem.nameEs : selectedStorageItem.nameEn;
+            onUpdateCells(project.cells, `Rellenar área con ${itemName}`, placements, project.floorTiles);
+          }
+          return;
+        }
+
         const updated = floodFill(
           project.cells,
           cell.x,
@@ -651,10 +742,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     if (activeTool === 'annotation') {
       if (cell) {
         const existing = annotations.find(a => a.x === cell.x && a.y === cell.y);
-        if (existing && onEditAnnotation) {
-          onEditAnnotation(existing.id);
-        } else if (onAddAnnotation) {
-          onAddAnnotation(cell.x, cell.y);
+        if (existing) {
+          setSelectedAnnotationId(existing.id);
+          setAnnotationEditor({ mode: 'edit', annotationId: existing.id, x: existing.x, y: existing.y, text: existing.text });
+        } else {
+          setAnnotationEditor({ mode: 'add', x: cell.x, y: cell.y, text: '' });
         }
       }
       return;
@@ -939,9 +1031,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         project.width,
         project.height
       );
-      const visiblePlacements = (project.storagePlacements ?? []).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
+      const visiblePlacements = selectionScope === 'floors' ? [] : (project.storagePlacements ?? []).filter(item => plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible);
       const expandedBox = expandSelectionBoxToIncludePlacements(box, visiblePlacements);
-      onSetSelectionBox(expandedBox);
+      onSetSelectionBox({ ...expandedBox, scope: selectionScope });
     } else if (activeTool === 'select' && dragStartCell) {
       const box = normalizeBox(
         dragStartCell.x,
@@ -967,6 +1059,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             minY: Math.max(0, Math.min(project.height - 1, selectionBox.minY + dy)),
             maxX: Math.max(0, Math.min(project.width - 1, selectionBox.maxX + dx)),
             maxY: Math.max(0, Math.min(project.height - 1, selectionBox.maxY + dy)),
+            scope: selectionBox.scope,
           });
         }
       }
@@ -1851,21 +1944,25 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           const textMetrics = ctx.measureText(ann.text);
           const bubbleW = textMetrics.width + 12;
           const bubbleH = Math.max(16, currentCellSize * 0.7);
+          ctx.save();
+          ctx.translate(annX, annY);
+          ctx.rotate((ann.rotation ?? 0) * Math.PI / 180);
           ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-          ctx.fillRect(annX - bubbleW / 2, annY - bubbleH / 2, bubbleW, bubbleH);
+          ctx.fillRect(-bubbleW / 2, -bubbleH / 2, bubbleW, bubbleH);
           ctx.strokeStyle = '#fbbf24';
           ctx.lineWidth = 1;
-          ctx.strokeRect(annX - bubbleW / 2, annY - bubbleH / 2, bubbleW, bubbleH);
+          ctx.strokeRect(-bubbleW / 2, -bubbleH / 2, bubbleW, bubbleH);
 
           // Annotation text
           ctx.fillStyle = '#fbbf24';
-          ctx.fillText(ann.text, annX, annY + 2);
+          ctx.fillText(ann.text, 0, 2);
 
           // Small dot at cell center
           ctx.fillStyle = '#f59e0b';
           ctx.beginPath();
-          ctx.arc(annX, annY - bubbleH / 2 - 4, 2, 0, Math.PI * 2);
+          ctx.arc(0, -bubbleH / 2 - 4, 2, 0, Math.PI * 2);
           ctx.fill();
+          ctx.restore();
         }
         ctx.restore();
       }
@@ -1973,15 +2070,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     : null;
   const mirrorSupported = ['pencil', 'eraser', 'line', 'rectangle', 'circle'].includes(activeTool);
   const materialDrawingTools: ToolType[] = ['pencil', 'line', 'rectangle', 'circle'];
-  const activeObjectItem = activeTool === 'place_storage' ? selectedStorageItem : null;
-  const activeFloorTile = materialDrawingTools.includes(activeTool) ? selectedFloorItem : null;
+  const activeObjectItem = activeTool === 'place_storage' || activeTool === 'fill' ? selectedStorageItem : null;
+  const activeFloorTile = [...materialDrawingTools, 'fill'].includes(activeTool) ? selectedFloorItem : null;
   const usesActiveColor = (materialDrawingTools.includes(activeTool) && !activeFloorTile) || activeTool === 'fill';
   const hasActiveTarget = Boolean(activeObjectItem || activeFloorTile || usesActiveColor);
   const showTargetCard = hasActiveTarget || activeTool === 'place_storage';
   const applicableTools: ToolType[] = activeObjectItem
-    ? ['place_storage']
+    ? ['place_storage', 'fill']
     : activeFloorTile
-      ? ['pencil', 'line', 'rectangle', 'circle']
+      ? ['pencil', 'line', 'rectangle', 'circle', 'fill']
       : usesActiveColor
         ? ['pencil', 'line', 'rectangle', 'circle', 'fill']
         : [];
@@ -2010,6 +2107,32 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const rotationToolbarTop = placementForRotationControls
     ? Math.max(8, pan.y + placementForRotationControls.y * currentCellSize - 48)
     : 0;
+  const selectedAnnotation = annotations.find(annotation => annotation.id === selectedAnnotationId) ?? null;
+  const annotationToolbarWidth = 236;
+  const annotationToolbarLeft = selectedAnnotation
+    ? Math.max(8, Math.min(
+      canvasWidth - annotationToolbarWidth - 8,
+      pan.x + (selectedAnnotation.x + 0.5) * currentCellSize - annotationToolbarWidth / 2,
+    ))
+    : 0;
+  const canvasHeight = containerRef.current?.clientHeight ?? 600;
+  const annotationToolbarTop = selectedAnnotation
+    ? Math.max(8, Math.min(
+      canvasHeight - 48,
+      pan.y + selectedAnnotation.y * currentCellSize - 52,
+    ))
+    : 0;
+  const saveAnnotationEditor = () => {
+    if (!annotationEditor) return;
+    const text = annotationEditor.text.trim();
+    if (!text) return;
+    if (annotationEditor.mode === 'edit' && annotationEditor.annotationId) {
+      onEditAnnotation(annotationEditor.annotationId, text);
+    } else {
+      onAddAnnotation(annotationEditor.x, annotationEditor.y, text);
+    }
+    setAnnotationEditor(null);
+  };
 
   return (
     <div
@@ -2050,6 +2173,105 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           </div>
         </div>
       )}
+      {selectedAnnotation && (
+        <div
+          className="absolute z-30 flex items-center gap-1 rounded-lg border border-amber-400/50 bg-[#0d1728]/95 p-1.5 shadow-xl backdrop-blur-md"
+          style={{ left: annotationToolbarLeft, top: annotationToolbarTop, width: annotationToolbarWidth }}
+          onPointerDown={event => event.stopPropagation()}
+          role="group"
+          aria-label={language === 'es' ? 'Acciones de nota' : 'Note actions'}
+        >
+          <span className="min-w-0 flex-1 truncate px-1 text-[10px] text-zinc-300" title={selectedAnnotation.text}>
+            {selectedAnnotation.text}
+          </span>
+          <button
+            type="button"
+            onClick={() => onRotateAnnotation(selectedAnnotation.id)}
+            title={`${language === 'es' ? 'Girar nota 90°' : 'Rotate note 90°'} · ${(selectedAnnotation.rotation ?? 0) + 90 > 270 ? 0 : (selectedAnnotation.rotation ?? 0) + 90}°`}
+            aria-label={language === 'es' ? 'Girar nota 90 grados' : 'Rotate note 90 degrees'}
+            className="flex h-7 shrink-0 items-center justify-center rounded-md border border-amber-500/30 px-2 text-amber-200 transition hover:bg-amber-500/15"
+          >
+            <RotateCw className="h-3 w-3" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setAnnotationEditor({ mode: 'edit', annotationId: selectedAnnotation.id, x: selectedAnnotation.x, y: selectedAnnotation.y, text: selectedAnnotation.text })}
+            title={language === 'es' ? 'Editar nota' : 'Edit note'}
+            aria-label={language === 'es' ? 'Editar nota' : 'Edit note'}
+            className="flex h-7 shrink-0 items-center gap-1 rounded-md border border-cyan-500/30 px-2 text-[10px] font-medium text-cyan-100 transition hover:bg-cyan-500/15"
+          >
+            <Pencil className="h-3 w-3" />
+            {language === 'es' ? 'Editar' : 'Edit'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onDeleteAnnotation(selectedAnnotation.id);
+              setSelectedAnnotationId(null);
+            }}
+            title={language === 'es' ? 'Eliminar nota' : 'Delete note'}
+            aria-label={language === 'es' ? 'Eliminar nota' : 'Delete note'}
+            className="flex h-7 shrink-0 items-center gap-1 rounded-md border border-red-500/30 px-2 text-[10px] font-medium text-red-200 transition hover:bg-red-500/15"
+          >
+            <Trash2 className="h-3 w-3" />
+            {language === 'es' ? 'Borrar' : 'Delete'}
+          </button>
+        </div>
+      )}
+      {annotationEditor && (
+        <div
+          className="absolute inset-0 z-40 flex items-center justify-center bg-black/45 p-4 backdrop-blur-[2px]"
+          onPointerDown={event => event.stopPropagation()}
+        >
+          <section
+            className="w-full max-w-sm rounded-xl border border-[#2b3d58] bg-[#0d1728] p-4 shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="annotation-editor-title"
+          >
+            <h2 id="annotation-editor-title" className="mb-3 text-sm font-semibold text-cyan-100">
+              {annotationEditor.mode === 'add'
+                ? (language === 'es' ? 'Nueva nota' : 'New note')
+                : (language === 'es' ? 'Editar nota' : 'Edit note')}
+            </h2>
+            <label className="mb-1 block text-xs text-zinc-400" htmlFor="annotation-editor-text">
+              {language === 'es' ? 'Texto de la nota' : 'Note text'}
+            </label>
+            <textarea
+              id="annotation-editor-text"
+              autoFocus
+              rows={4}
+              maxLength={500}
+              value={annotationEditor.text}
+              onChange={event => setAnnotationEditor({ ...annotationEditor, text: event.target.value })}
+              onKeyDown={event => {
+                if (event.key === 'Escape') setAnnotationEditor(null);
+                if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) saveAnnotationEditor();
+              }}
+              placeholder={language === 'es' ? 'Escribe una nota para este plano…' : 'Write a note for this blueprint…'}
+              className="w-full resize-y rounded-lg border border-[#2b3d58] bg-[#080f1c] px-3 py-2 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-400/70"
+            />
+            <div className="mt-3 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setAnnotationEditor(null)}
+                className="rounded-lg border border-[#2b3d58] px-3 py-1.5 text-xs text-zinc-300 transition hover:bg-white/5"
+              >
+                {language === 'es' ? 'Cancelar' : 'Cancel'}
+              </button>
+              <button
+                type="button"
+                disabled={!annotationEditor.text.trim()}
+                onClick={saveAnnotationEditor}
+                className="rounded-lg border border-cyan-400/50 bg-cyan-400/15 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-400/25 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {language === 'es' ? 'Guardar nota' : 'Save note'}
+              </button>
+            </div>
+            <p className="mt-2 text-right text-[10px] text-zinc-500">Ctrl+Enter · {language === 'es' ? 'guardar' : 'save'}</p>
+          </section>
+        </div>
+      )}
       <canvas
         ref={canvasRef}
         style={{ cursor: activeCursor }}
@@ -2063,6 +2285,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           setDraggingAnnotationId(null);
           setAnnotationDragStartCell(null);
         }}
+        onContextMenu={event => event.preventDefault()}
         className="w-full h-full block touch-none"
       />
 

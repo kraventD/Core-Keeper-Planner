@@ -296,6 +296,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
           {selectionBox ? (
             <div className="space-y-2 px-2.5 pb-2.5">
+              <div className="rounded-md border border-cyan-900/50 bg-cyan-950/20 px-2 py-1.5 text-[10px] text-cyan-200">
+                {selectionBox.scope === 'floors'
+                  ? (language === 'es' ? 'Contenido seleccionado: solo suelos' : 'Selected contents: floors only')
+                  : selectionBox.scope === 'objects'
+                    ? (language === 'es' ? 'Contenido seleccionado: solo objetos' : 'Selected contents: objects only')
+                    : (language === 'es' ? 'Contenido seleccionado: todo' : 'Selected contents: all')}
+              </div>
               <div className="grid grid-cols-2 gap-1.5 p-2 bg-[#121316] rounded border border-zinc-800/80 font-mono text-[11px]">
                 <div>
                   <span className="text-zinc-500 text-[10px] block">{t.origin}:</span>
@@ -327,15 +334,17 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   <Scissors className="w-3 h-3 text-amber-400" />
                   <span>{t.cut}</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={onFillSelection}
-                  title={t.fillSelectionTooltip}
-                  className="px-2 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 flex items-center justify-center gap-1.5 transition text-[11px]"
-                >
-                  <Sparkles className="w-3 h-3 text-emerald-400" />
-                  <span>{t.fillSelection}</span>
-                </button>
+                {selectionBox.scope !== 'objects' && (
+                  <button
+                    type="button"
+                    onClick={onFillSelection}
+                    title={t.fillSelectionTooltip}
+                    className="px-2 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 flex items-center justify-center gap-1.5 transition text-[11px]"
+                  >
+                    <Sparkles className="w-3 h-3 text-emerald-400" />
+                    <span>{t.fillSelection}</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={onDeleteSelection}
@@ -348,7 +357,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               </div>
 
               {/* Selection Mirror & Flip Actions */}
-              <div className="pt-2 border-t border-zinc-800/80 space-y-1.5">
+              {selectionBox.scope !== 'objects' && <div className="pt-2 border-t border-zinc-800/80 space-y-1.5">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400/90 block">
                   {t.mirror.mirrorSelectionTitle}
                 </span>
@@ -394,6 +403,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <span>{t.mirror.flipV}</span>
                   </button>
                 </div>
+              </div>}
 
                 {/* Centrar selección */}
                 <div className="pt-2 border-t border-zinc-800/80">
@@ -433,7 +443,6 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     </button>
                   </div>
                 </div>
-              </div>
             </div>
           ) : (
             <div className="px-2.5 pb-2.5 text-[11px] italic text-zinc-500">

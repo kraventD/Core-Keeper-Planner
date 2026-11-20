@@ -42,11 +42,15 @@ export interface SelectionBox {
   minY: number;
   maxX: number;
   maxY: number;
+  scope?: SelectionScope;
 }
+
+export type SelectionScope = 'all' | 'floors' | 'objects';
 
 export interface ClipboardData {
   width: number;
   height: number;
+  scope?: SelectionScope;
   cells: Array<{
     relX: number;
     relY: number;
@@ -64,6 +68,7 @@ export interface Annotation {
   x: number;
   y: number;
   text: string;
+  rotation?: StorageItemRotation;
 }
 
 export interface StorageItemPlacement {

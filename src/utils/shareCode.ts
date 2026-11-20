@@ -1,5 +1,4 @@
-import { BlueprintProject } from '../types/blueprint';
-import { StorageItemPlacement } from '../types/blueprint';
+import { BlueprintProject, StorageItemPlacement, StorageItemRotation } from '../types/blueprint';
 
 export const SHARE_CODE_VERSION = '1.0';
 export const SHARE_CODE_PREFIX = 'CKBP_V1:';
@@ -21,6 +20,7 @@ export interface ShareCodeData {
     x: number;
     y: number;
     text: string;
+    rotation?: StorageItemRotation;
   }>;
   storagePlacements?: StorageItemPlacement[];
 }
@@ -51,6 +51,7 @@ export function encodeShareCode(project: BlueprintProject): string {
             x: typeof a.x === 'number' ? a.x : 0,
             y: typeof a.y === 'number' ? a.y : 0,
             text: a.text || '',
+            rotation: a.rotation,
           }))
         : [],
       storagePlacements: Array.isArray(project.storagePlacements) ? project.storagePlacements : [],

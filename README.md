@@ -4,7 +4,7 @@
 
   **Build your underground home before you place the first block.**
 
-  <img src="assets/readme/stats-en.svg" alt="Version 1.1.0 · 488 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
+  <img src="assets/readme/stats-en.svg" alt="Version 1.1.1 · 488 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
 
   **🇬🇧 English** · [🇪🇸 Español](README.es.md)
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Latest release — v1.1.0:** adds 22 potted crop variants, a center guide enabled by default, optional object and floor erasing, and correct tall-sprite PNG exports. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.0/core-keeper-planner-1.1.0.zip).
+> **Latest release — v1.1.1:** fills connected areas with floors or catalog objects, adds selectable content scopes for rectangular selection, and makes notes editable, movable, deletable and rotatable. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
 
 Release numbering follows the project policy in [VERSIONING.md](VERSIONING.md).
 
@@ -112,11 +112,11 @@ Wall and block colors follow values published on the Core Keeper Wiki when avail
 | Line | Draw a line between two points |
 | Rectangle | Draw an outline or a filled rectangle |
 | Circle | Draw an outline or a filled circle, starting from the center or a corner |
-| Area fill | Fill a contiguous color region |
+| Area fill | Fill a connected region with the active color, floor or catalog object |
 | Real-time mirror | Mirror pencil, eraser, line, rectangle and circle strokes horizontally, vertically or in four directions |
 | Place Core | Insert the Core and statue pattern, optionally include a teleport point and center the pattern in the plan |
-| Annotation | Add, edit, move or delete notes |
-| Rectangle selection / move selection | Select and move an area, including objects inside it |
+| Annotation | Add, edit, rotate, move or delete notes |
+| Rectangle selection / move selection | Select all contents, floors only or objects only; copy, move or delete the selected scope |
 | Select | Select and move placed objects |
 | Hand | Pan around the canvas |
 
@@ -243,7 +243,7 @@ Core Keeper Planner is an independent project that I develop and maintain. It is
   <br>
   <strong>Plan it. Build it. Make it yours.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSION 1.1.0</sub>
+  <sub>CORE KEEPER PLANNER · VERSION 1.1.1</sub>
   <br>
   <a href="README.es.md">Leer en español</a>
 </div>

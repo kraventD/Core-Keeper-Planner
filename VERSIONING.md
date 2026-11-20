@@ -22,4 +22,4 @@ Use the Git tag `v<releaseVersion>`. Mark correction-only commits with a `hotfix
 
 ## Current release
 
-`1.1.0` adds 22 potted crop variants to the nature catalog, plus a center guide enabled by default. Chunk and light coverage guides are off by default. The eraser can optionally remove objects and floors, and custom visual heights are preserved in PNG exports.
+`1.1.1` adds catalog-aware connected fill, clearer note editing and rotation, and content filters for rectangular selection. It also corrects rotated double-chest sprite sizing.

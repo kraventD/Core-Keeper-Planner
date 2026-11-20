@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.1.1 — Selection and annotation tools
+
+### English
+
+- Expanded connected-area fill to apply the selected floor or catalog object across the connected region. Multi-tile objects respect their full footprint and skip overlaps or positions outside the plan.
+- Made note actions discoverable: select a note to edit, rotate or delete it, double-click to edit, and drag to move. Replaced browser prompts with an in-app note editor. Note rotation is preserved in share codes.
+- Added rectangular selection scopes for all contents, floors only, or placed objects only. Copy, cut, move and delete now honor the chosen scope.
+- Corrected visual sizing for rotated double-wide chests so their sprite matches the rotated 1×2 footprint instead of stretching to 2×2.
+
+### Español
+
+- El rellenado de áreas conectadas ahora aplica el suelo u objeto seleccionado del catálogo a toda la región. Los objetos de varias casillas respetan su huella completa y omiten espacios ocupados o fuera del plano.
+- Se hicieron visibles las acciones de las notas: al seleccionarlas puedes editarlas, girarlas o borrarlas; el doble clic abre la edición y también puedes arrastrarlas para moverlas. El editor de notas ahora está integrado en la app. La rotación se conserva en los códigos compartidos.
+- Se añadieron alcances para la selección rectangular: todo el contenido, solo suelos o solo objetos colocados. Copiar, cortar, mover y borrar respetan el alcance elegido.
+- Se corrigió el tamaño visual de los cofres dobles girados para que el sprite coincida con la huella rotada de 1×2 y no se estire a 2×2.
+
 ## v1.1.0 — Nature catalog and editor refinements
 
 ### English

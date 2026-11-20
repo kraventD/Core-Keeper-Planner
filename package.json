@@ -1,8 +1,8 @@
 {
   "name": "core-keeper-planner",
   "private": true,
-  "version": "1.1.0",
-  "releaseVersion": "1.1.0",
+  "version": "1.1.1",
+  "releaseVersion": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
