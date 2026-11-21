@@ -14,6 +14,8 @@
 
 > **Última versión — v1.2.0:** añade un historial de recuperación cada cinco minutos con miniaturas, previsualización clara para reflejar selecciones, previsualización del pegado junto al cursor con avisos de colisión y edición más rápida de notas. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.zip).
 
+> **Pruébalo en línea:** [Abrir Core Keeper Planner](https://kraventd.github.io/Core-Keeper-Planner/). Los planos se guardan en este navegador; usa las opciones de importar y exportar para moverlos entre dispositivos.
+
 La numeración de versiones sigue la política del proyecto en [VERSIONING.md](VERSIONING.md).
 
 ## <img src="assets/readme/app-logo.svg" width="32" alt=""> ¿Qué es Core Keeper Planner?

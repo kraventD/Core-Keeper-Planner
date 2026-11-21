@@ -5,7 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: './',
+    // Vite uses a project-site path in GitHub Pages and relative paths for local/standalone builds.
+    base: process.env.PAGES_BASE_PATH ?? './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

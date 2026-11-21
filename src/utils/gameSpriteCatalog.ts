@@ -22,7 +22,7 @@ let spriteCatalogRequest: Promise<Record<string, GameSpriteEntry>> | null = null
 
 export function loadGameSpriteCatalog(): Promise<Record<string, GameSpriteEntry>> {
   if (!spriteCatalogRequest) {
-    spriteCatalogRequest = fetch('/game-assets/construction-sprites.json')
+    spriteCatalogRequest = fetch(`${import.meta.env.BASE_URL}game-assets/construction-sprites.json`)
       .then(response => {
         if (!response.ok) throw new Error('Could not load the local game sprite catalog.');
         return response.json() as Promise<GameSpriteManifestEntry[]>;

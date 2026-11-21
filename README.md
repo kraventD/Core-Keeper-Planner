@@ -14,6 +14,8 @@
 
 > **Latest release — v1.2.0:** adds five-minute recovery history with thumbnails, clearer mirrored selection previews, cursor-following paste previews with collision warnings, and faster note editing. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.zip).
 
+> **Try it online:** [Open Core Keeper Planner](https://kraventd.github.io/Core-Keeper-Planner/). Plans are saved in this browser; use the import and export tools to move them between devices.
+
 Release numbering follows the project policy in [VERSIONING.md](VERSIONING.md).
 
 ## <img src="assets/readme/app-logo.svg" width="32" alt=""> What is Core Keeper Planner?
