@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.1" width="100%">
+  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.2.0" width="100%">
 
   **Construye tu hogar subterráneo antes de colocar el primer bloque.**
 
-  <img src="assets/readme/stats-es.svg" alt="Versión 1.1.1 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
+  <img src="assets/readme/stats-es.svg" alt="Versión 1.2.0 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
 
   [🇬🇧 English](README.md) · **🇪🇸 Español**
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Última versión — v1.1.1:** rellena áreas conectadas con suelos u objetos del catálogo, añade alcances para la selección rectangular, permite editar, mover, borrar y girar notas, y corrige un error que podía borrar los bloques de color al hacer clic en una nota. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.1.1/core-keeper-planner-1.1.1.zip).
+> **Última versión — v1.2.0:** añade un historial de recuperación cada cinco minutos con miniaturas, previsualización clara para reflejar selecciones, previsualización del pegado junto al cursor con avisos de colisión y edición más rápida de notas. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.zip).
 
 La numeración de versiones sigue la política del proyecto en [VERSIONING.md](VERSIONING.md).
 
@@ -245,7 +245,7 @@ Core Keeper Planner es un proyecto independiente que desarrollo y mantengo perso
   <br>
   <strong>Planifica. Construye. Hazlo tuyo.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSIÓN 1.1.1</sub>
+  <sub>CORE KEEPER PLANNER · VERSIÓN 1.2.0</sub>
   <br>
   <a href="README.md">Read in English</a>
 </div>

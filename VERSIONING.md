@@ -22,4 +22,4 @@ Use the Git tag `v<releaseVersion>`. Mark correction-only commits with a `hotfix
 
 ## Current release
 
-`1.1.1` adds catalog-aware connected fill, clearer note editing and rotation, and content filters for rectangular selection. It also corrects rotated double-chest sprite sizing and prevents note clicks from clearing blueprint blocks.
+`1.2.0` adds five-minute incremental recovery history with thumbnails, improved mirrored selection previews, cursor-following clipboard paste previews with collision feedback, and automatic focus in the note editor.

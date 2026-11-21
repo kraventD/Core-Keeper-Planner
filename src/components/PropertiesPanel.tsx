@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectionBox, Language, StorageItemPlacement, StorageItemRotation, PlannerLayerId, PlannerLayerStates } from '../types/blueprint';
+import { SelectionBox, Language, StorageItemPlacement, StorageItemRotation, PlannerLayerId, PlannerLayerStates, SelectionTransformPreview } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
 import { StorageItemDefinition } from '../utils/storageCatalog';
 import { GameSpriteEntry } from '../utils/gameSpriteCatalog';
@@ -53,6 +53,7 @@ interface PropertiesPanelProps {
   onChangeLightRadius?: (radius: number) => void;
   selectionBox: SelectionBox | null;
   hasClipboard: boolean;
+  isPastePlacementMode: boolean;
   onCopySelection: () => void;
   onCutSelection: () => void;
   onPasteSelection: () => void;
@@ -60,6 +61,7 @@ interface PropertiesPanelProps {
   onFillSelection: () => void;
   onClearSelection: () => void;
   onDuplicateMirrorSelection?: (axis: 'horizontal' | 'vertical') => void;
+  onPreviewSelectionTransform?: (preview: SelectionTransformPreview | null) => void;
   onFlipSelection?: (direction: 'horizontal' | 'vertical') => void;
   onCenterSelectionHorizontally?: () => void;
   onCenterSelectionVertically?: () => void;
@@ -99,6 +101,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onChangeLightRadius,
   selectionBox,
   hasClipboard,
+  isPastePlacementMode,
   onCopySelection,
   onCutSelection,
   onPasteSelection,
@@ -106,6 +109,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onFillSelection,
   onClearSelection,
   onDuplicateMirrorSelection,
+  onPreviewSelectionTransform,
   onFlipSelection,
   onCenterSelectionHorizontally,
   onCenterSelectionVertically,
@@ -357,7 +361,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               </div>
 
               {/* Selection Mirror & Flip Actions */}
-              {selectionBox.scope !== 'objects' && <div className="pt-2 border-t border-zinc-800/80 space-y-1.5">
+              <div className="pt-2 border-t border-zinc-800/80 space-y-1.5">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400/90 block">
                   {t.mirror.mirrorSelectionTitle}
                 </span>
@@ -366,6 +370,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => onDuplicateMirrorSelection?.('horizontal')}
+                    onMouseEnter={() => onPreviewSelectionTransform?.({ operation: 'mirror', axis: 'horizontal' })}
+                    onMouseLeave={() => onPreviewSelectionTransform?.(null)}
                     title={t.mirror.mirrorSelectionOppositeH}
                     className="px-2 py-1.5 rounded bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/50 text-cyan-200 flex items-center justify-center gap-1 transition text-[10px] font-medium"
                   >
@@ -375,6 +381,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => onDuplicateMirrorSelection?.('vertical')}
+                    onMouseEnter={() => onPreviewSelectionTransform?.({ operation: 'mirror', axis: 'vertical' })}
+                    onMouseLeave={() => onPreviewSelectionTransform?.(null)}
                     title={t.mirror.mirrorSelectionOppositeV}
                     className="px-2 py-1.5 rounded bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/50 text-cyan-200 flex items-center justify-center gap-1 transition text-[10px] font-medium"
                   >
@@ -382,11 +390,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <span>{t.mirror.mirrorV}</span>
                   </button>
                 </div>
+                <p className="px-0.5 text-[9px] leading-relaxed text-zinc-500">
+                  {language === 'es'
+                    ? 'Pasa el cursor por copiar o voltear para previsualizar; haz clic para aplicar.'
+                    : 'Hover over copy or flip to preview; click to apply.'}
+                </p>
 
                 <div className="grid grid-cols-2 gap-1.5 pt-0.5">
                   <button
                     type="button"
                     onClick={() => onFlipSelection?.('horizontal')}
+                    onMouseEnter={() => onPreviewSelectionTransform?.({ operation: 'flip', axis: 'horizontal' })}
+                    onMouseLeave={() => onPreviewSelectionTransform?.(null)}
                     title={t.mirror.flipSelectionH}
                     className="px-2 py-1.5 rounded bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center gap-1 transition text-[10px]"
                   >
@@ -396,6 +411,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => onFlipSelection?.('vertical')}
+                    onMouseEnter={() => onPreviewSelectionTransform?.({ operation: 'flip', axis: 'vertical' })}
+                    onMouseLeave={() => onPreviewSelectionTransform?.(null)}
                     title={t.mirror.flipSelectionV}
                     className="px-2 py-1.5 rounded bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center gap-1 transition text-[10px]"
                   >
@@ -403,7 +420,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <span>{t.mirror.flipV}</span>
                   </button>
                 </div>
-              </div>}
+              </div>
 
                 {/* Centrar selección */}
                 <div className="pt-2 border-t border-zinc-800/80">
@@ -454,10 +471,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <button
               type="button"
               onClick={onPasteSelection}
-              className="w-full mt-1 px-2.5 py-1.5 rounded bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 flex items-center justify-center gap-1.5 transition text-xs font-medium"
+              aria-pressed={isPastePlacementMode}
+              className={`w-full mt-1 px-2.5 py-1.5 rounded border flex items-center justify-center gap-1.5 transition text-xs font-medium ${isPastePlacementMode ? 'bg-cyan-500/20 border-cyan-400/60 text-cyan-200' : 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/50 text-amber-300'}`}
             >
               <ClipboardPaste className="w-3.5 h-3.5" />
-              <span>{t.paste} portapapeles</span>
+              <span>{isPastePlacementMode ? (language === 'es' ? 'Haz clic en el plano para pegar · Esc cancela' : 'Click on the blueprint to paste · Esc cancels') : `${t.paste} portapapeles`}</span>
             </button>
           )}
         </details>

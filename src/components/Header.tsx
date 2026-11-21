@@ -25,7 +25,7 @@ interface HeaderProps {
   onOpenProjectJson: (file: File) => void;
   onSaveProjectJson: () => void;
   onRecoverAutosave: () => void;
-  hasRecoveryAutosave: boolean;
+  recoveryPointCount: number;
   autosaveAvailable: boolean;
   onExportImage: () => void;
   onExportCode: () => void;
@@ -48,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenProjectJson,
   onSaveProjectJson,
   onRecoverAutosave,
-  hasRecoveryAutosave,
+  recoveryPointCount,
   autosaveAvailable,
   onExportImage,
   onExportCode,
@@ -96,8 +96,8 @@ export const Header: React.FC<HeaderProps> = ({
           <button onClick={onUndo} disabled={!canUndo} title={`${t.undo} (Ctrl+Z)`} aria-label={t.undo} className="rounded-md p-1.5 text-zinc-300 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-30"><Undo2 className="h-4 w-4" /></button>
           <button onClick={onRedo} disabled={!canRedo} title={`${t.redo} (Ctrl+Y / Ctrl+Shift+Z)`} aria-label={t.redo} className="rounded-md p-1.5 text-zinc-300 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-30"><Redo2 className="h-4 w-4" /></button>
         </div>
-        <button onClick={onRecoverAutosave} disabled={!hasRecoveryAutosave} title={hasRecoveryAutosave ? (currentLanguage === 'es' ? 'Recuperar respaldo anterior' : 'Recover previous backup') : (currentLanguage === 'es' ? 'Aún no hay respaldo anterior' : 'No previous backup yet')} aria-label={currentLanguage === 'es' ? 'Recuperar respaldo' : 'Recover backup'}
-          className="rounded-lg border border-[#26354c] bg-[#101a2b] p-2 text-cyan-200 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-35"><History className="h-4 w-4" /></button>
+        <button onClick={onRecoverAutosave} disabled={recoveryPointCount === 0} title={currentLanguage === 'es' ? `${recoveryPointCount} puntos de recuperación` : `${recoveryPointCount} recovery points`} aria-label={currentLanguage === 'es' ? 'Historial de recuperación' : 'Recovery history'}
+          className="relative rounded-lg border border-[#26354c] bg-[#101a2b] p-2 text-cyan-200 transition hover:bg-[#1d2b41] disabled:pointer-events-none disabled:opacity-35"><History className="h-4 w-4" />{recoveryPointCount > 0 && <span className="absolute -right-1 -top-1 min-w-4 rounded-full border border-[#080f1c] bg-cyan-500 px-1 text-center text-[9px] font-bold leading-4 text-[#06121c]">{recoveryPointCount}</span>}</button>
         <span title={autosaveAvailable ? (currentLanguage === 'es' ? 'Autoguardado local activo' : 'Local autosave active') : (currentLanguage === 'es' ? 'No se pudo guardar en este navegador' : 'Could not save in this browser')} className={`hidden items-center gap-1 text-[10px] xl:flex ${autosaveAvailable ? 'text-emerald-300' : 'text-red-300'}`}>
           {autosaveAvailable ? <CloudCheck className="h-3.5 w-3.5" /> : <CloudOff className="h-3.5 w-3.5" />}{autosaveAvailable ? (currentLanguage === 'es' ? 'Guardado' : 'Saved') : (currentLanguage === 'es' ? 'Sin respaldo' : 'Not saved')}
         </span>

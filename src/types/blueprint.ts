@@ -46,6 +46,11 @@ export interface SelectionBox {
 }
 
 export type SelectionScope = 'all' | 'floors' | 'objects';
+export type SelectionTransformAxis = 'horizontal' | 'vertical';
+export interface SelectionTransformPreview {
+  operation: 'mirror' | 'flip';
+  axis: SelectionTransformAxis;
+}
 
 export interface ClipboardData {
   width: number;
@@ -61,6 +66,15 @@ export interface ClipboardData {
     relY: number;
   }>;
   floorTiles?: Array<{ relX: number; relY: number; itemId: string }>;
+}
+
+export interface ClipboardPasteValidation {
+  valid: boolean;
+  outsideBlueprint: boolean;
+  conflicts: string[];
+  conflictingBoxes: Array<{ x: number; y: number; width: number; height: number }>;
+  overwrittenBlocks: number;
+  replacedFloors: number;
 }
 
 export interface Annotation {

@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.2.0 — Recovery history and clipboard workflow
+
+### English
+
+- Added an incremental recovery history that saves a point every five minutes when the blueprint has changed. Each point includes a thumbnail, timestamp and project summary; the latest 48 points are kept and can be restored from the recovery panel.
+- Improved selection mirroring and horizontal/vertical flips with a ghost preview before committing the transformation. Floors, colored blocks and placed objects are included, and object orientation follows the transform.
+- Reworked clipboard pasting into a cursor-following placement preview. It highlights out-of-bounds or occupied object footprints, warns when blocks or floors will be replaced, and pastes with one click when valid.
+- Added a canvas hint after copying that points users to Paste to preview the clipboard.
+- The note editor now focuses its text field as soon as it opens, so typing can start immediately.
+
+### Español
+
+- Se añadió un historial incremental de recuperación que guarda un punto cada cinco minutos cuando el plano ha cambiado. Cada punto incluye miniatura, fecha y resumen del plano; se conservan los últimos 48 y se pueden restaurar desde el panel de recuperación.
+- Se mejoraron el espejo de selecciones y los volteos horizontal y vertical con una previsualización fantasma antes de aplicar el cambio. Incluye suelos, bloques de color y objetos colocados, y ajusta la orientación de los objetos.
+- Se mejoró el pegado del portapapeles con una previsualización que sigue al cursor. Marca huellas de objetos fuera del plano o que ocupan el espacio, avisa si se reemplazarán bloques o suelos y permite pegar con un clic cuando la ubicación es válida.
+- Al copiar aparece un aviso en el lienzo que indica que se debe pulsar Pegar para ver la previsualización.
+- El editor de notas ahora enfoca el campo de texto al abrirse para que puedas empezar a escribir de inmediato.
+
 ## v1.1.1 — Selection and annotation tools
 
 ### English

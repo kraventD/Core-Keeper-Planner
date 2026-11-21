@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Annotation,
   BlueprintProject,
+  CellCoord,
   ClipboardData,
+  ClipboardPasteValidation,
   DoorOrientation,
   HistoryStep,
   Language,
@@ -12,11 +14,13 @@ import {
   CircleOrigin,
   SelectionBox,
   SelectionScope,
+  SelectionTransformPreview,
   StorageItemPlacement,
   StorageItemRotation,
   ToolType,
   MirrorMode,
   PlannerLayerId,
+  PlannerLayerStates,
 } from './types/blueprint';
 import { DEFAULT_PALETTE } from './utils/palette';
 import { getDoorPlacementColorId, normalizeDoorCells } from './utils/doorCells';
@@ -43,6 +47,13 @@ import {
   saveProjectToJson,
 } from './utils/projectStorage';
 import { loadRecoveryAutosave } from './utils/projectStorage';
+import {
+  createRecoverySnapshot,
+  listRecoverySnapshots,
+  RECOVERY_INTERVAL_MS,
+  RecoverySnapshot,
+  saveRecoverySnapshot,
+} from './utils/recoveryHistory';
 import { translations } from './i18n/translations';
 import { Header } from './components/Header';
 import { ToolBar } from './components/ToolBar';
@@ -99,6 +110,97 @@ function transformFloorSelection(
   return updated;
 }
 
+function validateClipboardPlacement(
+  project: BlueprintProject,
+  clipboard: ClipboardData,
+  destX: number,
+  destY: number,
+  layerStates: PlannerLayerStates,
+  language: Language,
+): ClipboardPasteValidation {
+  const outsideBlueprint = destX < 0 || destY < 0 ||
+    destX + clipboard.width > project.width || destY + clipboard.height > project.height;
+  const conflicts = new Set<string>();
+  const conflictingBoxes = new Map<string, { x: number; y: number; width: number; height: number }>();
+  const incoming: StorageItemPlacement[] = (clipboard.storagePlacements ?? []).map(({ relX, relY, ...item }, index) => ({
+    ...item,
+    id: `clipboard-preview-${index}`,
+    x: destX + relX,
+    y: destY + relY,
+  }));
+  const addConflict = (item: typeof incoming[number], reason?: string) => {
+    const definition = STORAGE_ITEM_BY_ID.get(item.itemId);
+    const name = language === 'es' ? definition?.nameEs : definition?.nameEn;
+    conflicts.add(`${name ?? item.itemId}${reason ? ` (${reason})` : ''}`);
+    conflictingBoxes.set(`${item.x},${item.y},${item.width},${item.height}`, {
+      x: item.x, y: item.y, width: item.width, height: item.height,
+    });
+  };
+  const overlaps = (a: StorageItemPlacement, b: StorageItemPlacement) =>
+    (a.layer ?? 'object') === (b.layer ?? 'object') &&
+    a.x < b.x + b.width && a.x + a.width > b.x &&
+    a.y < b.y + b.height && a.y + a.height > b.y;
+
+  for (const item of incoming) {
+    if (item.x < 0 || item.y < 0 || item.x + item.width > project.width || item.y + item.height > project.height) {
+      addConflict(item, language === 'es' ? 'fuera del plano' : 'outside blueprint');
+    }
+    const layerId = getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId));
+    if (!layerStates[layerId].visible || !isPlannerLayerEditable(layerStates, layerId)) {
+      addConflict(item, language === 'es' ? 'capa oculta o bloqueada' : 'layer hidden or locked');
+    }
+    for (const existing of project.storagePlacements ?? []) {
+      if (overlaps(item, existing)) addConflict(item);
+    }
+  }
+  for (let index = 0; index < incoming.length; index++) {
+    for (const other of incoming.slice(index + 1)) {
+      if (overlaps(incoming[index], other)) {
+        addConflict(incoming[index]);
+        addConflict(other);
+      }
+    }
+  }
+
+  let overwrittenBlocks = 0;
+  for (const item of clipboard.cells) {
+    const x = destX + item.relX;
+    const y = destY + item.relY;
+    const existing = project.cells[`${x},${y}`];
+    if (existing && existing !== item.colorId) overwrittenBlocks++;
+  }
+
+  let replacedFloors = 0;
+  if ((clipboard.scope ?? 'all') !== 'objects') {
+    const incomingFloors = new Map((clipboard.floorTiles ?? []).map(tile => [`${destX + tile.relX},${destY + tile.relY}`, tile.itemId]));
+    for (const [key, itemId] of Object.entries(project.floorTiles ?? {})) {
+      const [x, y] = key.split(',').map(Number);
+      if (x < destX || x >= destX + clipboard.width || y < destY || y >= destY + clipboard.height) continue;
+      if (incomingFloors.get(key) !== itemId) replacedFloors++;
+    }
+  }
+
+  const changesBlocks = clipboard.cells.some(item => project.cells[`${destX + item.relX},${destY + item.relY}`] !== item.colorId);
+  const changesFloors = replacedFloors > 0 || (clipboard.floorTiles ?? []).some(tile =>
+    project.floorTiles?.[`${destX + tile.relX},${destY + tile.relY}`] !== tile.itemId,
+  );
+  if (changesBlocks && (!layerStates.walls.visible || !isPlannerLayerEditable(layerStates, 'walls'))) {
+    conflicts.add(language === 'es' ? 'capa de bloques oculta o bloqueada' : 'block layer hidden or locked');
+  }
+  if (changesFloors && (!layerStates.floors.visible || !isPlannerLayerEditable(layerStates, 'floors'))) {
+    conflicts.add(language === 'es' ? 'capa de suelos oculta o bloqueada' : 'floor layer hidden or locked');
+  }
+
+  return {
+    valid: !outsideBlueprint && conflicts.size === 0,
+    outsideBlueprint,
+    conflicts: [...conflicts],
+    conflictingBoxes: [...conflictingBoxes.values()],
+    overwrittenBlocks,
+    replacedFloors,
+  };
+}
+
 export default function App() {
   // 1. Language state
   const [language, setLanguage] = useState<Language>(() => {
@@ -120,6 +222,9 @@ export default function App() {
     if (saved) return saved;
     return { ...INITIAL_PROJECT, name: translations[language].defaultProjectName };
   });
+  const projectRef = useRef(project);
+  const lastRecoverySignatureRef = useRef(JSON.stringify(project));
+  const recoverySaveInProgressRef = useRef(false);
 
   // 3. Tool & Color state
   const [activeTool, setActiveTool] = useState<ToolType>('pencil');
@@ -158,7 +263,11 @@ export default function App() {
   // 4. Selection & Clipboard state
   const [selectionBox, setSelectionBox] = useState<SelectionBox | null>(null);
   const [selectionScope, setSelectionScope] = useState<SelectionScope>('all');
+  const [selectionTransformPreview, setSelectionTransformPreview] = useState<SelectionTransformPreview | null>(null);
   const [clipboard, setClipboard] = useState<ClipboardData | null>(null);
+  const [isPastePlacementMode, setIsPastePlacementMode] = useState(false);
+  const [pasteTargetCell, setPasteTargetCell] = useState<CellCoord | null>(null);
+  const [showClipboardPasteHint, setShowClipboardPasteHint] = useState(false);
 
   // 5. View state
   const [showGrid, setShowGrid] = useState<boolean>(true);
@@ -171,6 +280,11 @@ export default function App() {
   const [gridTheme, setGridTheme] = useState<'light' | 'dark'>('dark');
   const [currentZoom, setCurrentZoom] = useState<number>(1.0);
   const [plannerLayerStates, setPlannerLayerStates] = useState(DEFAULT_PLANNER_LAYER_STATES);
+  const pastePreviewValidation = useMemo(() => (
+    isPastePlacementMode && clipboard && pasteTargetCell
+      ? validateClipboardPlacement(project, clipboard, pasteTargetCell.x, pasteTargetCell.y, plannerLayerStates, language)
+      : null
+  ), [isPastePlacementMode, clipboard, pasteTargetCell, project, plannerLayerStates, language]);
 
 
   // 6. History Undo / Redo
@@ -307,8 +421,52 @@ export default function App() {
   const [selectedStoragePlacementId, setSelectedStoragePlacementId] = useState<string | null>(null);
   const [gameSprites, setGameSprites] = useState<Record<string, GameSpriteEntry>>({});
   const [recoveryProject, setRecoveryProject] = useState<BlueprintProject | null>(() => loadRecoveryAutosave());
+  const [recoverySnapshots, setRecoverySnapshots] = useState<RecoverySnapshot[]>([]);
+  const [recoveryHistoryAvailable, setRecoveryHistoryAvailable] = useState(true);
   const [isRecoveryOpen, setIsRecoveryOpen] = useState(false);
   const [autosaveAvailable, setAutosaveAvailable] = useState(true);
+
+  useEffect(() => {
+    projectRef.current = project;
+  }, [project]);
+
+  useEffect(() => {
+    let mounted = true;
+    void listRecoverySnapshots()
+      .then(snapshots => { if (mounted) setRecoverySnapshots(snapshots); })
+      .catch(error => {
+        console.warn('Could not load recovery history', error);
+        if (mounted) setRecoveryHistoryAvailable(false);
+      });
+
+    const intervalId = window.setInterval(async () => {
+      if (recoverySaveInProgressRef.current) return;
+      const currentProject = projectRef.current;
+      const signature = JSON.stringify(currentProject);
+      if (signature === lastRecoverySignatureRef.current) return;
+
+      recoverySaveInProgressRef.current = true;
+      try {
+        await saveRecoverySnapshot(createRecoverySnapshot(currentProject));
+        lastRecoverySignatureRef.current = signature;
+        const snapshots = await listRecoverySnapshots();
+        if (mounted) {
+          setRecoverySnapshots(snapshots);
+          setRecoveryHistoryAvailable(true);
+        }
+      } catch (error) {
+        console.warn('Could not create recovery point', error);
+        if (mounted) setRecoveryHistoryAvailable(false);
+      } finally {
+        recoverySaveInProgressRef.current = false;
+      }
+    }, RECOVERY_INTERVAL_MS);
+
+    return () => {
+      mounted = false;
+      window.clearInterval(intervalId);
+    };
+  }, []);
 
   const togglePlannerLayerVisibility = useCallback((layer: PlannerLayerId) => {
     setPlannerLayerStates(prev => ({ ...prev, [layer]: { ...prev[layer], visible: !prev[layer].visible } }));
@@ -337,16 +495,36 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   }, []);
 
-  const handleRecoverAutosave = useCallback(() => {
+  const handleRecoverAutosave = useCallback(async () => {
     if (!recoveryProject) return;
-    setProject(recoveryProject);
+    if (recoverySaveInProgressRef.current) return;
+    recoverySaveInProgressRef.current = true;
+    let recovered: BlueprintProject;
+    try {
+      await saveRecoverySnapshot(createRecoverySnapshot(projectRef.current));
+      const snapshots = await listRecoverySnapshots();
+      setRecoverySnapshots(snapshots);
+      recovered = { ...recoveryProject, updatedAt: new Date().toISOString() };
+      setAutosaveAvailable(saveAutosave(recovered));
+    } catch (error) {
+      console.warn('Could not protect the current plan before recovery', error);
+      showToast(language === 'es'
+        ? 'No se pudo proteger el plano actual. No se restauró el respaldo.'
+        : 'The current blueprint could not be protected. The backup was not restored.');
+      recoverySaveInProgressRef.current = false;
+      return;
+    }
+    recoverySaveInProgressRef.current = false;
+    projectRef.current = recovered;
+    lastRecoverySignatureRef.current = JSON.stringify(recovered);
+    setProject(recovered);
     setHistory([{
       description: language === 'es' ? 'Respaldo recuperado' : 'Recovered backup',
-      cells: { ...recoveryProject.cells },
-      width: recoveryProject.width,
-      height: recoveryProject.height,
-      storagePlacements: recoveryProject.storagePlacements ?? [],
-      floorTiles: recoveryProject.floorTiles ?? {},
+      cells: { ...recovered.cells },
+      width: recovered.width,
+      height: recovered.height,
+      storagePlacements: recovered.storagePlacements ?? [],
+      floorTiles: recovered.floorTiles ?? {},
     }]);
     setHistoryIndex(0);
     setSelectionBox(null);
@@ -356,6 +534,48 @@ export default function App() {
     setIsRecoveryOpen(false);
     showToast(language === 'es' ? 'Se recuperó el respaldo automático.' : 'The autosave backup was recovered.');
   }, [language, recoveryProject, showToast]);
+
+  const handleRecoverSnapshot = useCallback(async (snapshot: RecoverySnapshot) => {
+    if (recoverySaveInProgressRef.current) return;
+    recoverySaveInProgressRef.current = true;
+    try {
+      const currentProject = projectRef.current;
+      if (JSON.stringify(currentProject) !== JSON.stringify(snapshot.project)) {
+        await saveRecoverySnapshot(createRecoverySnapshot(currentProject));
+        setRecoverySnapshots(await listRecoverySnapshots());
+      }
+
+      const recovered: BlueprintProject = { ...snapshot.project, updatedAt: new Date().toISOString() };
+      setAutosaveAvailable(saveAutosave(recovered));
+      projectRef.current = recovered;
+      lastRecoverySignatureRef.current = JSON.stringify(recovered);
+      setProject(recovered);
+      setHistory([{
+        description: language === 'es' ? 'Punto de recuperación restaurado' : 'Recovery point restored',
+        cells: { ...recovered.cells },
+        width: recovered.width,
+        height: recovered.height,
+        storagePlacements: recovered.storagePlacements ?? [],
+        floorTiles: recovered.floorTiles ?? {},
+      }]);
+      setHistoryIndex(0);
+      setSelectionBox(null);
+      setSelectedStoragePlacementId(null);
+      setSelectedStorageItemId(null);
+      setSelectedFloorItemId(null);
+      setIsRecoveryOpen(false);
+      showToast(language === 'es'
+        ? 'Se restauró el punto. El estado anterior quedó guardado en el historial.'
+        : 'Recovery point restored. The previous state was kept in the history.');
+    } catch (error) {
+      console.warn('Could not protect the current plan before restoring a recovery point', error);
+      showToast(language === 'es'
+        ? 'No se pudo proteger el plano actual. No se restauró el punto.'
+        : 'The current blueprint could not be protected. The recovery point was not restored.');
+    } finally {
+      recoverySaveInProgressRef.current = false;
+    }
+  }, [language, showToast]);
 
   const handleSetSelectionBox = useCallback((box: SelectionBox | null) => {
     setSelectionBox(box);
@@ -445,14 +665,20 @@ export default function App() {
   const handleCopySelection = useCallback(() => {
     const data = getSelectionClipboard();
     if (!data) return;
+    setIsPastePlacementMode(false);
+    setPasteTargetCell(null);
     setClipboard(data);
+    setShowClipboardPasteHint(true);
     showToast(t.alerts.copied);
   }, [getSelectionClipboard, showToast, t.alerts.copied]);
 
   const handleCutSelection = useCallback(() => {
     const data = getSelectionClipboard();
     if (!data) return;
+    setIsPastePlacementMode(false);
+    setPasteTargetCell(null);
     setClipboard(data);
+    setShowClipboardPasteHint(true);
     const scope = selectionBox?.scope ?? 'all';
     const deleted = selectionBox && scope === 'all' ? deleteSelection(project.cells, selectionBox) : project.cells;
     const selectedIds = new Set(selectionBox && scope !== 'floors'
@@ -477,8 +703,34 @@ export default function App() {
       showToast(t.alerts.clipboardEmpty);
       return;
     }
-    const destX = selectionBox ? selectionBox.minX : 0;
-    const destY = selectionBox ? selectionBox.minY : 0;
+    setSelectionTransformPreview(null);
+    setPasteTargetCell(null);
+    setShowClipboardPasteHint(false);
+    setIsPastePlacementMode(true);
+    showToast(language === 'es'
+      ? 'Mueve el cursor al plano y haz clic para pegar. Esc cancela.'
+      : 'Move the cursor over the blueprint and click to paste. Esc cancels.');
+  }, [clipboard, showToast, t.alerts.clipboardEmpty, language]);
+
+  const handlePasteHoverCell = useCallback((cell: CellCoord | null) => {
+    setPasteTargetCell(current => current?.x === cell?.x && current?.y === cell?.y ? current : cell);
+  }, []);
+
+  const handlePlaceClipboardAt = useCallback((destX: number, destY: number) => {
+    if (!clipboard) return;
+    const validation = validateClipboardPlacement(project, clipboard, destX, destY, plannerLayerStates, language);
+    if (!validation.valid) {
+      const parts: string[] = [];
+      if (validation.outsideBlueprint) parts.push(language === 'es' ? 'La copia se sale del plano.' : 'The copy extends beyond the blueprint.');
+      if (validation.conflicts.length > 0) {
+        const names = validation.conflicts.slice(0, 2).join(', ');
+        const more = validation.conflicts.length > 2 ? (language === 'es' ? ` y ${validation.conflicts.length - 2} más` : ` and ${validation.conflicts.length - 2} more`) : '';
+        parts.push(language === 'es' ? `Espacio ocupado: ${names}${more}.` : `Occupied space: ${names}${more}.`);
+      }
+      showToast(parts.join(' '));
+      return;
+    }
+
     const copiedPlacements = clipboard.storagePlacements ?? [];
     const pastedPlacements = copiedPlacements.map(({ relX, relY, ...item }, index) => ({
       ...item,
@@ -487,21 +739,6 @@ export default function App() {
       y: destY + relY,
     }));
     const currentPlacements = project.storagePlacements ?? [];
-    const placementOverlap = pastedPlacements.some((pasted, index) =>
-      pasted.x < 0 || pasted.y < 0 || pasted.x + pasted.width > project.width || pasted.y + pasted.height > project.height ||
-      currentPlacements.some(existing => (existing.layer ?? 'object') === (pasted.layer ?? 'object') &&
-        pasted.x < existing.x + existing.width && pasted.x + pasted.width > existing.x &&
-        pasted.y < existing.y + existing.height && pasted.y + pasted.height > existing.y) ||
-      pastedPlacements.slice(index + 1).some(other => (other.layer ?? 'object') === (pasted.layer ?? 'object') &&
-        pasted.x < other.x + other.width && pasted.x + pasted.width > other.x &&
-        pasted.y < other.y + other.height && pasted.y + pasted.height > other.y),
-    );
-    if (placementOverlap) {
-      showToast(language === 'es'
-        ? 'No se puede pegar: un objeto quedaría fuera del plano o chocaría con otro.'
-        : 'Cannot paste: an item would leave the blueprint or overlap another item.');
-      return;
-    }
     const pasted = pasteSelection(project.cells, clipboard, destX, destY, project.width, project.height);
     const pastedFloors = { ...(project.floorTiles ?? {}) };
     if ((clipboard.scope ?? 'all') !== 'objects') {
@@ -523,8 +760,16 @@ export default function App() {
       maxY: Math.min(project.height - 1, destY + clipboard.height - 1),
       scope: clipboard.scope ?? 'all',
     });
-    showToast(t.alerts.pasted);
-  }, [clipboard, selectionBox, project.cells, project.floorTiles, project.storagePlacements, project.width, project.height, handleUpdateCells, handleSetSelectionBox, showToast, t.alerts, language]);
+    setIsPastePlacementMode(false);
+    setPasteTargetCell(null);
+    setShowClipboardPasteHint(false);
+    const replacementNote = validation.overwrittenBlocks || validation.replacedFloors
+      ? language === 'es'
+        ? ` Se sustituyeron ${validation.overwrittenBlocks} bloques y ${validation.replacedFloors} suelos.`
+        : ` Replaced ${validation.overwrittenBlocks} blocks and ${validation.replacedFloors} floors.`
+      : '';
+    showToast(`${t.alerts.pasted}${replacementNote}`);
+  }, [clipboard, project, plannerLayerStates, language, handleUpdateCells, handleSetSelectionBox, showToast, t.alerts.pasted]);
 
   const handleDeleteSelection = useCallback(() => {
     if (!selectionBox) return;
@@ -565,33 +810,78 @@ export default function App() {
     (axis: 'horizontal' | 'vertical') => {
       if (!selectionBox) return;
       const scope = selectionBox.scope ?? 'all';
-      const { updatedCells, mirroredBox } = scope === 'all'
-        ? duplicateMirrorSelection(project.cells, selectionBox, axis, project.width, project.height)
-        : { updatedCells: project.cells, mirroredBox: selectionBox };
+      const { updatedCells: mirroredCells, mirroredBox } = duplicateMirrorSelection(
+        scope === 'all' ? project.cells : {}, selectionBox, axis, project.width, project.height,
+      );
+      const updatedCells = scope === 'all' ? mirroredCells : project.cells;
       const updatedFloorTiles = scope === 'objects'
         ? (project.floorTiles ?? {})
         : transformFloorSelection(project.floorTiles ?? {}, selectionBox, axis, project.width, project.height, true);
+
+      const existingPlacements = project.storagePlacements ?? [];
+      const mirroredPlacements: StorageItemPlacement[] = [];
+      let skippedPlacements = 0;
+      if (scope !== 'floors') {
+        const sourcePlacements = existingPlacements.filter(item =>
+          item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
+          item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY &&
+          plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible &&
+          isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))),
+        );
+
+        for (const item of sourcePlacements) {
+          const x = axis === 'horizontal' ? project.width - item.x - item.width : item.x;
+          const y = axis === 'vertical' ? project.height - item.y - item.height : item.y;
+          if (x === item.x && y === item.y) continue;
+
+          const rotation = item.rotation ?? 0;
+          const mirroredRotation = axis === 'horizontal'
+            ? rotation === 90 ? 270 : rotation === 270 ? 90 : rotation
+            : rotation === 0 ? 180 : rotation === 180 ? 0 : rotation;
+          const mirroredItem: StorageItemPlacement = {
+            ...item,
+            id: `storage_${Date.now()}_mirror_${Math.random().toString(36).slice(2, 8)}`,
+            x,
+            y,
+            rotation: mirroredRotation,
+          };
+          const collides = [...existingPlacements, ...mirroredPlacements].some(existing =>
+            (existing.layer ?? 'object') === (mirroredItem.layer ?? 'object') &&
+            mirroredItem.x < existing.x + existing.width && mirroredItem.x + mirroredItem.width > existing.x &&
+            mirroredItem.y < existing.y + existing.height && mirroredItem.y + mirroredItem.height > existing.y,
+          );
+          if (collides) {
+            skippedPlacements++;
+            continue;
+          }
+          mirroredPlacements.push(mirroredItem);
+        }
+      }
+
       handleUpdateCells(
         updatedCells,
         `Duplicar espejo (${axis === 'horizontal' ? 'H' : 'V'})`,
-        undefined,
+        [...existingPlacements, ...mirroredPlacements],
         updatedFloorTiles,
       );
       setSelectionBox({ ...mirroredBox, scope });
-      showToast(
-        axis === 'horizontal'
-          ? t.mirror.duplicatedOppositeH
-          : t.mirror.duplicatedOppositeV
-      );
+      setSelectionTransformPreview(null);
+      const message = axis === 'horizontal' ? t.mirror.duplicatedOppositeH : t.mirror.duplicatedOppositeV;
+      showToast(skippedPlacements > 0
+        ? `${message} ${language === 'es' ? `Objetos añadidos: ${mirroredPlacements.length}; omitidos por espacio ocupado: ${skippedPlacements}.` : `Objects added: ${mirroredPlacements.length}; skipped because space is occupied: ${skippedPlacements}.`}`
+        : message);
     },
     [
       selectionBox,
       project.cells,
       project.floorTiles,
+      project.storagePlacements,
       project.width,
       project.height,
+      plannerLayerStates,
       handleUpdateCells,
       showToast,
+      language,
       t.mirror.duplicatedOppositeH,
       t.mirror.duplicatedOppositeV,
     ]
@@ -605,10 +895,49 @@ export default function App() {
       const flippedFloorTiles = scope === 'objects'
         ? (project.floorTiles ?? {})
         : transformFloorSelection(project.floorTiles ?? {}, selectionBox, direction, project.width, project.height, false);
+
+      const existingPlacements = project.storagePlacements ?? [];
+      const selectedPlacements = scope === 'floors' ? [] : existingPlacements.filter(item =>
+        item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
+        item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY &&
+        plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible &&
+        isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))),
+      );
+      const selectedPlacementIds = new Set(selectedPlacements.map(item => item.id));
+      const flippedPlacements = selectedPlacements.map(item => {
+        const rotation = item.rotation ?? 0;
+        return {
+          ...item,
+          x: direction === 'horizontal' ? selectionBox.minX + selectionBox.maxX + 1 - item.x - item.width : item.x,
+          y: direction === 'vertical' ? selectionBox.minY + selectionBox.maxY + 1 - item.y - item.height : item.y,
+          rotation: direction === 'horizontal'
+            ? rotation === 90 ? 270 : rotation === 270 ? 90 : rotation
+            : rotation === 0 ? 180 : rotation === 180 ? 0 : rotation,
+        };
+      });
+      const externalPlacements = existingPlacements.filter(item => !selectedPlacementIds.has(item.id));
+      const hasOverlap = flippedPlacements.some((item, index) =>
+        [...externalPlacements, ...flippedPlacements.slice(index + 1)].some(other =>
+          (item.layer ?? 'object') === (other.layer ?? 'object') &&
+          item.x < other.x + other.width && item.x + item.width > other.x &&
+          item.y < other.y + other.height && item.y + item.height > other.y,
+        ),
+      );
+      if (hasOverlap) {
+        showToast(language === 'es'
+          ? 'No se volteó la selección: los objetos chocarían con otros elementos.'
+          : 'The selection was not flipped because objects would overlap other items.');
+        return;
+      }
+      setSelectionTransformPreview(null);
+      const updatedPlacements = existingPlacements.map(item =>
+        flippedPlacements.find(flipped => flipped.id === item.id) ?? item,
+      );
+
       handleUpdateCells(
         flippedCells,
         `Voltear selección (${direction === 'horizontal' ? 'H' : 'V'})`,
-        undefined,
+        updatedPlacements,
         flippedFloorTiles,
       );
       showToast(
@@ -621,8 +950,11 @@ export default function App() {
       selectionBox,
       project.cells,
       project.floorTiles,
+      project.storagePlacements,
+      plannerLayerStates,
       handleUpdateCells,
       showToast,
+      language,
       t.mirror.flippedH,
       t.mirror.flippedV,
     ]
@@ -1058,6 +1390,13 @@ export default function App() {
 
       // Escape clear selection
       if (e.key === 'Escape') {
+        if (isPastePlacementMode) {
+          e.preventDefault();
+          setIsPastePlacementMode(false);
+          setPasteTargetCell(null);
+          showToast(language === 'es' ? 'Pegado cancelado.' : 'Paste cancelled.');
+          return;
+        }
         handleClearSelection();
         setSelectedStoragePlacementId(null);
         return;
@@ -1100,6 +1439,9 @@ export default function App() {
     handleCopySelection,
     handleCutSelection,
     handlePasteSelection,
+    isPastePlacementMode,
+    language,
+    showToast,
     handleDeleteSelection,
     handleClearSelection,
     handleRotateSelectedStorageItem,
@@ -1128,7 +1470,7 @@ export default function App() {
         onOpenProjectJson={handleOpenProjectJson}
         onSaveProjectJson={handleSaveProjectJson}
         onRecoverAutosave={() => setIsRecoveryOpen(true)}
-        hasRecoveryAutosave={recoveryProject !== null}
+        recoveryPointCount={recoverySnapshots.length + (recoveryProject !== null ? 1 : 0)}
         autosaveAvailable={autosaveAvailable}
         onExportImage={() => setIsExportOpen(true)}
         onExportCode={handleExportCode}
@@ -1220,6 +1562,14 @@ export default function App() {
             circleOrigin={circleOrigin}
             includeWaypoint={includeWaypoint}
             mirrorMode={mirrorMode}
+            selectionTransformPreview={selectionTransformPreview}
+            clipboard={clipboard}
+            pastePlacementMode={isPastePlacementMode}
+            showClipboardPasteHint={showClipboardPasteHint}
+            onDismissClipboardPasteHint={() => setShowClipboardPasteHint(false)}
+            pastePreviewValidation={pastePreviewValidation}
+            onPasteAt={handlePlaceClipboardAt}
+            onPasteHoverCell={handlePasteHoverCell}
             brushSize={brushSize}
             eraseObjectsWithEraser={eraseObjectsWithEraser}
             showGrid={showGrid}
@@ -1289,6 +1639,7 @@ export default function App() {
           onChangeLightRadius={radius => selectedStoragePlacementId && handleChangeLightRadius(selectedStoragePlacementId, radius)}
           selectionBox={selectionBox}
           hasClipboard={clipboard !== null}
+          isPastePlacementMode={isPastePlacementMode}
           onCopySelection={handleCopySelection}
           onCutSelection={handleCutSelection}
           onPasteSelection={handlePasteSelection}
@@ -1296,6 +1647,7 @@ export default function App() {
           onFillSelection={handleFillSelection}
           onClearSelection={handleClearSelection}
           onDuplicateMirrorSelection={handleDuplicateMirrorSelection}
+          onPreviewSelectionTransform={setSelectionTransformPreview}
           onFlipSelection={handleFlipSelection}
           onCenterSelectionHorizontally={handleCenterSelectionHorizontally}
           onCenterSelectionVertically={handleCenterSelectionVertically}
@@ -1326,10 +1678,14 @@ export default function App() {
       />
 
       <RecoveryModal
-        project={isRecoveryOpen ? recoveryProject : null}
+        isOpen={isRecoveryOpen}
+        project={recoveryProject}
+        snapshots={recoverySnapshots}
+        historyAvailable={recoveryHistoryAvailable}
         language={language}
         onClose={() => setIsRecoveryOpen(false)}
         onRecover={handleRecoverAutosave}
+        onRecoverSnapshot={handleRecoverSnapshot}
       />
 
       <ResizeModal

@@ -14,6 +14,9 @@ import {
   StorageItemRotation,
   PlannerLayerStates,
   SelectionScope,
+  SelectionTransformPreview,
+  ClipboardData,
+  ClipboardPasteValidation,
   Language,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
@@ -162,6 +165,14 @@ interface CanvasAreaProps {
   circleOrigin?: CircleOrigin;
   includeWaypoint?: boolean;
   mirrorMode?: MirrorMode;
+  selectionTransformPreview?: SelectionTransformPreview | null;
+  clipboard?: ClipboardData | null;
+  pastePlacementMode?: boolean;
+  showClipboardPasteHint?: boolean;
+  onDismissClipboardPasteHint?: () => void;
+  pastePreviewValidation?: ClipboardPasteValidation | null;
+  onPasteAt?: (x: number, y: number) => void;
+  onPasteHoverCell?: (cell: CellCoord | null) => void;
   brushSize: number;
   eraseObjectsWithEraser?: boolean;
   showGrid: boolean;
@@ -211,6 +222,14 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   circleOrigin = 'center',
   includeWaypoint = true,
   mirrorMode = 'none',
+  selectionTransformPreview = null,
+  clipboard = null,
+  pastePlacementMode = false,
+  showClipboardPasteHint = false,
+  onDismissClipboardPasteHint,
+  pastePreviewValidation = null,
+  onPasteAt,
+  onPasteHoverCell,
   brushSize,
   eraseObjectsWithEraser = false,
   showGrid,
@@ -263,6 +282,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   // Hover & interaction states
   const [hoverCell, setHoverCell] = useState<CellCoord | null>(null);
+  const [hoverPointer, setHoverPointer] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isPointerDown, setIsPointerDown] = useState<boolean>(false);
   const [dragStartCell, setDragStartCell] = useState<CellCoord | null>(null);
   const [dragCurrentCell, setDragCurrentCell] = useState<CellCoord | null>(null);
@@ -275,6 +295,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const [annotationDragStartCell, setAnnotationDragStartCell] = useState<CellCoord | null>(null);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const [annotationEditor, setAnnotationEditor] = useState<AnnotationEditorState | null>(null);
+  const annotationTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Door tooltip tracking (per session)
   const doorTooltipNotifiedRef = useRef<boolean>(false);
@@ -553,7 +574,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     canvas.setPointerCapture(e.pointerId);
 
     // Pan mode with Middle Click (button === 1), Spacebar held, or Hand tool (left click)
-    if (e.button === 1 || isSpaceHeld || (activeTool === 'hand' && e.button === 0)) {
+    if (e.button === 1 || isSpaceHeld || (!pastePlacementMode && activeTool === 'hand' && e.button === 0)) {
       setIsPanning(true);
       setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
       return;
@@ -573,6 +594,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     // Only process left click for drawing/selection
     if (e.button !== 0) return;
+
+    if (pastePlacementMode) {
+      if (cell) onPasteAt?.(cell.x, cell.y);
+      return;
+    }
 
     setIsPointerDown(true);
 
@@ -870,6 +896,15 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     const cell = screenToCell(e.clientX, e.clientY);
     setHoverCell(cell);
+    onPasteHoverCell?.(pastePlacementMode ? cell : null);
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      setHoverPointer({
+        x: Math.max(8, Math.min(rect.width - 250, e.clientX - rect.left + 16)),
+        y: Math.max(8, Math.min(rect.height - 96, e.clientY - rect.top + 16)),
+      });
+    }
 
     if (storageDragRef.current && cell) {
       setStorageDragPreview({ x: cell.x - storageDragRef.current.offsetX, y: cell.y - storageDragRef.current.offsetY });
@@ -1702,6 +1737,113 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         ctx.fillRect(sX, sY, sW, sH);
       }
 
+      if (selectionBox && selectionTransformPreview) {
+        const scope = selectionBox.scope ?? 'all';
+        const horizontal = selectionTransformPreview.axis === 'horizontal';
+        const isMirrorCopy = selectionTransformPreview.operation === 'mirror';
+        const previewBox = isMirrorCopy ? {
+          minX: horizontal ? project.width - 1 - selectionBox.maxX : selectionBox.minX,
+          maxX: horizontal ? project.width - 1 - selectionBox.minX : selectionBox.maxX,
+          minY: horizontal ? selectionBox.minY : project.height - 1 - selectionBox.maxY,
+          maxY: horizontal ? selectionBox.maxY : project.height - 1 - selectionBox.minY,
+        } : selectionBox;
+        const transformCell = (x: number, y: number) => isMirrorCopy
+          ? { x: horizontal ? project.width - 1 - x : x, y: horizontal ? y : project.height - 1 - y }
+          : { x: horizontal ? selectionBox.minX + selectionBox.maxX - x : x, y: horizontal ? y : selectionBox.minY + selectionBox.maxY - y };
+        const transformPlacement = (placement: StorageItemPlacement) => isMirrorCopy
+          ? {
+              x: horizontal ? project.width - placement.x - placement.width : placement.x,
+              y: horizontal ? placement.y : project.height - placement.y - placement.height,
+            }
+          : {
+              x: horizontal ? selectionBox.minX + selectionBox.maxX + 1 - placement.x - placement.width : placement.x,
+              y: horizontal ? placement.y : selectionBox.minY + selectionBox.maxY + 1 - placement.y - placement.height,
+            };
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(bpX, bpY, bpW, bpH);
+        ctx.clip();
+        ctx.globalAlpha = 0.62;
+
+        if (scope === 'all' && plannerLayerStates.walls.visible && !plannerLayerStates.walls.locked) {
+          for (const [key, itemId] of Object.entries(project.cells)) {
+            const [x, y] = key.split(',').map(Number);
+            if (x < selectionBox.minX || x > selectionBox.maxX || y < selectionBox.minY || y > selectionBox.maxY) continue;
+            const { x: destX, y: destY } = transformCell(x, y);
+            const color = project.palette.find(candidate => candidate.id === itemId)?.hex ?? '#94a3b8';
+            ctx.fillStyle = color;
+            ctx.fillRect(bpX + destX * currentCellSize, bpY + destY * currentCellSize, currentCellSize, currentCellSize);
+          }
+
+        }
+
+        if (scope !== 'objects' && plannerLayerStates.floors.visible && !plannerLayerStates.floors.locked) {
+          for (const [key, itemId] of Object.entries(project.floorTiles ?? {})) {
+            const [x, y] = key.split(',').map(Number);
+            if (x < selectionBox.minX || x > selectionBox.maxX || y < selectionBox.minY || y > selectionBox.maxY) continue;
+            const { x: destX, y: destY } = transformCell(x, y);
+            const floor = FLOOR_ITEM_BY_ID.get(itemId);
+            const image = getSpriteImage(floor?.placementImageUrl ?? floor?.imageUrl);
+            if (image) {
+              ctx.imageSmoothingEnabled = false;
+              ctx.drawImage(image, bpX + destX * currentCellSize, bpY + destY * currentCellSize, currentCellSize, currentCellSize);
+            } else {
+              ctx.fillStyle = 'rgba(34, 211, 238, 0.5)';
+              ctx.fillRect(bpX + destX * currentCellSize, bpY + destY * currentCellSize, currentCellSize, currentCellSize);
+            }
+          }
+        }
+
+        if (scope !== 'floors') {
+          for (const placement of project.storagePlacements ?? []) {
+            if (placement.x < selectionBox.minX || placement.y < selectionBox.minY ||
+              placement.x + placement.width - 1 > selectionBox.maxX || placement.y + placement.height - 1 > selectionBox.maxY) continue;
+            const layerId = getStoragePlacementLayerId(placement, STORAGE_ITEM_BY_ID.get(placement.itemId));
+            if (!plannerLayerStates[layerId].visible || plannerLayerStates[layerId].locked) continue;
+            const { x: destX, y: destY } = transformPlacement(placement);
+            ctx.fillStyle = placement.layer === 'light' ? '#fde047' : placement.layer === 'rail' ? '#a78bfa' : '#22d3ee';
+            ctx.fillRect(bpX + destX * currentCellSize, bpY + destY * currentCellSize, placement.width * currentCellSize, placement.height * currentCellSize);
+          }
+        }
+
+        const previewX = bpX + previewBox.minX * currentCellSize;
+        const previewY = bpY + previewBox.minY * currentCellSize;
+        const previewW = (previewBox.maxX - previewBox.minX + 1) * currentCellSize;
+        const previewH = (previewBox.maxY - previewBox.minY + 1) * currentCellSize;
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.10)';
+        ctx.fillRect(previewX, previewY, previewW, previewH);
+        ctx.strokeStyle = '#22d3ee';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([7, 4]);
+        ctx.strokeRect(previewX, previewY, previewW, previewH);
+        ctx.setLineDash([]);
+
+        if (currentCellSize >= 10) {
+          const label = isMirrorCopy
+            ? horizontal
+              ? (language === 'es' ? 'COPIA ESPEJO E ↔ O' : 'MIRROR COPY E ↔ W')
+              : (language === 'es' ? 'COPIA ESPEJO N ↕ S' : 'MIRROR COPY N ↕ S')
+            : horizontal
+              ? (language === 'es' ? 'VISTA PREVIA VOLTEO H' : 'FLIP PREVIEW H')
+              : (language === 'es' ? 'VISTA PREVIA VOLTEO V' : 'FLIP PREVIEW V');
+          ctx.font = 'bold 10px sans-serif';
+          const labelWidth = ctx.measureText(label).width + 12;
+          const labelX = Math.max(bpX + 2, Math.min(previewX, bpX + bpW - labelWidth - 2));
+          const labelY = Math.max(bpY + 2, previewY - 18);
+          ctx.fillStyle = '#0891b2';
+          ctx.fillRect(labelX, labelY, labelWidth, 15);
+          ctx.fillStyle = '#ecfeff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(label, labelX + labelWidth / 2, labelY + 7.5);
+          ctx.textAlign = 'start';
+          ctx.textBaseline = 'alphabetic';
+        }
+        ctx.restore();
+      }
+
       // 7. Hover Cell cursor indicator (Black in Light Mode, White in Dark Mode)
       if (hoverCell && !isPanning) {
         const hX = bpX + hoverCell.x * currentCellSize;
@@ -1930,6 +2072,88 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         }
       }
 
+      // Floating clipboard preview follows the pointer until the user commits or cancels.
+      if (pastePlacementMode && clipboard && hoverCell) {
+        const scope = clipboard.scope ?? 'all';
+        const validation = pastePreviewValidation;
+        const previewColor = validation?.valid === false ? '#ef4444' :
+          validation && (validation.overwrittenBlocks > 0 || validation.replacedFloors > 0) ? '#f59e0b' : '#22d3ee';
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(bpX, bpY, bpW, bpH);
+        ctx.clip();
+        ctx.globalAlpha = validation?.valid === false ? 0.38 : 0.58;
+
+        for (const item of clipboard.cells) {
+          const x = hoverCell.x + item.relX;
+          const y = hoverCell.y + item.relY;
+          const color = project.palette.find(candidate => candidate.id === item.colorId)?.hex ?? '#94a3b8';
+          ctx.fillStyle = validation?.valid === false ? '#ef4444' : color;
+          ctx.fillRect(bpX + x * currentCellSize, bpY + y * currentCellSize, currentCellSize, currentCellSize);
+        }
+
+        if (scope !== 'objects') {
+          for (const tile of clipboard.floorTiles ?? []) {
+            const x = hoverCell.x + tile.relX;
+            const y = hoverCell.y + tile.relY;
+            const floor = FLOOR_ITEM_BY_ID.get(tile.itemId);
+            const image = getSpriteImage(floor?.placementImageUrl ?? floor?.imageUrl);
+            if (image) {
+              ctx.imageSmoothingEnabled = false;
+              ctx.drawImage(image, bpX + x * currentCellSize, bpY + y * currentCellSize, currentCellSize, currentCellSize);
+            } else {
+              ctx.fillStyle = '#22d3ee';
+              ctx.fillRect(bpX + x * currentCellSize, bpY + y * currentCellSize, currentCellSize, currentCellSize);
+            }
+          }
+        }
+
+        for (const { relX, relY, ...placement } of clipboard.storagePlacements ?? []) {
+          const x = hoverCell.x + relX;
+          const y = hoverCell.y + relY;
+          const item = STORAGE_ITEM_BY_ID.get(placement.itemId);
+          const gameSprite = item?.spriteId ? gameSprites[item.spriteId] : undefined;
+          const image = getSpriteImage(item?.placementImageUrl ?? gameSprite?.atlas ?? item?.imageUrl);
+          const drawX = bpX + x * currentCellSize;
+          const drawY = bpY + y * currentCellSize;
+          const drawWidth = placement.width * currentCellSize;
+          const drawHeight = placement.height * currentCellSize;
+          if (image) {
+            if (item?.renderAtNativeScale && (item.placementImageUrl || !gameSprite)) {
+              drawNativeStorageSprite(ctx, image, drawX, drawY, drawWidth, drawHeight, currentCellSize, placement.rotation ?? 0);
+            } else {
+              drawStorageSprite(ctx, image, drawX, drawY, drawWidth, drawHeight);
+            }
+          } else {
+            ctx.fillStyle = validation?.valid === false ? '#ef4444' : '#22d3ee';
+            ctx.fillRect(drawX, drawY, drawWidth, drawHeight);
+          }
+          ctx.strokeStyle = previewColor;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(drawX, drawY, drawWidth, drawHeight);
+        }
+
+        ctx.globalAlpha = 1;
+        for (const box of validation?.conflictingBoxes ?? []) {
+          const x = bpX + box.x * currentCellSize;
+          const y = bpY + box.y * currentCellSize;
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+          ctx.fillRect(x, y, box.width * currentCellSize, box.height * currentCellSize);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, box.width * currentCellSize, box.height * currentCellSize);
+        }
+
+        const pasteX = bpX + hoverCell.x * currentCellSize;
+        const pasteY = bpY + hoverCell.y * currentCellSize;
+        ctx.strokeStyle = previewColor;
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([6, 3]);
+        ctx.strokeRect(pasteX, pasteY, clipboard.width * currentCellSize, clipboard.height * currentCellSize);
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+
       // Render annotations
       if (annotations.length > 0 && currentCellSize >= 6) {
         ctx.save();
@@ -2033,6 +2257,10 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     circleOrigin,
     includeWaypoint,
     mirrorMode,
+    selectionTransformPreview,
+    clipboard,
+    pastePlacementMode,
+    pastePreviewValidation,
     selectionBox,
     selectedStoragePlacementId,
     storageDragPreview,
@@ -2138,10 +2366,20 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     setAnnotationEditor(null);
   };
 
+  useEffect(() => {
+    if (!annotationEditor) return;
+    const focusFrame = requestAnimationFrame(() => {
+      const textarea = annotationTextareaRef.current;
+      textarea?.focus({ preventScroll: true });
+      textarea?.setSelectionRange(textarea.value.length, textarea.value.length);
+    });
+    return () => cancelAnimationFrame(focusFrame);
+  }, [annotationEditor?.mode, annotationEditor?.annotationId]);
+
   return (
     <div
       ref={containerRef}
-      style={{ cursor: activeCursor }}
+      style={{ cursor: pastePlacementMode ? (pastePreviewValidation?.valid === false ? 'not-allowed' : 'copy') : activeCursor }}
       className="relative flex-1 h-full w-full overflow-hidden bg-[#080f1c] select-none"
     >
       {placementForRotationControls && (
@@ -2242,6 +2480,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               {language === 'es' ? 'Texto de la nota' : 'Note text'}
             </label>
             <textarea
+              ref={annotationTextareaRef}
               id="annotation-editor-text"
               autoFocus
               rows={4}
@@ -2278,12 +2517,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       )}
       <canvas
         ref={canvasRef}
-        style={{ cursor: activeCursor }}
+        style={{ cursor: pastePlacementMode ? (pastePreviewValidation?.valid === false ? 'not-allowed' : 'copy') : activeCursor }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={() => {
           setHoverCell(null);
+          onPasteHoverCell?.(null);
           setIsPointerDown(false);
           setIsPanning(false);
           setDraggingAnnotationId(null);
@@ -2292,6 +2532,38 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         onContextMenu={event => event.preventDefault()}
         className="w-full h-full block touch-none"
       />
+
+      {pastePlacementMode && hoverCell && <div
+        className={`pointer-events-none absolute z-30 max-w-64 rounded-lg border px-2.5 py-2 text-[10px] leading-relaxed shadow-xl backdrop-blur ${
+          pastePreviewValidation?.valid === false
+            ? 'border-red-400/60 bg-red-950/95 text-red-100'
+            : pastePreviewValidation && (pastePreviewValidation.overwrittenBlocks > 0 || pastePreviewValidation.replacedFloors > 0)
+              ? 'border-amber-400/60 bg-amber-950/95 text-amber-100'
+              : 'border-cyan-400/60 bg-[#0d1728]/95 text-cyan-100'
+        }`}
+        style={{ left: hoverPointer.x, top: hoverPointer.y }}
+      >
+        <div className="font-semibold">
+          {pastePreviewValidation?.valid === false
+            ? pastePreviewValidation.outsideBlueprint
+              ? (language === 'es' ? 'La copia se sale del plano' : 'Copy extends beyond the blueprint')
+              : pastePreviewValidation.conflictingBoxes.length > 0
+                ? language === 'es'
+                  ? `${pastePreviewValidation.conflictingBoxes.length} objeto(s) ocupan este espacio`
+                  : `${pastePreviewValidation.conflictingBoxes.length} object(s) occupy this space`
+                : (language === 'es' ? 'No se puede pegar con las capas actuales' : 'Cannot paste with the current layers')
+            : pastePreviewValidation && (pastePreviewValidation.overwrittenBlocks > 0 || pastePreviewValidation.replacedFloors > 0)
+              ? (language === 'es' ? 'El pegado reemplazará contenido' : 'Pasting will replace content')
+              : (language === 'es' ? 'Haz clic para pegar aquí' : 'Click to paste here')}
+        </div>
+        {pastePreviewValidation?.conflicts.length ? <div className="mt-0.5">{pastePreviewValidation.conflicts.slice(0, 2).join(', ')}{pastePreviewValidation.conflicts.length > 2 ? ` +${pastePreviewValidation.conflicts.length - 2}` : ''}</div> : null}
+        {pastePreviewValidation && pastePreviewValidation.valid && (pastePreviewValidation.overwrittenBlocks > 0 || pastePreviewValidation.replacedFloors > 0) && <div className="mt-0.5">
+          {language === 'es'
+            ? `${pastePreviewValidation.overwrittenBlocks} bloques · ${pastePreviewValidation.replacedFloors} suelos`
+            : `${pastePreviewValidation.overwrittenBlocks} blocks · ${pastePreviewValidation.replacedFloors} floors`}
+        </div>}
+        <div className="mt-1 text-[9px] opacity-70">Esc · {language === 'es' ? 'cancelar' : 'cancel'}</div>
+      </div>}
 
       {/* Active material and contextual tools, beside canvas navigation */}
       <div className="pointer-events-none absolute left-3 right-3 top-3 z-20 flex items-start justify-between gap-2">
@@ -2410,6 +2682,23 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
         </button>
       </div>
       </div>
+
+      {showClipboardPasteHint && !pastePlacementMode && clipboard && (
+        <div className="absolute bottom-[4.5rem] left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-lg border border-cyan-400/40 bg-[#0d1728]/95 px-3 py-2 text-xs font-medium text-cyan-100 shadow-lg backdrop-blur-md">
+          <span className="whitespace-nowrap">
+            {language === 'es' ? 'Haz clic en Pegar para ver la previsualización' : 'Click Paste to see the preview'}
+          </span>
+          <button
+            type="button"
+            onClick={onDismissClipboardPasteHint}
+            aria-label={language === 'es' ? 'Cerrar aviso' : 'Dismiss hint'}
+            title={language === 'es' ? 'Cerrar' : 'Close'}
+            className="rounded px-1 text-cyan-200/70 hover:bg-white/10 hover:text-white"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {/* Floating Status & Coordinate Badge */}
       <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 rounded-xl border border-[#2b3d58] bg-[#0d1728]/95 px-3 py-2 shadow-lg backdrop-blur-md text-xs font-mono text-zinc-300">
