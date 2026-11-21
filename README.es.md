@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.2.1" width="100%">
+  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.2.2" width="100%">
 
   **Construye tu hogar subterráneo antes de colocar el primer bloque.**
 
-  <img src="assets/readme/stats-es.svg" alt="Versión 1.2.1 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
+  <img src="assets/readme/stats-es.svg" alt="Versión 1.2.2 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
 
   [🇬🇧 English](README.md) · **🇪🇸 Español**
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Última versión — v1.2.1:** permite orientar de una vez todos los objetos de una selección rectangular, con validación de huellas y colisiones. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.1/core-keeper-planner-1.2.1.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.1/core-keeper-planner-1.2.1.zip).
+> **Última versión — v1.2.2:** permite colocar el sprite completo del Core como un objeto único con huella de 19×13 casillas. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.2/core-keeper-planner-1.2.2.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.2/core-keeper-planner-1.2.2.zip).
 
 > **Pruébalo en línea:** [Abrir Core Keeper Planner](https://kraventd.github.io/Core-Keeper-Planner/). Los planos se guardan en este navegador; usa las opciones de importar y exportar para moverlos entre dispositivos.
 
@@ -247,7 +247,7 @@ Core Keeper Planner es un proyecto independiente que desarrollo y mantengo perso
   <br>
   <strong>Planifica. Construye. Hazlo tuyo.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSIÓN 1.2.1</sub>
+  <sub>CORE KEEPER PLANNER · VERSIÓN 1.2.2</sub>
   <br>
   <a href="README.md">Read in English</a>
 </div>

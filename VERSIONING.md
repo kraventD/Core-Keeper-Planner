@@ -22,4 +22,4 @@ Use the Git tag `v<releaseVersion>`. Mark correction-only commits with a `hotfix
 
 ## Current release
 
-`1.2.1` adds four-direction orientation controls for objects inside a rectangular selection, with footprint and collision validation. `1.2.0a` fixes public asset paths for GitHub Pages. `1.2.0` adds five-minute incremental recovery history with thumbnails, improved mirrored selection previews, cursor-following clipboard paste previews with collision feedback, and automatic focus in the note editor.
+`1.2.2` replaces the colored Core-and-statues stamp with the transparent 19×13 Core sprite in the dedicated tool, preserves its image proportions, and removes the temporary catalog entry. `1.2.1` adds four-direction orientation controls for objects inside a rectangular selection, with footprint and collision validation. `1.2.0a` fixes public asset paths for GitHub Pages. `1.2.0` adds five-minute incremental recovery history with thumbnails, improved mirrored selection previews, cursor-following clipboard paste previews with collision feedback, and automatic focus in the note editor.

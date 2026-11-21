@@ -20,7 +20,7 @@ import {
   Language,
 } from '../types/blueprint';
 import { Translations } from '../i18n/translations';
-import { STORAGE_ITEM_BY_ID, StorageItemDefinition } from '../utils/storageCatalog';
+import { CORE_SPRITE_ITEM, STORAGE_ITEM_BY_ID, StorageItemDefinition } from '../utils/storageCatalog';
 import { StorageItemPlacement } from '../types/blueprint';
 import { GameSpriteEntry } from '../utils/gameSpriteCatalog';
 import { getDoorCellOrientation, getDoorPlacementColorId } from '../utils/doorCells';
@@ -38,10 +38,6 @@ import {
   floodFill,
   getConnectedRegion,
   moveCells,
-  getCorePatternCells,
-  stampCorePattern,
-  CORE_PATTERN_WIDTH,
-  CORE_PATTERN_HEIGHT,
   CORE_PATTERN_CENTER_OFFSET_X,
   CORE_PATTERN_CENTER_OFFSET_Y,
 } from '../utils/gridLogic';
@@ -163,7 +159,6 @@ interface CanvasAreaProps {
   rectangleMode: RectangleMode;
   circleMode?: ShapeMode;
   circleOrigin?: CircleOrigin;
-  includeWaypoint?: boolean;
   mirrorMode?: MirrorMode;
   selectionTransformPreview?: SelectionTransformPreview | null;
   clipboard?: ClipboardData | null;
@@ -220,7 +215,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   rectangleMode,
   circleMode = 'outline',
   circleOrigin = 'center',
-  includeWaypoint = true,
   mirrorMode = 'none',
   selectionTransformPreview = null,
   clipboard = null,
@@ -754,15 +748,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
     if (activeTool === 'place_core') {
       if (cell) {
-        const { updatedCells } = stampCorePattern(
-          project.cells,
-          cell.x,
-          cell.y,
-          project.width,
-          project.height,
-          includeWaypoint
+        onPlaceStorageItem?.(
+          cell.x - CORE_PATTERN_CENTER_OFFSET_X,
+          cell.y - CORE_PATTERN_CENTER_OFFSET_Y,
+          CORE_SPRITE_ITEM,
         );
-        onUpdateCells(updatedCells, 'Colocar Core y Estatuas');
       }
       return;
     }
@@ -1917,81 +1907,33 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           }
         }
 
-        // Place Core Ghost Preview
-        if (activeTool === 'place_core') {
-          const pattern = getCorePatternCells(includeWaypoint);
-          const originX = hoverCell.x - CORE_PATTERN_CENTER_OFFSET_X;
-          const originY = hoverCell.y - CORE_PATTERN_CENTER_OFFSET_Y;
-
-          // Outer bounding box
-          const boxLeft = bpX + originX * currentCellSize;
-          const boxTop = bpY + originY * currentCellSize;
-          const boxW = CORE_PATTERN_WIDTH * currentCellSize;
-          const boxH = CORE_PATTERN_HEIGHT * currentCellSize;
-
-          ctx.strokeStyle = '#f59e0b';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([5, 5]);
-          ctx.strokeRect(boxLeft, boxTop, boxW, boxH);
-          ctx.setLineDash([]);
-
-          for (const item of pattern) {
-            const tx = originX + item.relX;
-            const ty = originY + item.relY;
-            if (isInBounds(tx, ty, project.width, project.height)) {
-              const px = bpX + tx * currentCellSize;
-              const py = bpY + ty * currentCellSize;
-
-              if (item.part === 'waypoint') {
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.75)';
-              } else {
-                ctx.fillStyle = 'rgba(236, 72, 153, 0.75)';
-              }
-              ctx.fillRect(px, py, currentCellSize, currentCellSize);
-
-              ctx.strokeStyle = gridTheme === 'light' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)';
-              ctx.lineWidth = 1;
-              ctx.strokeRect(px, py, currentCellSize, currentCellSize);
-            }
-          }
-
-          // Badge pill indicating tool
-          const badgeText = `★ ${t.placeCore.badge} (${CORE_PATTERN_WIDTH}×${CORE_PATTERN_HEIGHT})`;
-          ctx.font = 'bold 12px monospace';
-          const textMetrics = ctx.measureText(badgeText);
-          const badgeX = boxLeft + boxW / 2 - textMetrics.width / 2 - 8;
-          const badgeY = boxTop - 24;
-
-          ctx.fillStyle = 'rgba(15, 23, 42, 0.90)';
-          ctx.fillRect(badgeX, badgeY, textMetrics.width + 16, 20);
-          ctx.strokeStyle = '#f59e0b';
-          ctx.lineWidth = 1;
-          ctx.strokeRect(badgeX, badgeY, textMetrics.width + 16, 20);
-          ctx.fillStyle = '#fbbf24';
-          ctx.fillText(badgeText, badgeX + 8, badgeY + 14);
-        } else if (activeTool === 'place_storage' && selectedStorageItem) {
-          const { width: itemWidth, height: itemHeight } = selectedStorageItem;
-          const x = bpX + hoverCell.x * currentCellSize;
-          const y = bpY + hoverCell.y * currentCellSize;
+        // Place Core or selected catalog object with the same footprint and height preview.
+        if ((activeTool === 'place_storage' && selectedStorageItem) || activeTool === 'place_core') {
+          const previewItem = activeTool === 'place_core' ? CORE_SPRITE_ITEM : selectedStorageItem!;
+          const originX = activeTool === 'place_core' ? hoverCell.x - CORE_PATTERN_CENTER_OFFSET_X : hoverCell.x;
+          const originY = activeTool === 'place_core' ? hoverCell.y - CORE_PATTERN_CENTER_OFFSET_Y : hoverCell.y;
+          const { width: itemWidth, height: itemHeight } = previewItem;
+          const x = bpX + originX * currentCellSize;
+          const y = bpY + originY * currentCellSize;
           const w = itemWidth * currentCellSize;
           const h = itemHeight * currentCellSize;
-          const fits = hoverCell.x + itemWidth <= project.width && hoverCell.y + itemHeight <= project.height;
-          const previewSprite = selectedStorageItem.spriteId ? gameSprites[selectedStorageItem.spriteId] : undefined;
-          const image = getSpriteImage(selectedStorageItem.placementImageUrl ?? previewSprite?.atlas ?? selectedStorageItem.imageUrl);
-          const nativeSprite = image && selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite);
+          const fits = originX >= 0 && originY >= 0 && originX + itemWidth <= project.width && originY + itemHeight <= project.height;
+          const previewSprite = previewItem.spriteId ? gameSprites[previewItem.spriteId] : undefined;
+          const image = getSpriteImage(previewItem.placementImageUrl ?? previewSprite?.atlas ?? previewItem.imageUrl);
+          const nativeSprite = image && previewItem.renderAtNativeScale && (previewItem.placementImageUrl || !previewSprite);
           const spriteBounds = nativeSprite && image ? getSpriteContentBounds(image) : null;
-          const visualHeightTiles = selectedStorageItem.visualHeightTiles ?? (spriteBounds ? Math.max(itemHeight, spriteBounds.height / 16) : itemHeight);
-          const visualWidthTiles = selectedStorageItem.visualWidthTiles ?? (spriteBounds ? Math.max(itemWidth, spriteBounds.width / 16) : itemWidth);
-          const visualLeft = hoverCell.x + (itemWidth - visualWidthTiles) / 2;
-          const visualTop = hoverCell.y + itemHeight - visualHeightTiles;
+          const visualHeightTiles = previewItem.visualHeightTiles ?? (spriteBounds ? Math.max(itemHeight, spriteBounds.height / 16) : itemHeight);
+          const visualWidthTiles = previewItem.visualWidthTiles ?? (spriteBounds ? Math.max(itemWidth, spriteBounds.width / 16) : itemWidth);
+          const visualLeft = originX + (itemWidth - visualWidthTiles) / 2;
+          const visualTop = originY + itemHeight - visualHeightTiles;
           const visualFits = visualLeft >= 0 && visualTop >= 0 && visualLeft + visualWidthTiles <= project.width && visualTop + visualHeightTiles <= project.height;
-          const blocked = (project.storagePlacements ?? []).some(item => (item.layer ?? 'object') === (selectedStorageItem.layer ?? 'object') &&
-            hoverCell.x < item.x + item.width && hoverCell.x + itemWidth > item.x &&
-            hoverCell.y < item.y + item.height && hoverCell.y + itemHeight > item.y,
+          const blocked = (project.storagePlacements ?? []).some(item => (item.layer ?? 'object') === (previewItem.layer ?? 'object') &&
+            originX < item.x + item.width && originX + itemWidth > item.x &&
+            originY < item.y + item.height && originY + itemHeight > item.y,
           );
-          const wallBacked = selectedStorageItem.category !== 'wall_decoration' || Array.from({ length: itemWidth * itemHeight }, (_, index) => {
-            const tileX = hoverCell.x + (index % itemWidth);
-            const tileY = hoverCell.y + Math.floor(index / itemWidth);
+          const wallBacked = previewItem.category !== 'wall_decoration' || Array.from({ length: itemWidth * itemHeight }, (_, index) => {
+            const tileX = originX + (index % itemWidth);
+            const tileY = originY + Math.floor(index / itemWidth);
             return Boolean(project.cells[`${tileX},${tileY}`]) || (project.storagePlacements ?? []).some(placement => {
               const wallItem = STORAGE_ITEM_BY_ID.get(placement.itemId);
               return (wallItem?.category === 'wall' || placement.layer === 'wall') &&
@@ -2002,7 +1944,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           if (!fits || !visualFits) warnings.push(language === 'es' ? 'Fuera del plano' : 'Outside blueprint');
           if (blocked) warnings.push(language === 'es' ? 'Espacio ocupado en esta capa' : 'Occupied in this layer');
           if (!wallBacked) warnings.push(language === 'es' ? 'Necesita pared detrás' : 'Needs a wall behind');
-          const selectedLayerId = getStorageItemLayerId(selectedStorageItem, selectedStorageItem.layer);
+          const selectedLayerId = getStorageItemLayerId(previewItem, previewItem.layer);
           if (!plannerLayerStates[selectedLayerId].visible) warnings.push(language === 'es' ? 'La capa está oculta' : 'Layer is hidden');
           else if (!isPlannerLayerEditable(plannerLayerStates, selectedLayerId)) warnings.push(language === 'es' ? 'La capa está bloqueada' : 'Layer is locked');
           const valid = warnings.length === 0;
@@ -2012,7 +1954,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             ctx.save();
             ctx.globalAlpha = 0.72;
             ctx.imageSmoothingEnabled = false;
-            if (selectedStorageItem.visualWidthTiles || selectedStorageItem.visualHeightTiles) {
+            if (previewItem.visualWidthTiles || previewItem.visualHeightTiles) {
               const visualX = bpX + visualLeft * currentCellSize;
               const visualY = bpY + visualTop * currentCellSize;
               if (previewSprite) {
@@ -2024,7 +1966,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               } else {
                 drawStorageSprite(ctx, image, visualX, visualY, visualWidthTiles * currentCellSize, visualHeightTiles * currentCellSize);
               }
-            } else if (selectedStorageItem.renderAtNativeScale && (selectedStorageItem.placementImageUrl || !previewSprite)) {
+            } else if (previewItem.renderAtNativeScale && (previewItem.placementImageUrl || !previewSprite)) {
               drawNativeStorageSprite(ctx, image, x, y, w, h, currentCellSize);
             } else if (previewSprite) {
               const sourceY = previewSprite.rect.origin === 'bottom-left'
@@ -2255,7 +2197,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     rectangleMode,
     circleMode,
     circleOrigin,
-    includeWaypoint,
     mirrorMode,
     selectionTransformPreview,
     clipboard,

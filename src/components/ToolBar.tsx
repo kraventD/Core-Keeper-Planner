@@ -50,8 +50,6 @@ interface ToolBarProps {
   onChangeCircleMode: (mode: ShapeMode) => void;
   circleOrigin: CircleOrigin;
   onChangeCircleOrigin: (origin: CircleOrigin) => void;
-  includeWaypoint?: boolean;
-  onToggleIncludeWaypoint?: () => void;
   onCenterCoreOnBlueprint?: () => void;
   mirrorMode: MirrorMode;
   onChangeMirrorMode: (mode: MirrorMode) => void;
@@ -81,8 +79,6 @@ export const ToolBar: React.FC<ToolBarProps> = ({
   onChangeCircleMode,
   circleOrigin,
   onChangeCircleOrigin,
-  includeWaypoint = true,
-  onToggleIncludeWaypoint,
   onCenterCoreOnBlueprint,
   mirrorMode,
   onChangeMirrorMode,
@@ -440,36 +436,6 @@ export const ToolBar: React.FC<ToolBarProps> = ({
                 </button>
               )}
 
-              {onToggleIncludeWaypoint && (
-                <label className="flex items-center gap-2 p-1.5 rounded-lg bg-[#121316] border border-zinc-800 cursor-pointer hover:border-zinc-700 transition">
-                  <input
-                    type="checkbox"
-                    checked={includeWaypoint}
-                    onChange={onToggleIncludeWaypoint}
-                    className="w-3.5 h-3.5 accent-amber-500 rounded bg-zinc-900 border-zinc-700"
-                  />
-                  <span className="text-[11px] text-zinc-300 font-medium">
-                    {t.placeCore.includeWaypoint}
-                  </span>
-                </label>
-              )}
-
-              <div className="mt-2 p-2 rounded-lg bg-[#101115] border border-zinc-800/80 space-y-1 text-[10px]">
-                <div className="flex items-center gap-1.5 text-zinc-300">
-                  <span className="w-2.5 h-2.5 rounded-sm bg-[#EC4899] shrink-0 border border-black/40" />
-                  <span>{t.placeCore.coreComponent}</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-zinc-300">
-                  <span className="w-2.5 h-2.5 rounded-sm bg-[#EC4899] shrink-0 border border-black/40" />
-                  <span>{t.placeCore.statuesComponent}</span>
-                </div>
-                {includeWaypoint && (
-                  <div className="flex items-center gap-1.5 text-zinc-300">
-                    <span className="w-2.5 h-2.5 rounded-sm bg-[#38BDF8] shrink-0 border border-black/40" />
-                    <span>{t.placeCore.waypointComponent}</span>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         )}

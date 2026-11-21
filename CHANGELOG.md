@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.2.2 — Core sprite replacement
+
+### English
+
+- Replaced the colored Core-and-statues stamp with the complete transparent Core sprite. The dedicated Core tool now places it as one object with the existing 19×13 tile footprint and preserved image proportions.
+- Removed the temporary Core sprite entry from the object catalog to avoid duplicate ways to place it.
+- Updated the Core placement preview and center-on-blueprint action to use the sprite.
+
+### Español
+
+- Se reemplazó el patrón de colores del Core y las estatuas por el sprite completo con fondo transparente. La herramienta dedicada del Core ahora lo coloca como un solo objeto con la huella actual de 19×13 casillas y conserva la proporción de la imagen.
+- Se quitó del catálogo la entrada temporal del sprite para evitar que haya dos formas de colocarlo.
+- La previsualización y la acción para centrar el Core en el plano ahora usan el sprite.
+
 ## v1.2.1 — Multi-object orientation
 
 ### English

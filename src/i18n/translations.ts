@@ -51,13 +51,8 @@ export interface Translations {
     title: string;
     centerOnBlueprint: string;
     centerTooltip: string;
-    includeWaypoint: string;
-    coreComponent: string;
-    statuesComponent: string;
-    waypointComponent: string;
     placedSuccessToast: string;
     hint: string;
-    badge: string;
   };
   toolOptions: {
     brushSize: string;
@@ -356,7 +351,7 @@ export const translations: Record<Language, Translations> = {
       line: 'Dibujar línea recta o diagonal (L)',
       rectangle: 'Dibujar habitación o bloque rectangular (R)',
       circle: 'Dibujar habitación o estructura circular perfecta (C)',
-      place_core: 'Colocar Core y estatuas inamovibles de inicio (K)',
+      place_core: 'Colocar el sprite completo del Core (K)',
       place_storage: 'Colocar muebles, estaciones y estructuras',
       hand: 'Mover el lienzo arrastrando (H)',
       rect_select: 'Seleccionar región para copiar, mover o borrar (S)',
@@ -365,16 +360,11 @@ export const translations: Record<Language, Translations> = {
       annotation: 'Agregar o editar una anotación de texto en una casilla (T)',
     },
     placeCore: {
-      title: 'Colocar Core y Estatuas',
+      title: 'Colocar Core',
       centerOnBlueprint: 'Centrar Core en el plano',
-      centerTooltip: 'Coloca automáticamente el patrón del Core y las estatuas en el centro exacto del plano',
-      includeWaypoint: 'Incluir Waypoint',
-      coreComponent: 'Core central (5×5)',
-      statuesComponent: '3 estatuas de jefes (3×3)',
-      waypointComponent: 'Waypoint de aparición (3×3)',
-      placedSuccessToast: 'Patrón del Core y las estatuas colocado con éxito',
-      hint: 'Haz clic en el plano para estampar el Core o usa "Centrar Core en el plano"',
-      badge: 'CORE Y ESTATUAS',
+      centerTooltip: 'Coloca el sprite completo del Core en el centro exacto del plano',
+      placedSuccessToast: 'Core colocado en el centro del plano',
+      hint: 'Haz clic para colocar el sprite completo del Core o usa el botón para centrarlo.',
     },
     toolOptions: {
       brushSize: 'Grosor',
@@ -665,7 +655,7 @@ export const translations: Record<Language, Translations> = {
       line: 'Draw straight or diagonal line (L)',
       rectangle: 'Draw room or rectangular block (R)',
       circle: 'Draw perfect circular room or structure (C)',
-      place_core: 'Place Core and default immovable boss statues (K)',
+      place_core: 'Place the complete Core sprite (K)',
       place_storage: 'Place furniture, stations, and structures',
       hand: 'Pan canvas by dragging (H)',
       rect_select: 'Select region to copy, move or delete (S)',
@@ -674,16 +664,11 @@ export const translations: Record<Language, Translations> = {
       annotation: 'Add or edit a text annotation on a cell (T)',
     },
     placeCore: {
-      title: 'Place Core & Statues',
+      title: 'Place Core',
       centerOnBlueprint: 'Center Core on blueprint',
-      centerTooltip: 'Automatically stamps the Core & statues at the exact center of the blueprint',
-      includeWaypoint: 'Include Waypoint',
-      coreComponent: 'Central Core (5×5)',
-      statuesComponent: '3 boss statues (3×3)',
-      waypointComponent: 'Spawn Waypoint (3×3)',
-      placedSuccessToast: 'Core & statues pattern placed successfully',
-      hint: 'Click on the grid to stamp the Core or use "Center Core on blueprint"',
-      badge: 'CORE & STATUES',
+      centerTooltip: 'Place the complete Core sprite at the exact center of the blueprint',
+      placedSuccessToast: 'Core placed in the center of the blueprint',
+      hint: 'Click to place the complete Core sprite, or use the button to center it.',
     },
     toolOptions: {
       brushSize: 'Size',

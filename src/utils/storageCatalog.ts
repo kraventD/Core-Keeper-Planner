@@ -307,6 +307,20 @@ const withPublicAssetUrls = (item: StorageItemDefinition): StorageItemDefinition
   ...(item.placementImageUrl ? { placementImageUrl: publicAssetUrl(item.placementImageUrl) } : {}),
 });
 
+/** The dedicated Core tool uses this item definition; it is intentionally omitted from the catalog. */
+export const CORE_SPRITE_ITEM: StorageItemDefinition = withPublicAssetUrls({
+  id: 'core-sprite',
+  nameEn: 'Core',
+  nameEs: 'Core',
+  category: 'other',
+  width: 19,
+  height: 13,
+  imageUrl: '/object-sprites/core-shrine.png',
+  placementImageUrl: '/object-sprites/core-shrine.png',
+  visualWidthTiles: 19,
+  visualHeightTiles: 19 * 875 / 1215,
+});
+
 const additionalStorageItems: StorageItemDefinition[] = [
   { id: 'plain-chest', nameEn: 'Plain Chest', nameEs: 'Cofre sencillo', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/plain-chest.png', color: '#9c7046', estimatedSize: true },
   { id: 'relucite-chest', nameEn: 'Relucite Chest', nameEs: 'Cofre de relucita', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/relucite-chest.png', spriteId: 'lootsprite_reluciteChest' },
@@ -706,7 +720,7 @@ const functionalItemDefinitions: StorageItemDefinition[] = [
 
 export const FUNCTIONAL_ITEMS = functionalItemDefinitions.map(withWikiPlacedSprite).map(withPublicAssetUrls);
 
-export const STORAGE_ITEM_BY_ID = new Map([...STORAGE_ITEMS, ...FUNCTIONAL_ITEMS, ...STRUCTURE_ITEMS].map(item => [item.id, item]));
+export const STORAGE_ITEM_BY_ID = new Map([...STORAGE_ITEMS, ...FUNCTIONAL_ITEMS, ...STRUCTURE_ITEMS, CORE_SPRITE_ITEM].map(item => [item.id, item]));
 
 export function migrateStructurePlacementsToColors(
   cells: Record<string, string>,

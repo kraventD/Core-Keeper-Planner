@@ -34,7 +34,6 @@ import {
   duplicateMirrorSelection,
   flipSelectionInPlace,
   getCenterOfGrid,
-  stampCorePattern,
   centerSelectionHorizontally,
   centerSelectionVertically,
   centerSelectionBoth,
@@ -68,7 +67,7 @@ import { RecoveryModal } from './components/Modals/RecoveryModal';
 import { ShortcutsModal } from './components/Modals/ShortcutsModal';
 import { BlockPaletteModal } from './components/Modals/BlockPaletteModal';
 import { DEFAULT_ACTIVE_COLOR, paletteWithBlockColors } from './utils/blockCatalog';
-import { StorageItemDefinition } from './utils/storageCatalog';
+import { CORE_SPRITE_ITEM, StorageItemDefinition } from './utils/storageCatalog';
 import { migrateStructurePlacementsToColors, STORAGE_ITEM_BY_ID } from './utils/storageCatalog';
 import { GameSpriteEntry, loadGameSpriteCatalog } from './utils/gameSpriteCatalog';
 import { FLOOR_ITEM_BY_ID } from './utils/floorCatalog';
@@ -231,7 +230,6 @@ export default function App() {
   const [rectangleMode, setRectangleMode] = useState<RectangleMode>('outline');
   const [circleMode, setCircleMode] = useState<ShapeMode>('outline');
   const [circleOrigin, setCircleOrigin] = useState<CircleOrigin>('center');
-  const [includeWaypoint, setIncludeWaypoint] = useState<boolean>(true);
   const [mirrorMode, setMirrorMode] = useState<MirrorMode>('none');
   const [brushSize, setBrushSize] = useState<number>(1);
   const [eraseObjectsWithEraser, setEraseObjectsWithEraser] = useState<boolean>(false);
@@ -1063,28 +1061,6 @@ export default function App() {
     }
   }, []);
 
-  const handleCenterCoreOnBlueprint = useCallback(() => {
-    const center = getCenterOfGrid(project.width, project.height);
-    const { updatedCells } = stampCorePattern(
-      project.cells,
-      center.x,
-      center.y,
-      project.width,
-      project.height,
-      includeWaypoint
-    );
-    handleUpdateCells(updatedCells, 'Colocar Core en el centro');
-    showToast(t.placeCore.placedSuccessToast);
-  }, [
-    project.width,
-    project.height,
-    project.cells,
-    includeWaypoint,
-    handleUpdateCells,
-    showToast,
-    t.placeCore.placedSuccessToast,
-  ]);
-
   // 9. Resize & Clear Blueprint
   const handleApplyResize = (newWidth: number, newHeight: number) => {
     const { updatedCells } = resizeGridCells(project.cells, newWidth, newHeight);
@@ -1213,13 +1189,13 @@ export default function App() {
     showToast(t.alerts.projectLoaded);
   };
 
-  const handlePlaceStorageItem = useCallback((x: number, y: number, item: StorageItemDefinition) => {
+  const handlePlaceStorageItem = useCallback((x: number, y: number, item: StorageItemDefinition): boolean => {
     const itemLayer = getStorageItemLayerId(item, item.layer);
-    if (!isPlannerLayerEditable(plannerLayerStates, itemLayer)) return;
+    if (!isPlannerLayerEditable(plannerLayerStates, itemLayer)) return false;
     const currentPlacements = project.storagePlacements ?? [];
     if (x + item.width > project.width || y + item.height > project.height) {
       showToast(language === 'es' ? 'El objeto queda fuera del plano.' : 'The item would extend beyond the blueprint.');
-      return;
+      return false;
     }
     const layer = item.layer ?? 'object';
     const overlaps = currentPlacements.some(existing => (existing.layer ?? 'object') === layer &&
@@ -1228,7 +1204,7 @@ export default function App() {
     );
     if (overlaps) {
       showToast(language === 'es' ? 'Ese espacio ya está ocupado por otro objeto.' : 'That space is occupied by another item.');
-      return;
+      return false;
     }
     const nextPlacements = [...currentPlacements, {
       id: `storage_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
@@ -1249,7 +1225,15 @@ export default function App() {
       return updated;
     });
     pushHistory(project.cells, `Colocar ${language === 'es' ? item.nameEs : item.nameEn} (${item.width}×${item.height})`, project.width, project.height, nextPlacements);
+    return true;
   }, [language, plannerLayerStates, project.cells, project.height, project.storagePlacements, project.width, pushHistory, showToast]);
+
+  const handleCenterCoreOnBlueprint = useCallback(() => {
+    const center = getCenterOfGrid(project.width, project.height);
+    if (handlePlaceStorageItem(center.x - 9, center.y - 7, CORE_SPRITE_ITEM)) {
+      showToast(t.placeCore.placedSuccessToast);
+    }
+  }, [handlePlaceStorageItem, project.height, project.width, showToast, t.placeCore.placedSuccessToast]);
 
   const handleRemoveStorageItems = useCallback((placementIds: string[]) => {
     const requestedIds = new Set(placementIds);
@@ -1573,8 +1557,6 @@ export default function App() {
           onChangeCircleMode={setCircleMode}
           circleOrigin={circleOrigin}
           onChangeCircleOrigin={setCircleOrigin}
-          includeWaypoint={includeWaypoint}
-          onToggleIncludeWaypoint={() => setIncludeWaypoint(v => !v)}
           onCenterCoreOnBlueprint={handleCenterCoreOnBlueprint}
           mirrorMode={mirrorMode}
           onChangeMirrorMode={setMirrorMode}
@@ -1634,7 +1616,6 @@ export default function App() {
             rectangleMode={rectangleMode}
             circleMode={circleMode}
             circleOrigin={circleOrigin}
-            includeWaypoint={includeWaypoint}
             mirrorMode={mirrorMode}
             selectionTransformPreview={selectionTransformPreview}
             clipboard={clipboard}
