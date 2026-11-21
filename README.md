@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="assets/readme/banner-en.png" alt="Core Keeper Planner — base design and blueprint editor, version 1.2.0a" width="100%">
+  <img src="assets/readme/banner-en.png" alt="Core Keeper Planner — base design and blueprint editor, version 1.2.1" width="100%">
 
   **Build your underground home before you place the first block.**
 
-  <img src="assets/readme/stats-en.svg" alt="Version 1.2.0a · 488 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
+  <img src="assets/readme/stats-en.svg" alt="Version 1.2.1 · 488 catalog entries · 10–300 tiles per side · English and Spanish" width="100%">
 
   **🇬🇧 English** · [🇪🇸 Español](README.es.md)
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Latest release — v1.2.0a:** fixes sprite loading on the hosted GitHub Pages version. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0a/core-keeper-planner-1.2.0a.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0a/core-keeper-planner-1.2.0a.zip).
+> **Latest release — v1.2.1:** orient all objects in a rectangular selection with one action, with footprint and collision checks. [Download the standalone HTML](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.1/core-keeper-planner-1.2.1.html) · [Download the ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.1/core-keeper-planner-1.2.1.zip).
 
 > **Try it online:** [Open Core Keeper Planner](https://kraventd.github.io/Core-Keeper-Planner/). Plans are saved in this browser; use the import and export tools to move them between devices.
 
@@ -245,7 +245,7 @@ Core Keeper Planner is an independent project that I develop and maintain. It is
   <br>
   <strong>Plan it. Build it. Make it yours.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSION 1.2.0a</sub>
+  <sub>CORE KEEPER PLANNER · VERSION 1.2.1</sub>
   <br>
   <a href="README.es.md">Leer en español</a>
 </div>

@@ -52,6 +52,9 @@ interface PropertiesPanelProps {
   onRotateStoragePlacement?: (rotation: StorageItemRotation) => void;
   onChangeLightRadius?: (radius: number) => void;
   selectionBox: SelectionBox | null;
+  selectionObjectCount: number;
+  selectionObjectRotation: StorageItemRotation | null;
+  onRotateSelectionObjects: (rotation: StorageItemRotation) => void;
   hasClipboard: boolean;
   isPastePlacementMode: boolean;
   onCopySelection: () => void;
@@ -100,6 +103,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onRotateStoragePlacement,
   onChangeLightRadius,
   selectionBox,
+  selectionObjectCount,
+  selectionObjectRotation,
+  onRotateSelectionObjects,
   hasClipboard,
   isPastePlacementMode,
   onCopySelection,
@@ -317,6 +323,40 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   {selWidth} × {selHeight} ({selTotalCells})
                 </div>
               </div>
+
+              {selectionObjectCount > 0 && selectionBox.scope !== 'floors' && (
+                <div className="rounded-lg border border-cyan-500/30 bg-cyan-950/15 p-2">
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-semibold text-cyan-200">
+                      {language === 'es' ? 'Orientación de los objetos seleccionados' : 'Selected object orientation'}
+                    </span>
+                    <span className="shrink-0 font-mono text-[9px] text-cyan-300/70">{selectionObjectCount}</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-1 rounded border border-zinc-800 bg-[#111216] p-1">
+                    {([
+                      { rotation: 0, arrow: '↑' },
+                      { rotation: 90, arrow: '→' },
+                      { rotation: 180, arrow: '↓' },
+                      { rotation: 270, arrow: '←' },
+                    ] as const).map(option => (
+                      <button
+                        key={option.rotation}
+                        type="button"
+                        onClick={() => onRotateSelectionObjects(option.rotation)}
+                        aria-label={t.objectRotation.direction(option.rotation)}
+                        aria-pressed={selectionObjectRotation === option.rotation}
+                        title={`${t.objectRotation.direction(option.rotation)} · ${option.rotation}°`}
+                        className={`rounded py-1 text-sm font-semibold transition ${selectionObjectRotation === option.rotation ? 'bg-cyan-500 text-zinc-950' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'}`}
+                      >
+                        {option.arrow}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-1 text-[9px] leading-relaxed text-zinc-500">
+                    {language === 'es' ? 'Aplica la dirección elegida a todos los objetos dentro de la selección.' : 'Apply the chosen direction to every object inside the selection.'}
+                  </p>
+                </div>
+              )}
 
               {/* Selection action buttons */}
               <div className="grid grid-cols-2 gap-1.5 pt-1">

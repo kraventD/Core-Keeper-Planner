@@ -1327,6 +1327,67 @@ export default function App() {
     handleRotateStorageItem(selected.id, rotation);
   }, [handleRotateStorageItem, project.storagePlacements, selectedStoragePlacementId]);
 
+  const handleRotateSelectionObjects = useCallback((rotation: StorageItemRotation) => {
+    if (!selectionBox || selectionBox.scope === 'floors') return;
+    const placements = project.storagePlacements ?? [];
+    const selected = placements.filter(item =>
+      item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
+      item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY &&
+      plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible &&
+      isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))),
+    );
+    if (selected.length === 0) return;
+
+    const selectedIds = new Set(selected.map(item => item.id));
+    const rotated = selected.map(item => {
+      const definition = STORAGE_ITEM_BY_ID.get(item.itemId);
+      const wasQuarterTurn = item.rotation === 90 || item.rotation === 270;
+      const baseWidth = definition?.width ?? (wasQuarterTurn ? item.height : item.width);
+      const baseHeight = definition?.height ?? (wasQuarterTurn ? item.width : item.height);
+      const needsSwap = rotation === 90 || rotation === 270;
+      return {
+        ...item,
+        width: needsSwap ? baseHeight : baseWidth,
+        height: needsSwap ? baseWidth : baseHeight,
+        rotation,
+      };
+    });
+    const outside = rotated.some(item =>
+      item.x < 0 || item.y < 0 || item.x + item.width > project.width || item.y + item.height > project.height,
+    );
+    const outsidePlacements = placements.filter(item => !selectedIds.has(item.id));
+    const overlaps = rotated.some((item, index) =>
+      [...outsidePlacements, ...rotated.slice(index + 1)].some(other =>
+        (item.layer ?? 'object') === (other.layer ?? 'object') &&
+        item.x < other.x + other.width && item.x + item.width > other.x &&
+        item.y < other.y + other.height && item.y + item.height > other.y,
+      ),
+    );
+    if (outside || overlaps) {
+      showToast(language === 'es'
+        ? 'No se cambió la orientación: un objeto quedaría fuera del plano o chocaría con otro.'
+        : 'Orientation was not changed because an object would leave the blueprint or overlap another item.');
+      return;
+    }
+
+    const rotatedById = new Map(rotated.map(item => [item.id, item]));
+    const changedCount = rotated.filter(item => {
+      const current = selected.find(candidate => candidate.id === item.id)!;
+      return current.rotation !== item.rotation || current.width !== item.width || current.height !== item.height;
+    }).length;
+    if (changedCount === 0) return;
+    const nextPlacements = placements.map(item => rotatedById.get(item.id) ?? item);
+    handleUpdateCells(
+      project.cells,
+      language === 'es' ? `Cambiar orientación de ${changedCount} objetos` : `Change orientation of ${changedCount} objects`,
+      nextPlacements,
+      project.floorTiles,
+    );
+    showToast(language === 'es'
+      ? `Orientación actualizada para ${changedCount} ${changedCount === 1 ? 'objeto' : 'objetos'}.`
+      : `Updated orientation for ${changedCount} ${changedCount === 1 ? 'object' : 'objects'}.`);
+  }, [selectionBox, project.storagePlacements, project.width, project.cells, project.floorTiles, plannerLayerStates, handleUpdateCells, language, showToast]);
+
   const handleChangeLightRadius = useCallback((placementId: string, lightRadius: number) => {
     const current = (project.storagePlacements ?? []).find(item => item.id === placementId);
     if (!current || !isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(current, STORAGE_ITEM_BY_ID.get(current.itemId)))) return;
@@ -1459,6 +1520,19 @@ export default function App() {
   const selectedStorageItem = selectedStorageItemId ? STORAGE_ITEM_BY_ID.get(selectedStorageItemId) ?? null : null;
   const selectedStoragePlacement = (project.storagePlacements ?? []).find(item => item.id === selectedStoragePlacementId) ?? null;
   const selectedPlacedStorageItem = selectedStoragePlacement ? STORAGE_ITEM_BY_ID.get(selectedStoragePlacement.itemId) ?? null : null;
+  const selectedObjectsInBox = useMemo(() => {
+    if (!selectionBox || selectionBox.scope === 'floors') return [];
+    return (project.storagePlacements ?? []).filter(item =>
+      item.x >= selectionBox.minX && item.y >= selectionBox.minY &&
+      item.x + item.width - 1 <= selectionBox.maxX && item.y + item.height - 1 <= selectionBox.maxY &&
+      plannerLayerStates[getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))].visible &&
+      isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(item, STORAGE_ITEM_BY_ID.get(item.itemId))),
+    );
+  }, [selectionBox, project.storagePlacements, plannerLayerStates]);
+  const selectionObjectRotation: StorageItemRotation | null = selectedObjectsInBox.length > 0 &&
+    selectedObjectsInBox.every(item => (item.rotation ?? 0) === (selectedObjectsInBox[0].rotation ?? 0))
+    ? (selectedObjectsInBox[0].rotation ?? 0)
+    : null;
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#080f1c] font-sans text-zinc-100">
@@ -1636,6 +1710,9 @@ export default function App() {
           selectedPlacedStorageItem={selectedPlacedStorageItem}
           onDeleteStoragePlacement={() => selectedStoragePlacementId && handleRemoveStorageItem(selectedStoragePlacementId)}
           onRotateStoragePlacement={rotation => selectedStoragePlacementId && handleRotateStorageItem(selectedStoragePlacementId, rotation)}
+          selectionObjectCount={selectedObjectsInBox.length}
+          selectionObjectRotation={selectionObjectRotation}
+          onRotateSelectionObjects={handleRotateSelectionObjects}
           onChangeLightRadius={radius => selectedStoragePlacementId && handleChangeLightRadius(selectedStoragePlacementId, radius)}
           selectionBox={selectionBox}
           hasClipboard={clipboard !== null}

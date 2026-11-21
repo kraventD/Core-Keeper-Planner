@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.2.1 — Multi-object orientation
+
+### English
+
+- Added four-direction orientation controls to rectangular selections containing editable objects, so all selected objects can be pointed up, right, down or left together.
+- The selection inspector shows the number of affected objects and highlights a direction when all selected objects share it.
+- Orientation changes recalculate rotated footprints and are applied as one operation. If any object would leave the blueprint or overlap another item, the entire change is rejected.
+
+### Español
+
+- Se añadieron controles de orientación en cuatro direcciones para las selecciones rectangulares que contienen objetos editables, para orientar juntos todos los objetos seleccionados hacia arriba, derecha, abajo o izquierda.
+- El inspector muestra cuántos objetos se modificarán y resalta la dirección cuando todos comparten la misma.
+- Los cambios recalculan las huellas al girar y se aplican como una sola operación. Si algún objeto queda fuera del plano o choca con otro, se cancela el cambio completo.
+
 ## v1.2.0a — GitHub Pages sprite loading hotfix
 
 ### English
