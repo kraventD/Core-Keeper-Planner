@@ -1,3 +1,5 @@
+import { publicAssetUrl } from './publicAssetUrl';
+
 export interface GameSpriteEntry {
   id: string;
   name: string;
@@ -47,7 +49,7 @@ export function loadGameSpriteCatalog(): Promise<Record<string, GameSpriteEntry>
             name,
             width,
             height,
-            atlas,
+            atlas: publicAssetUrl(atlas),
             rect: { x, y, width, height, origin },
           };
           return [[id, sprite] as const];

@@ -1,4 +1,5 @@
 import { StorageItemDefinition } from './storageCatalog';
+import { publicAssetUrl } from './publicAssetUrl';
 
 // Core Keeper placed floor and ground tiles. The images are local 16×16 game
 // item sprites so a floor remains legible at one blueprint cell per tile.
@@ -43,8 +44,8 @@ export const FLOOR_ITEMS: StorageItemDefinition[] = floorDefinitions.map(([id, n
   layer: RUG_OBJECT_IDS.has(id) ? 'object' : 'floor',
   width: 1,
   height: 1,
-  imageUrl: `/floor-sprites/${sprite}.png`,
-  placementImageUrl: `/floor-sprites/${sprite}.png`,
+  imageUrl: publicAssetUrl(`/floor-sprites/${sprite}.png`),
+  placementImageUrl: publicAssetUrl(`/floor-sprites/${sprite}.png`),
   renderAtNativeScale: true,
 }));
 
@@ -95,8 +96,8 @@ export const GROUND_ITEMS: StorageItemDefinition[] = groundDefinitions.map(([blo
   layer: 'floor',
   width: 1,
   height: 1,
-  imageUrl: `/floor-sprites/${sprite}.png`,
-  placementImageUrl: `/floor-sprites/${sprite}.png`,
+  imageUrl: publicAssetUrl(`/floor-sprites/${sprite}.png`),
+  placementImageUrl: publicAssetUrl(`/floor-sprites/${sprite}.png`),
   renderAtNativeScale: true,
 }));
 

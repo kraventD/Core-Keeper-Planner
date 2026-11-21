@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.2.0" width="100%">
+  <img src="assets/readme/banner-es.png" alt="Core Keeper Planner — diseño de bases y editor de planos, versión 1.2.0a" width="100%">
 
   **Construye tu hogar subterráneo antes de colocar el primer bloque.**
 
-  <img src="assets/readme/stats-es.svg" alt="Versión 1.2.0 · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
+  <img src="assets/readme/stats-es.svg" alt="Versión 1.2.0a · 488 entradas del catálogo · 10–300 casillas por lado · Español e inglés" width="100%">
 
   [🇬🇧 English](README.md) · **🇪🇸 Español**
 
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Última versión — v1.2.0:** añade un historial de recuperación cada cinco minutos con miniaturas, previsualización clara para reflejar selecciones, previsualización del pegado junto al cursor con avisos de colisión y edición más rápida de notas. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0/core-keeper-planner-1.2.0.zip).
+> **Última versión — v1.2.0a:** corrige la carga de sprites en la versión alojada en GitHub Pages. [Descargar el HTML autónomo](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0a/core-keeper-planner-1.2.0a.html) · [Descargar el ZIP](https://github.com/kraventD/Core-Keeper-Planner/releases/download/v1.2.0a/core-keeper-planner-1.2.0a.zip).
 
 > **Pruébalo en línea:** [Abrir Core Keeper Planner](https://kraventd.github.io/Core-Keeper-Planner/). Los planos se guardan en este navegador; usa las opciones de importar y exportar para moverlos entre dispositivos.
 
@@ -247,7 +247,7 @@ Core Keeper Planner es un proyecto independiente que desarrollo y mantengo perso
   <br>
   <strong>Planifica. Construye. Hazlo tuyo.</strong>
   <br>
-  <sub>CORE KEEPER PLANNER · VERSIÓN 1.2.0</sub>
+  <sub>CORE KEEPER PLANNER · VERSIÓN 1.2.0a</sub>
   <br>
   <a href="README.md">Read in English</a>
 </div>

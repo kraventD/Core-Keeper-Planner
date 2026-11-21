@@ -1,3 +1,5 @@
+import { publicAssetUrl } from './publicAssetUrl';
+
 export type StorageCategory = 'chest' | 'table' | 'pedestal' | 'pet' | 'bed' | 'chair' | 'terrarium' | 'aquarium' | 'other' | 'station' | 'mechanism' | 'rail' | 'door' | 'gate' | 'wall' | 'wall_decoration' | 'floor' | 'bridge' | 'fence' | 'light' | 'nature';
 
 export interface StorageItemDefinition {
@@ -299,6 +301,12 @@ const withWikiPlacedSprite = (item: StorageItemDefinition): StorageItemDefinitio
     : item;
 };
 
+const withPublicAssetUrls = (item: StorageItemDefinition): StorageItemDefinition => ({
+  ...item,
+  imageUrl: publicAssetUrl(item.imageUrl),
+  ...(item.placementImageUrl ? { placementImageUrl: publicAssetUrl(item.placementImageUrl) } : {}),
+});
+
 const additionalStorageItems: StorageItemDefinition[] = [
   { id: 'plain-chest', nameEn: 'Plain Chest', nameEs: 'Cofre sencillo', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/plain-chest.png', color: '#9c7046', estimatedSize: true },
   { id: 'relucite-chest', nameEn: 'Relucite Chest', nameEs: 'Cofre de relucita', category: 'chest', width: 1, height: 1, imageUrl: '/storage-items/relucite-chest.png', spriteId: 'lootsprite_reluciteChest' },
@@ -354,10 +362,10 @@ export const STORAGE_ITEMS: StorageItemDefinition[] = [
   imageUrl: `/storage-items/${id}.png`,
   })),
   ...additionalStorageItems.map(withWikiPlacedSprite),
-];
+].map(withPublicAssetUrls);
 
 // Buildable wall segments and bridges. Wall pieces use flat colors in the planner.
-export const STRUCTURE_ITEMS: StorageItemDefinition[] = [
+const structureItems: StorageItemDefinition[] = [
   { id: 'wood-wall', nameEn: 'Wood Wall', nameEs: 'Pared de madera', category: 'wall', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#946933' },
   { id: 'stone-bricks-wall', nameEn: 'Stone Bricks Wall', nameEs: 'Pared de ladrillos de piedra', category: 'wall', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#6a6c72' },
   { id: 'scarlet-wall', nameEn: 'Scarlet Wall', nameEs: 'Pared escarlata', category: 'wall', layer: 'wall', width: 1, height: 1, imageUrl: '', color: '#902613' },
@@ -468,6 +476,8 @@ export const STRUCTURE_ITEMS: StorageItemDefinition[] = [
   { id: 'galaxite-fence-gate', nameEn: 'Galaxite Fence Gate', nameEs: 'Portón de cerca de galaxita', category: 'gate', layer: 'fence', width: 1, height: 1, imageUrl: '', color: '#615bb3' },
   { id: 'gleam-wood-fence-gate', nameEn: 'Gleam Wood Fence Gate', nameEs: 'Portón de cerca de madera resplandeciente', category: 'gate', layer: 'fence', width: 1, height: 1, imageUrl: '', color: '#61b9b1' },
 ];
+
+export const STRUCTURE_ITEMS: StorageItemDefinition[] = structureItems.map(withPublicAssetUrls);
 
 // Additional buildable furniture, stations and mechanisms. Wiki footprints are checked against each item's Placeable field when present.
 const functionalItemDefinitions: StorageItemDefinition[] = [
@@ -694,7 +704,7 @@ const functionalItemDefinitions: StorageItemDefinition[] = [
   }),
 ];
 
-export const FUNCTIONAL_ITEMS = functionalItemDefinitions.map(withWikiPlacedSprite);
+export const FUNCTIONAL_ITEMS = functionalItemDefinitions.map(withWikiPlacedSprite).map(withPublicAssetUrls);
 
 export const STORAGE_ITEM_BY_ID = new Map([...STORAGE_ITEMS, ...FUNCTIONAL_ITEMS, ...STRUCTURE_ITEMS].map(item => [item.id, item]));
 

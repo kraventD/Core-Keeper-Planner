@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.0a — GitHub Pages sprite loading hotfix
+
+### English
+
+- Fixed public asset paths for placed objects, floors and game sprite atlases when the planner runs from the repository subpath on GitHub Pages.
+
+### Español
+
+- Se corrigieron las rutas de los recursos públicos de objetos, suelos y atlas de sprites para que carguen en GitHub Pages desde la subruta del repositorio.
+
 ## v1.2.0 — Recovery history and clipboard workflow
 
 ### English
