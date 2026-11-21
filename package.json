@@ -2,7 +2,7 @@
   "name": "core-keeper-planner",
   "private": true,
   "version": "1.2.2",
-  "releaseVersion": "1.2.2",
+  "releaseVersion": "1.2.2a",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",

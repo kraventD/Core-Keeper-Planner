@@ -2,6 +2,11 @@ import { publicAssetUrl } from './publicAssetUrl';
 
 export type StorageCategory = 'chest' | 'table' | 'pedestal' | 'pet' | 'bed' | 'chair' | 'terrarium' | 'aquarium' | 'other' | 'station' | 'mechanism' | 'rail' | 'door' | 'gate' | 'wall' | 'wall_decoration' | 'floor' | 'bridge' | 'fence' | 'light' | 'nature';
 
+export interface StorageItemOccupiedTile {
+  x: number;
+  y: number;
+}
+
 export interface StorageItemDefinition {
   id: string;
   nameEn: string;
@@ -22,6 +27,8 @@ export interface StorageItemDefinition {
   /** Visual sprite size in tiles, independent of the occupied placement footprint. */
   visualWidthTiles?: number;
   visualHeightTiles?: number;
+  /** Sparse gameplay footprint. Omit to occupy the full width × height rectangle. */
+  occupiedTiles?: readonly StorageItemOccupiedTile[];
 }
 
 type ItemSeed = [id: string, en: string, es: string, category: StorageCategory, width: number, height: number, estimated?: boolean];
@@ -307,6 +314,14 @@ const withPublicAssetUrls = (item: StorageItemDefinition): StorageItemDefinition
   ...(item.placementImageUrl ? { placementImageUrl: publicAssetUrl(item.placementImageUrl) } : {}),
 });
 
+const coreOccupiedTiles: StorageItemOccupiedTile[] = [
+  ...Array.from({ length: 5 }, (_, row) => Array.from({ length: 5 }, (_, column) => ({ x: column + 7, y: row + 5 }))).flat(),
+  ...Array.from({ length: 3 }, (_, row) => Array.from({ length: 3 }, (_, column) => ({ x: column + 8, y: row }))).flat(),
+  ...Array.from({ length: 3 }, (_, row) => Array.from({ length: 3 }, (_, column) => ({ x: column, y: row + 4 }))).flat(),
+  ...Array.from({ length: 3 }, (_, row) => Array.from({ length: 3 }, (_, column) => ({ x: column + 16, y: row + 4 }))).flat(),
+  ...Array.from({ length: 3 }, (_, row) => Array.from({ length: 3 }, (_, column) => ({ x: column + 8, y: row + 10 }))).flat(),
+];
+
 /** The dedicated Core tool uses this item definition; it is intentionally omitted from the catalog. */
 export const CORE_SPRITE_ITEM: StorageItemDefinition = withPublicAssetUrls({
   id: 'core-sprite',
@@ -319,6 +334,7 @@ export const CORE_SPRITE_ITEM: StorageItemDefinition = withPublicAssetUrls({
   placementImageUrl: '/object-sprites/core-shrine.png',
   visualWidthTiles: 19,
   visualHeightTiles: 19 * 875 / 1215,
+  occupiedTiles: coreOccupiedTiles,
 });
 
 const additionalStorageItems: StorageItemDefinition[] = [

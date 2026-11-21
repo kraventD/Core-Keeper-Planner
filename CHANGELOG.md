@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.2.2a — Core footprint collision hotfix
+
+### English
+
+- The Core sprite now blocks only its occupied tiles instead of its full 19×13 visual bounds. Placement, movement, rotation and clipboard overlap checks use the sparse footprint.
+- The placement preview highlights only the intersecting tiles and reports the blocking object and tile coordinates.
+- Kept the Core sprite out of the object catalog; it remains available through its dedicated tool.
+
+### Español
+
+- El sprite del Core ahora ocupa solo las casillas que utiliza, no todo el rectángulo visual de 19×13. La colocación, el movimiento, la rotación y el pegado validan su huella dispersa.
+- La previsualización resalta únicamente las casillas que chocan e indica el objeto que bloquea y sus coordenadas.
+- El Core se mantiene fuera del catálogo de objetos y disponible mediante su herramienta dedicada.
+
 ## v1.2.2 — Core sprite replacement
 
 ### English

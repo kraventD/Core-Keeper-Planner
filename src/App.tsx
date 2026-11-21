@@ -69,6 +69,7 @@ import { BlockPaletteModal } from './components/Modals/BlockPaletteModal';
 import { DEFAULT_ACTIVE_COLOR, paletteWithBlockColors } from './utils/blockCatalog';
 import { CORE_SPRITE_ITEM, StorageItemDefinition } from './utils/storageCatalog';
 import { migrateStructurePlacementsToColors, STORAGE_ITEM_BY_ID } from './utils/storageCatalog';
+import { getStoragePlacementOverlapTiles, storagePlacementsOverlap } from './utils/storageFootprint';
 import { GameSpriteEntry, loadGameSpriteCatalog } from './utils/gameSpriteCatalog';
 import { FLOOR_ITEM_BY_ID } from './utils/floorCatalog';
 import { DEFAULT_PLANNER_LAYER_STATES, getStorageItemLayerId, getStoragePlacementLayerId, isPlannerLayerEditable } from './utils/plannerLayers';
@@ -127,18 +128,18 @@ function validateClipboardPlacement(
     x: destX + relX,
     y: destY + relY,
   }));
-  const addConflict = (item: typeof incoming[number], reason?: string) => {
+  const addConflict = (item: typeof incoming[number], reason?: string, occupiedOverlap?: Array<{ x: number; y: number }>) => {
     const definition = STORAGE_ITEM_BY_ID.get(item.itemId);
     const name = language === 'es' ? definition?.nameEs : definition?.nameEn;
     conflicts.add(`${name ?? item.itemId}${reason ? ` (${reason})` : ''}`);
-    conflictingBoxes.set(`${item.x},${item.y},${item.width},${item.height}`, {
-      x: item.x, y: item.y, width: item.width, height: item.height,
-    });
+    if (occupiedOverlap?.length) {
+      for (const tile of occupiedOverlap) conflictingBoxes.set(`${tile.x},${tile.y},1,1`, { x: tile.x, y: tile.y, width: 1, height: 1 });
+    } else {
+      conflictingBoxes.set(`${item.x},${item.y},${item.width},${item.height}`, { x: item.x, y: item.y, width: item.width, height: item.height });
+    }
   };
   const overlaps = (a: StorageItemPlacement, b: StorageItemPlacement) =>
-    (a.layer ?? 'object') === (b.layer ?? 'object') &&
-    a.x < b.x + b.width && a.x + a.width > b.x &&
-    a.y < b.y + b.height && a.y + a.height > b.y;
+    storagePlacementsOverlap(a, b);
 
   for (const item of incoming) {
     if (item.x < 0 || item.y < 0 || item.x + item.width > project.width || item.y + item.height > project.height) {
@@ -149,14 +150,20 @@ function validateClipboardPlacement(
       addConflict(item, language === 'es' ? 'capa oculta o bloqueada' : 'layer hidden or locked');
     }
     for (const existing of project.storagePlacements ?? []) {
-      if (overlaps(item, existing)) addConflict(item);
+      if (overlaps(item, existing)) {
+        const itemHasSparseFootprint = Boolean(STORAGE_ITEM_BY_ID.get(item.itemId)?.occupiedTiles);
+        const existingHasSparseFootprint = Boolean(STORAGE_ITEM_BY_ID.get(existing.itemId)?.occupiedTiles);
+        addConflict(item, undefined, itemHasSparseFootprint || existingHasSparseFootprint ? getStoragePlacementOverlapTiles(item, existing) : undefined);
+      }
     }
   }
   for (let index = 0; index < incoming.length; index++) {
     for (const other of incoming.slice(index + 1)) {
       if (overlaps(incoming[index], other)) {
-        addConflict(incoming[index]);
-        addConflict(other);
+        const eitherHasSparseFootprint = Boolean(STORAGE_ITEM_BY_ID.get(incoming[index].itemId)?.occupiedTiles || STORAGE_ITEM_BY_ID.get(other.itemId)?.occupiedTiles);
+        const commonTiles = eitherHasSparseFootprint ? getStoragePlacementOverlapTiles(incoming[index], other) : undefined;
+        addConflict(incoming[index], undefined, commonTiles);
+        addConflict(other, undefined, commonTiles);
       }
     }
   }
@@ -591,14 +598,10 @@ export default function App() {
     const movedPlacements = selected.map(item => ({ ...item, x: item.x + deltaX, y: item.y + deltaY }));
     const outside = movedPlacements.some(item => item.x < 0 || item.y < 0 || item.x + item.width > project.width || item.y + item.height > project.height);
     const overlapsExisting = movedPlacements.some(moving => placements.some(existing =>
-      !selectedIds.has(existing.id) && (existing.layer ?? 'object') === (moving.layer ?? 'object') &&
-      moving.x < existing.x + existing.width && moving.x + moving.width > existing.x &&
-      moving.y < existing.y + existing.height && moving.y + moving.height > existing.y,
+      !selectedIds.has(existing.id) && storagePlacementsOverlap(moving, existing),
     ));
     const overlapsWithinSelection = movedPlacements.some((moving, index) => movedPlacements.slice(index + 1).some(other =>
-      (other.layer ?? 'object') === (moving.layer ?? 'object') &&
-      moving.x < other.x + other.width && moving.x + moving.width > other.x &&
-      moving.y < other.y + other.height && moving.y + moving.height > other.y,
+      storagePlacementsOverlap(moving, other),
     ));
     if (outside || overlapsExisting || overlapsWithinSelection) {
       showToast(language === 'es'
@@ -843,11 +846,7 @@ export default function App() {
             y,
             rotation: mirroredRotation,
           };
-          const collides = [...existingPlacements, ...mirroredPlacements].some(existing =>
-            (existing.layer ?? 'object') === (mirroredItem.layer ?? 'object') &&
-            mirroredItem.x < existing.x + existing.width && mirroredItem.x + mirroredItem.width > existing.x &&
-            mirroredItem.y < existing.y + existing.height && mirroredItem.y + mirroredItem.height > existing.y,
-          );
+          const collides = [...existingPlacements, ...mirroredPlacements].some(existing => storagePlacementsOverlap(mirroredItem, existing));
           if (collides) {
             skippedPlacements++;
             continue;
@@ -917,8 +916,7 @@ export default function App() {
       const hasOverlap = flippedPlacements.some((item, index) =>
         [...externalPlacements, ...flippedPlacements.slice(index + 1)].some(other =>
           (item.layer ?? 'object') === (other.layer ?? 'object') &&
-          item.x < other.x + other.width && item.x + item.width > other.x &&
-          item.y < other.y + other.height && item.y + item.height > other.y,
+      storagePlacementsOverlap(item, other),
         ),
       );
       if (hasOverlap) {
@@ -1198,10 +1196,8 @@ export default function App() {
       return false;
     }
     const layer = item.layer ?? 'object';
-    const overlaps = currentPlacements.some(existing => (existing.layer ?? 'object') === layer &&
-      x < existing.x + existing.width && x + item.width > existing.x &&
-      y < existing.y + existing.height && y + item.height > existing.y,
-    );
+    const candidate: StorageItemPlacement = { id: 'placement-candidate', itemId: item.id, x, y, width: item.width, height: item.height, layer };
+    const overlaps = currentPlacements.some(existing => storagePlacementsOverlap(candidate, existing));
     if (overlaps) {
       showToast(language === 'es' ? 'Ese espacio ya está ocupado por otro objeto.' : 'That space is occupied by another item.');
       return false;
@@ -1261,9 +1257,8 @@ export default function App() {
     const moving = placements.find(item => item.id === placementId);
     if (!moving || (moving.x === x && moving.y === y)) return;
     if (!isPlannerLayerEditable(plannerLayerStates, getStoragePlacementLayerId(moving, STORAGE_ITEM_BY_ID.get(moving.itemId)))) return;
-    const overlaps = placements.some(item => item.id !== placementId && (item.layer ?? 'object') === (moving.layer ?? 'object') &&
-      x < item.x + item.width && x + moving.width > item.x &&
-      y < item.y + item.height && y + moving.height > item.y);
+    const candidate = { ...moving, x, y };
+    const overlaps = placements.some(item => item.id !== placementId && storagePlacementsOverlap(candidate, item));
     if (x < 0 || y < 0 || x + moving.width > project.width || y + moving.height > project.height || overlaps) {
       showToast(language === 'es' ? 'No se puede mover: el espacio está fuera del plano u ocupado.' : 'Cannot move: the space is outside the blueprint or occupied.');
       return;
@@ -1286,9 +1281,8 @@ export default function App() {
     const needsSwap = rotation === 90 || rotation === 270;
     const width = needsSwap ? baseHeight : baseWidth;
     const height = needsSwap ? baseWidth : baseHeight;
-    const overlaps = placements.some(item => item.id !== placementId && (item.layer ?? 'object') === (current.layer ?? 'object') &&
-      current.x < item.x + item.width && current.x + width > item.x &&
-      current.y < item.y + item.height && current.y + height > item.y);
+    const candidate = { ...current, width, height, rotation };
+    const overlaps = placements.some(item => item.id !== placementId && storagePlacementsOverlap(candidate, item));
     if (current.x + width > project.width || current.y + height > project.height || overlaps) {
       showToast(language === 'es' ? 'No se puede girar: el espacio está fuera del plano u ocupado.' : 'Cannot rotate: the space is outside the blueprint or occupied.');
       return;
@@ -1341,11 +1335,7 @@ export default function App() {
     );
     const outsidePlacements = placements.filter(item => !selectedIds.has(item.id));
     const overlaps = rotated.some((item, index) =>
-      [...outsidePlacements, ...rotated.slice(index + 1)].some(other =>
-        (item.layer ?? 'object') === (other.layer ?? 'object') &&
-        item.x < other.x + other.width && item.x + item.width > other.x &&
-        item.y < other.y + other.height && item.y + item.height > other.y,
-      ),
+      [...outsidePlacements, ...rotated.slice(index + 1)].some(other => storagePlacementsOverlap(item, other)),
     );
     if (outside || overlaps) {
       showToast(language === 'es'

@@ -27,6 +27,7 @@ import { getDoorCellOrientation, getDoorPlacementColorId } from '../utils/doorCe
 import { FLOOR_ITEM_BY_ID } from '../utils/floorCatalog';
 import { getPaletteColorLabel } from '../utils/palette';
 import { DEFAULT_PLANNER_LAYER_STATES, getStorageItemLayerId, getStoragePlacementLayerId, isPlannerLayerEditable } from '../utils/plannerLayers';
+import { getStoragePlacementOverlapTiles, storagePlacementsOverlap } from '../utils/storageFootprint';
 import {
   coordKey,
   getBresenhamLine,
@@ -1927,10 +1928,13 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           const visualLeft = originX + (itemWidth - visualWidthTiles) / 2;
           const visualTop = originY + itemHeight - visualHeightTiles;
           const visualFits = visualLeft >= 0 && visualTop >= 0 && visualLeft + visualWidthTiles <= project.width && visualTop + visualHeightTiles <= project.height;
-          const blocked = (project.storagePlacements ?? []).some(item => (item.layer ?? 'object') === (previewItem.layer ?? 'object') &&
-            originX < item.x + item.width && originX + itemWidth > item.x &&
-            originY < item.y + item.height && originY + itemHeight > item.y,
-          );
+          const candidate: StorageItemPlacement = {
+            id: 'placement-preview', itemId: previewItem.id, x: originX, y: originY,
+            width: itemWidth, height: itemHeight, layer: previewItem.layer ?? 'object', rotation: 0,
+          };
+          const collidingPlacements = (project.storagePlacements ?? []).filter(item => storagePlacementsOverlap(candidate, item));
+          const blocked = collidingPlacements.length > 0;
+          const collidingTiles = collidingPlacements.flatMap(item => getStoragePlacementOverlapTiles(candidate, item));
           const wallBacked = previewItem.category !== 'wall_decoration' || Array.from({ length: itemWidth * itemHeight }, (_, index) => {
             const tileX = originX + (index % itemWidth);
             const tileY = originY + Math.floor(index / itemWidth);
@@ -1942,14 +1946,40 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
           }).every(Boolean);
           const warnings: string[] = [];
           if (!fits || !visualFits) warnings.push(language === 'es' ? 'Fuera del plano' : 'Outside blueprint');
-          if (blocked) warnings.push(language === 'es' ? 'Espacio ocupado en esta capa' : 'Occupied in this layer');
+          if (blocked) {
+            const blocker = collidingPlacements[0];
+            const blockerDefinition = STORAGE_ITEM_BY_ID.get(blocker.itemId);
+            const blockerName = blockerDefinition
+              ? (language === 'es' ? blockerDefinition.nameEs : blockerDefinition.nameEn)
+              : (language === 'es' ? 'objeto' : 'object');
+            const collisionTile = collidingTiles[0];
+            warnings.push(language === 'es'
+              ? `Ocupado: ${blockerName} en ${collisionTile.x},${collisionTile.y}`
+              : `Occupied: ${blockerName} at ${collisionTile.x},${collisionTile.y}`);
+          }
           if (!wallBacked) warnings.push(language === 'es' ? 'Necesita pared detrás' : 'Needs a wall behind');
           const selectedLayerId = getStorageItemLayerId(previewItem, previewItem.layer);
           if (!plannerLayerStates[selectedLayerId].visible) warnings.push(language === 'es' ? 'La capa está oculta' : 'Layer is hidden');
           else if (!isPlannerLayerEditable(plannerLayerStates, selectedLayerId)) warnings.push(language === 'es' ? 'La capa está bloqueada' : 'Layer is locked');
           const valid = warnings.length === 0;
-          ctx.fillStyle = valid ? 'rgba(245, 158, 11, 0.24)' : 'rgba(239, 68, 68, 0.28)';
+          ctx.fillStyle = valid || (blocked && fits && visualFits && wallBacked)
+            ? 'rgba(245, 158, 11, 0.20)'
+            : 'rgba(239, 68, 68, 0.24)';
           ctx.fillRect(x, y, w, h);
+          // Keep the Core's bounding rectangle as a visual guide, but show red only on the
+          // exact tiles that collide. A single occupied tile must not make the whole 19×13
+          // sprite look like a solid blocker.
+          if (blocked) {
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.64)';
+            ctx.strokeStyle = '#f87171';
+            ctx.lineWidth = Math.max(1, currentCellSize * 0.07);
+            for (const tile of collidingTiles) {
+              const tileX = bpX + tile.x * currentCellSize;
+              const tileY = bpY + tile.y * currentCellSize;
+              ctx.fillRect(tileX, tileY, currentCellSize, currentCellSize);
+              ctx.strokeRect(tileX + 0.5, tileY + 0.5, currentCellSize - 1, currentCellSize - 1);
+            }
+          }
           if (image && fits) {
             ctx.save();
             ctx.globalAlpha = 0.72;
